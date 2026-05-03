@@ -1,0 +1,43 @@
+---
+type Props = {
+  title: string;
+  description?: string;
+  canonical?: string;
+};
+
+const { title, description, canonical } = Astro.props;
+const fullCanonical = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
+const fullDescription =
+  description ??
+  'Privacy-first, open-source replacements for paywalled utility apps. Two-person studio.';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={fullDescription} />
+    <link rel="canonical" href={fullCanonical} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={fullDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={fullCanonical} />
+    <meta property="og:site_name" content="Josh Approved" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={fullDescription} />
+
+    <link rel="icon" type="image/svg+xml" href="/assets/wordmark.svg" />
+
+    <link rel="preload" href="/fonts/IBMPlexSans-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/IBMPlexSans-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
+
+    <link rel="stylesheet" href="/styles/tokens.css" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

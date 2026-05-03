@@ -1,0 +1,74 @@
+---
+import type { AppRecord } from '../data/apps.ts';
+
+type Props = {
+  app: AppRecord;
+  size?: 'sm' | 'lg';
+};
+
+const { app, size = 'sm' } = Astro.props;
+const px = size === 'lg' ? 96 : 56;
+const radius = size === 'lg' ? 22 : 14;
+const cornerPx = size === 'lg' ? 22 : 14;
+const cornerCheck = size === 'lg' ? 14 : 9;
+const cornerOffset = size === 'lg' ? 8 : 5;
+const cornerRadius = size === 'lg' ? 5 : 4;
+const glyphSize = size === 'lg' ? 36 : 22;
+---
+<div class="frame" style={`width: ${px}px; height: ${px}px; border-radius: ${radius}px;`}>
+  {app.from && app.to ? (
+    <div class="ig" style={size === 'lg' ? 'font-size: 22px;' : 'font-size: 14px;'}>
+      {app.from}<em style={size === 'lg' ? 'font-size: 16px;' : 'font-size: 9px;'}>{app.to}</em>
+    </div>
+  ) : (
+    <div class="glyph" style={`font-size: ${glyphSize}px;`}>{app.glyph ?? '·'}</div>
+  )}
+  <span
+    class="corner"
+    style={`width: ${cornerPx}px; height: ${cornerPx}px; right: ${cornerOffset}px; bottom: ${cornerOffset}px; border-radius: ${cornerRadius}px;`}
+  >
+    <svg width={cornerCheck} height={cornerCheck} viewBox="0 0 24 24" fill="none" stroke="#FAFAF7" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  </span>
+</div>
+
+<style>
+  .frame {
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .ig {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    line-height: 1;
+    text-align: center;
+  }
+  .ig em {
+    font-style: normal;
+    color: var(--fg-subtle);
+    display: block;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+  .glyph {
+    font-weight: 500;
+    color: var(--fg);
+    line-height: 1;
+    text-align: center;
+  }
+  .corner {
+    position: absolute;
+    background: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>

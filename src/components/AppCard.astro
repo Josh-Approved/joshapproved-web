@@ -1,0 +1,56 @@
+---
+import type { AppRecord } from '../data/apps.ts';
+import { PLATFORM_LABEL } from '../data/apps.ts';
+import AppIcon from './AppIcon.astro';
+
+type Props = { app: AppRecord };
+const { app } = Astro.props;
+const platforms = app.platforms.map((p) => PLATFORM_LABEL[p] ?? p).join(' · ');
+---
+<a class="card" href={`/apps/${app.slug}/`}>
+  <AppIcon app={app} size="sm" />
+  <div>
+    <h3>{app.name}</h3>
+  </div>
+  <p>{app.description}</p>
+  <div class="platforms">{platforms}</div>
+</a>
+
+<style>
+  .card {
+    background: var(--paper);
+    padding: 22px 22px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 150ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  .card:hover {
+    background: var(--pure-white);
+  }
+  .card h3 {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    margin: 0;
+  }
+  .card p {
+    font-size: 14px;
+    color: var(--fg-muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+  .platforms {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--fg-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+</style>

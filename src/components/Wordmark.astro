@@ -1,0 +1,39 @@
+---
+type Props = {
+  size?: 'sm' | 'md';
+  href?: string;
+};
+
+const { size = 'md', href = '/' } = Astro.props;
+const checkSize = size === 'sm' ? 18 : 22;
+const fontSize = size === 'sm' ? 15 : 17;
+const innerCheck = size === 'sm' ? 11 : 13;
+---
+<a class="wm" href={href} aria-label="Josh Approved home" style={`font-size: ${fontSize}px;`}>
+  <span class="wm-check" style={`width: ${checkSize}px; height: ${checkSize}px;`}>
+    <svg width={innerCheck} height={innerCheck} viewBox="0 0 24 24" fill="none" stroke="#FAFAF7" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  </span>
+  <span>josh approved</span>
+</a>
+
+<style>
+  .wm {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--fg);
+    text-decoration: none;
+  }
+  .wm-check {
+    background: var(--accent);
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+</style>

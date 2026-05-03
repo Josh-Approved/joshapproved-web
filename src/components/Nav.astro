@@ -1,0 +1,81 @@
+---
+import Wordmark from './Wordmark.astro';
+
+type Props = {
+  variant?: 'full' | 'crumb';
+  crumb?: string;
+};
+
+const { variant = 'full', crumb } = Astro.props;
+---
+<nav class="nav">
+  <div class="nav-left">
+    <Wordmark size={variant === 'crumb' ? 'sm' : 'md'} />
+    {variant === 'full' && (
+      <div class="links">
+        <a href="/#apps">Apps</a>
+        <a href="/manifesto/">Manifesto</a>
+        <a href="https://github.com/jtysonwilliams" rel="noopener">Source</a>
+      </div>
+    )}
+    {variant === 'crumb' && crumb && (
+      <span class="crumb"><a href="/#apps">apps</a> &nbsp;/&nbsp; <b>{crumb}</b></span>
+    )}
+  </div>
+  {variant === 'full' && (
+    <div class="links">
+      <a href="/#donate">Donate</a>
+      <a href="mailto:jtysonwilliams@yahoo.com">Contact</a>
+    </div>
+  )}
+</nav>
+
+<style>
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .links {
+    display: flex;
+    gap: 22px;
+  }
+  .links a {
+    font-size: 14px;
+    color: var(--fg-muted);
+    text-decoration: none;
+  }
+  .links a:hover {
+    color: var(--fg);
+  }
+  .crumb {
+    font-size: 13px;
+    color: var(--fg-muted);
+  }
+  .crumb a {
+    color: var(--fg-muted);
+    text-decoration: none;
+  }
+  .crumb a:hover {
+    color: var(--fg);
+  }
+  .crumb b {
+    color: var(--fg);
+    font-weight: 500;
+  }
+  @media (max-width: 640px) {
+    .nav-left {
+      gap: 16px;
+    }
+    .links {
+      gap: 16px;
+    }
+  }
+</style>
