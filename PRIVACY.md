@@ -16,4 +16,4 @@ Each app linked from this site has its own privacy policy in its own repository.
 
 ## Contact
 
-If you spot a privacy issue with the site, email `jtysonwilliams@yahoo.com`.
+If you spot a privacy issue with the site, email `info@joshapproved.com`.
