@@ -9,7 +9,7 @@ const { title, description, canonical } = Astro.props;
 const fullCanonical = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
 const fullDescription =
   description ??
-  'Privacy-first, open-source replacements for paywalled utility apps. Two-person studio.';
+  'Privacy-first, open-source replacements for paywalled utility apps.';
 ---
 <!doctype html>
 <html lang="en">

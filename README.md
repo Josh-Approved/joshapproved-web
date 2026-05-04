@@ -1,6 +1,6 @@
 # joshapproved.com
 
-The studio site for Josh Approved — a two-person studio shipping privacy-first, open-source replacements for paywalled utility apps.
+The studio site for Josh Approved — privacy-first, open-source replacements for paywalled utility apps.
 
 Lives at https://joshapproved.com.
 
