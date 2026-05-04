@@ -1,0 +1,74 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+---
+<Base
+  title="About · Josh Approved"
+  description="Why Josh Approved exists and how it works."
+>
+  <div class="container">
+    <Nav variant="full" />
+
+    <article class="prose">
+      <h1>About</h1>
+      <p class="lede">Josh Approved is a side project.</p>
+
+      <p>
+        After years building consumer apps in the tech industry, I wanted to do utility
+        apps differently. The pattern I kept seeing: a simple tool wrapped in an account,
+        an analytics SDK, and a paywall in front of the one feature people opened the app
+        for. None of that is necessary to make a good timer or a good converter. So this
+        exists.
+      </p>
+
+      <p>
+        A Josh Approved app does one thing well, runs on your device by default, and
+        stays out of your way. We charge only when we're covering a real cost — a server,
+        an API. We use accounts only when the feature genuinely needs one, like
+        cross-device sync.
+      </p>
+
+      <p>What you won't see: ads, hidden tracking, or nag screens.</p>
+
+      <p>If we drift from this, the apps lose the badge.</p>
+    </article>
+
+    <Footer />
+  </div>
+</Base>
+
+<style>
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .prose {
+    padding: 64px 0 32px;
+  }
+  .prose h1 {
+    font-size: 48px;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    font-weight: 600;
+    margin: 0 0 16px;
+  }
+  .prose .lede {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--fg-muted);
+    margin: 0 0 24px;
+  }
+  .prose p {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--fg);
+    margin: 0 0 16px;
+  }
+  @media (max-width: 540px) {
+    .container { padding: 0 20px; }
+    .prose h1 { font-size: 36px; }
+    .prose { padding: 40px 0 24px; }
+  }
+</style>
