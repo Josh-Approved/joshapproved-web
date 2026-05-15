@@ -12,11 +12,11 @@ This is normally done with tools you'd recognise by name if you worked in tech a
 
 ## The fair version of why this exists
 
-I want to be honest about the other side, because I've been on it.
+I want to be fair to the other side, because I've watched it up close.
 
 When you're building something, you genuinely cannot see what people do with it. You watch ten friends use it and learn a lot; you ship to ten thousand strangers and you're blind again. Analytics is the instrument that gives that sight back. Used well, it answers humane questions: Where do people give up? Which step is confusing enough that half of them quit? Did the thing I just changed make it better or worse?
 
-I've used these tools to find a screen where most people got stuck, fixed it, and watched the frustration disappear. That is a real, good use. The people adding analytics are mostly not cackling villains. Most of them tell themselves — accurately, at first — that they're doing it to make the product better for you.
+I've watched these tools find a screen where most people got stuck, watched it get fixed, and watched the frustration disappear. That is a real, good use. The people adding analytics are mostly not cackling villains. Most of them tell themselves — accurately, at first — that they're doing it to make the product better for you.
 
 ## Where it stops being for you
 
