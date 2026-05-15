@@ -29,7 +29,7 @@ export const APPS: AppRecord[] = [
     slug: 'free-workout-timer',
     name: 'Free Workout Timer',
     tagline: 'A timer for intervals and Tabata. No account, no subscription, no ads.',
-    description: 'Tabata and interval timing without the paywall every other timer app puts in front of you.',
+    description: 'Tabata and interval timing that runs entirely on your phone. No account, no subscription, no ads.',
     tag: 'util',
     platforms: ['ios', 'android'],
     status: 'shipped',
@@ -39,7 +39,7 @@ export const APPS: AppRecord[] = [
     network: 'None',
     license: 'MIT',
     body: [
-      "Most workout timers want a sign-in, an email, or twelve dollars a year. This one runs on your phone, plays a beep, and counts down. That's the whole app.",
+      "This one runs on your phone, plays a beep, and counts down. No sign-in, no email, no subscription — that's the whole app.",
       'Build your own intervals or pick a preset. Works in portrait or landscape on the floor next to you. No account. No tracking. No data leaves your device because there is no server to send it to.',
     ],
     privacy: {

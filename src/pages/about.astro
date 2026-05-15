@@ -7,31 +7,54 @@ import Footer from '../components/Footer.astro';
   title="About · Josh Approved"
   description="Why Josh Approved exists and how it works."
 >
+  <div class="brandrule"></div>
   <div class="container">
     <Nav variant="full" />
 
     <article class="prose">
       <h1>About</h1>
-      <p class="lede">Josh Approved is a side project.</p>
+      <p class="lede">Hi — I'm Josh. I make small apps, and this is the honest version of why.</p>
 
       <p>
-        After years building consumer apps in the tech industry, I wanted to do utility
-        apps differently. The pattern I kept seeing: a simple tool wrapped in an account,
-        an analytics SDK, and a paywall in front of the one feature people opened the app
-        for. None of that is necessary to make a good timer or a good converter. So this
-        exists.
+        I spent years building consumer apps inside the tech industry. I'm good at the
+        thing those apps are designed to do: get you to come back, get you to tap, get
+        you to upgrade. Up close, the pattern was always the same — take a tool that
+        should take ten seconds, wrap it in an account so we can email you, bolt on an
+        analytics SDK so we can watch what you do, and put the one feature you actually
+        came for behind a subscription.
       </p>
 
       <p>
-        A Josh Approved app does one thing well, runs on your device by default, and
-        stays out of your way. We charge only when we're covering a real cost — a server,
-        an API. We use accounts only when the feature genuinely needs one, like
-        cross-device sync.
+        I don't think most of the people doing this are villains. A lot of that
+        instrumentation starts with a fair intention — you genuinely want to know where
+        people get stuck so you can fix it. But the incentives only ever pull one way,
+        and "understand the user" quietly becomes "increase the number." I'd shipped
+        enough of it to know how that story ends.
       </p>
 
-      <p>What you won't see: ads, hidden tracking, or nag screens.</p>
+      <p>
+        So in my own time I started making the opposite kind of app. A Josh Approved
+        app does one thing, runs on your device, and then gets out of your way. No
+        account unless the feature genuinely can't work without one. No analytics
+        watching you use it. No ads. No "pro" tier hiding the part you needed. The whole
+        app is the free app.
+      </p>
 
-      <p>If we drift from this, the apps lose the badge.</p>
+      <p>
+        It isn't a company. It's me, on the side, putting my name on things I'd be
+        comfortable handing to my own family. That's what the little check means: I
+        stand behind this one. If an app ever drifts — if it starts tracking you, or
+        nagging you, or holding a feature hostage — it doesn't get to keep the badge,
+        and I'd rather pull it than pretend.
+      </p>
+
+      <p>
+        I also write about the patterns I'm pushing back on, in plain terms, trying to
+        be fair to the other side — that's the <a href="/writing/">writing</a> section.
+        If something here saved you a subscription and you want to throw a few dollars
+        my way, you can. If you don't, the app is exactly the same. That's the deal,
+        and it isn't going to change.
+      </p>
     </article>
 
     <Footer />
@@ -39,6 +62,10 @@ import Footer from '../components/Footer.astro';
 </Base>
 
 <style>
+  .brandrule {
+    height: 3px;
+    background: var(--marketing-terracotta);
+  }
   .container {
     max-width: 720px;
     margin: 0 auto;

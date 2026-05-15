@@ -8,21 +8,27 @@ import { APPS } from '../data/apps.ts';
 const shipped = APPS.filter((a) => a.status === 'shipped');
 const inProgress = APPS.filter((a) => a.status === 'in-progress').length;
 ---
-<Base title="Josh Approved — privacy-first replacements for paywalled utility apps">
+<Base
+  title="Josh Approved — small, honest utility apps"
+  description="Small tools that do one thing, run on your device, and don't follow you around. Open-source, no tracking, free by default — made by one person."
+>
+  <div class="brandrule"></div>
   <div class="container">
     <Nav variant="full" />
 
     <section class="hero">
-      <h1>Privacy-first replacements for paywalled utility apps.</h1>
+      <h1>I build small tools that do one thing and leave you alone.</h1>
       <p class="lede">
-        Open source. Pay what you want. Every Josh Approved app does one thing,
-        runs entirely on your device, and never asks for an account.
+        After years building consumer apps, I got tired of simple tools wrapped in
+        an account, a tracker, and a paywall in front of the one feature you opened
+        the app for. So I make the opposite kind — open source, on your device, free
+        by default. I'm Josh. This is everything I've made.
       </p>
       <div class="pillline">
-        <span class="pill"><span class="dot"></span>No telemetry</span>
-        <span class="pill"><span class="dot"></span>On-device</span>
+        <span class="pill"><span class="dot"></span>No tracking</span>
+        <span class="pill"><span class="dot"></span>On your device</span>
         <span class="pill"><span class="dot"></span>No ads</span>
-        <span class="pill"><span class="dot"></span>MIT licensed</span>
+        <span class="pill"><span class="dot"></span>Open source</span>
       </div>
     </section>
 
@@ -41,17 +47,17 @@ const inProgress = APPS.filter((a) => a.status === 'in-progress').length;
       <div class="principle">
         <span class="num">01</span>
         <h3>Your data stays with you</h3>
-        <p>Apps run on your device. We never collect, store, or transmit your data.</p>
+        <p>The work happens on your device. There are no servers, so there's nothing of yours for me to lose, sell, or hand over.</p>
       </div>
       <div class="principle">
         <span class="num">02</span>
-        <h3>Free, by default</h3>
-        <p>Paid only when we're covering a real cost — a server, an API. No ads. Pay what you want, or don't.</p>
+        <h3>Free, the honest way</h3>
+        <p>The whole app is the free app. If something ever costs money it's because it costs me money — never to unlock what you came for. Pay what you want, or nothing.</p>
       </div>
       <div class="principle">
         <span class="num">03</span>
-        <h3>Radical transparency</h3>
-        <p>Every app is open source. No hidden telemetry. Read the code or build it yourself.</p>
+        <h3>You can check my work</h3>
+        <p>Every app is open source. You don't have to take my word for any of this — read the code, or build it yourself.</p>
       </div>
     </section>
 
@@ -60,6 +66,10 @@ const inProgress = APPS.filter((a) => a.status === 'in-progress').length;
 </Base>
 
 <style>
+  .brandrule {
+    height: 3px;
+    background: var(--marketing-terracotta);
+  }
   .container {
     max-width: 1080px;
     margin: 0 auto;
@@ -138,12 +148,13 @@ const inProgress = APPS.filter((a) => a.status === 'in-progress').length;
     overflow: hidden;
   }
   .principles {
-    padding: 40px 0 24px;
+    padding: 40px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 28px;
-    border-top: 1px solid var(--hairline);
-    margin-top: 40px;
+    background: var(--marketing-terracotta-bg);
+    border-radius: 16px;
+    margin-top: 48px;
   }
   .principle h3 {
     font-size: 16px;

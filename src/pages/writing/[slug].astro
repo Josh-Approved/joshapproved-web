@@ -1,0 +1,149 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('writing');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const updated = new Date(post.data.updated).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+<Base title={`${post.data.title} · Josh Approved`} description={post.data.description}>
+  <div class="brandrule"></div>
+  <div class="container">
+    <Nav variant="full" />
+
+    <a class="back" href="/writing/">← Writing</a>
+
+    <article class="prose">
+      <h1>{post.data.title}</h1>
+      <p class="dek">{post.data.dek}</p>
+      <p class="meta">By Josh · Updated {updated}</p>
+      <Content />
+    </article>
+
+    <aside class="closer">
+      <p>
+        This is one of the patterns the apps are a reaction to. If you'd rather
+        just see what I make, <a href="/#apps">the apps are here</a> — or
+        there's <a href="/about/">more on why</a>.
+      </p>
+    </aside>
+
+    <Footer />
+  </div>
+</Base>
+
+<style>
+  .brandrule {
+    height: 3px;
+    background: var(--marketing-terracotta);
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .back {
+    display: inline-block;
+    margin: 40px 0 0;
+    font-size: 14px;
+    color: var(--fg-muted);
+    text-decoration: none;
+  }
+  .back:hover {
+    color: var(--fg);
+  }
+  .prose {
+    padding: 16px 0 8px;
+  }
+  .prose h1 {
+    font-size: 42px;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    font-weight: 600;
+    margin: 12px 0 16px;
+  }
+  .prose .dek {
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--fg-muted);
+    margin: 0 0 16px;
+  }
+  .prose .meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--fg-subtle);
+    margin: 0 0 8px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .prose :global(h2) {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    margin: 40px 0 12px;
+  }
+  .prose :global(p) {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--fg);
+    margin: 0 0 18px;
+  }
+  .prose :global(strong) {
+    font-weight: 600;
+  }
+  .prose :global(a) {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--marketing-terracotta);
+    text-underline-offset: 3px;
+  }
+  .prose :global(ul) {
+    margin: 0 0 18px;
+    padding-left: 22px;
+  }
+  .prose :global(li) {
+    font-size: 17px;
+    line-height: 1.7;
+    margin: 0 0 8px;
+  }
+  .closer {
+    margin: 40px 0 0;
+    padding: 24px;
+    background: var(--marketing-terracotta-bg);
+    border-radius: 16px;
+  }
+  .closer p {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--fg);
+    margin: 0;
+  }
+  .closer a {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--marketing-terracotta);
+    text-underline-offset: 3px;
+  }
+  @media (max-width: 540px) {
+    .container { padding: 0 20px; }
+    .prose h1 { font-size: 32px; }
+    .prose :global(p), .prose :global(li) { font-size: 16px; }
+  }
+</style>

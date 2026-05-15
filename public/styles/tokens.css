@@ -70,6 +70,15 @@
   --slate-600: #475569;
   --slate-100: #E2E8F0;
 
+  /* Warm marketing palette — studio site / landing pages only.
+     Never inside product UI. Tint = background; body text stays ink. */
+  --marketing-terracotta:    #B0654B;
+  --marketing-terracotta-bg: #F4E8E2;
+  --marketing-ochre:         #A37430;
+  --marketing-ochre-bg:      #F4ECDC;
+  --marketing-dusty-blue:    #5E7691;
+  --marketing-dusty-blue-bg: #E5EBF1;
+
   --bg:              var(--paper);
   --bg-elevated:     var(--pure-white);
   --bg-subtle:       var(--ink-50);
