@@ -22,7 +22,7 @@ There's even a fair version of the free trial. Letting people experience the rea
 
 The line is crossed when the paywall is built to extract a decision instead of inform one.
 
-A trial says: here's the thing working, now choose. The pattern I'm describing does the opposite. It withholds the core function until you've spent your effort — found the app, learned it, imported your file, formed the intention — and then springs the price at the exact moment quitting feels like a waste. That's not pricing. That's leverage manufactured out of your own sunk effort. The listing implied the app does the job; the app does the job *of getting you to the paywall*.
+A trial says: here's the thing working, now choose. The pattern I'm describing does the opposite. It withholds the core function until you've spent your effort — found the app, learned it, imported your file, formed the intention — and then springs the price at the exact moment quitting feels like a waste. That's not pricing. That's pressure manufactured out of your own sunk effort. The listing implied the app does the job; the app does the job *of getting you to the paywall*.
 
 You can usually feel the tells. The price hidden until the last screen. The "free" that turns out to mean "watch it almost work." The annual plan pre-selected and the cancel link nowhere near the buy button. None of that is the behaviour of someone confident their tool is worth the money. It's the behaviour of someone who has measured, precisely, the moment you're least able to say no — and built the app around that moment.
 
