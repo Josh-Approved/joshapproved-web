@@ -5,8 +5,9 @@ import Footer from '../components/Footer.astro';
 import AppCard from '../components/AppCard.astro';
 import { APPS } from '../data/apps.ts';
 
-const shipped = APPS.filter((a) => a.status === 'shipped');
-const inProgress = APPS.filter((a) => a.status === 'in-progress').length;
+const visible = APPS.filter((a) => a.status === 'shipped' || a.status === 'in-progress');
+const shippedCount = APPS.filter((a) => a.status === 'shipped').length;
+const inProgressCount = APPS.filter((a) => a.status === 'in-progress').length;
 ---
 <Base
   title="Josh Approved — utility apps that do one thing and leave you alone"
@@ -35,12 +36,12 @@ const inProgress = APPS.filter((a) => a.status === 'in-progress').length;
     <div id="apps" class="section-head">
       <h2>Apps</h2>
       <span class="meta">
-        {shipped.length} SHIPPED{inProgress > 0 ? ` · ${inProgress} IN PROGRESS` : ''}
+        {shippedCount} SHIPPED{inProgressCount > 0 ? ` · ${inProgressCount} IN BETA` : ''}
       </span>
     </div>
 
     <div class="grid">
-      {shipped.map((app) => <AppCard app={app} />)}
+      {visible.map((app) => <AppCard app={app} />)}
     </div>
 
     <section class="principles">

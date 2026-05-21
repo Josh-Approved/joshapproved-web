@@ -21,8 +21,14 @@ const { app } = Astro.props;
     <section class="hero">
       <AppIcon app={app} size="lg" />
       <div>
-        <h1>{app.name}</h1>
+        <div class="title-row">
+          <h1>{app.name}</h1>
+          {app.status === 'in-progress' && <span class="beta-tag">BETA</span>}
+        </div>
         <p>{app.tagline}</p>
+        {app.status === 'in-progress' && (
+          <p class="beta-note">In TestFlight while I finish the last device-testing pass. Public listing soon — the GitHub source is open today.</p>
+        )}
       </div>
     </section>
 
@@ -120,17 +126,40 @@ const { app } = Astro.props;
     gap: 28px;
     align-items: center;
   }
+  .hero .title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 0 0 6px;
+  }
   .hero h1 {
     font-size: 36px;
     font-weight: 600;
     letter-spacing: -0.02em;
-    margin: 0 0 6px;
+    margin: 0;
+  }
+  .beta-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--marketing-terracotta);
+    border: 1px solid var(--marketing-terracotta);
+    border-radius: 4px;
+    padding: 3px 7px;
+    line-height: 1;
   }
   .hero p {
     font-size: 16px;
     color: var(--fg-muted);
     margin: 0;
     line-height: 1.5;
+  }
+  .hero .beta-note {
+    font-size: 14px;
+    color: var(--marketing-terracotta);
+    margin-top: 8px;
   }
   .cta-row {
     display: flex;

@@ -9,8 +9,9 @@ const { app } = Astro.props;
 <article class="card">
   <a class="card-main" href={`/apps/${app.slug}/`}>
     <AppIcon app={app} size="sm" />
-    <div>
+    <div class="title-row">
       <h3>{app.name}</h3>
+      {app.status === 'in-progress' && <span class="beta-tag">BETA</span>}
     </div>
     <p>{app.description}</p>
   </a>
@@ -57,6 +58,23 @@ const { app } = Astro.props;
     letter-spacing: -0.02em;
     color: var(--fg);
     margin: 0;
+  }
+  .title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .beta-tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--marketing-terracotta);
+    border: 1px solid var(--marketing-terracotta);
+    border-radius: 4px;
+    padding: 2px 6px;
+    line-height: 1;
   }
   .card p {
     font-size: 14px;
