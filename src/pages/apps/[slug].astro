@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import AppIcon from '../../components/AppIcon.astro';
-import { APPS, PLATFORM_LABEL } from '../../data/apps.ts';
+import { APPS, PLATFORM_LABEL, platformUrl } from '../../data/apps.ts';
 
 export function getStaticPaths() {
   return APPS.map((app) => ({
@@ -50,7 +50,22 @@ const { app } = Astro.props;
     <div class="specs">
       <div class="spec">
         <div class="lab">Platforms</div>
-        <div class="val">{app.platforms.map((p) => PLATFORM_LABEL[p]).join(' · ')}</div>
+        <div class="val">
+          {app.platforms.map((p, i) => {
+            const label = PLATFORM_LABEL[p] ?? p;
+            const url = platformUrl(p, app);
+            return (
+              <>
+                {i > 0 && <span class="sep" aria-hidden="true"> · </span>}
+                {url ? (
+                  <a class="platform-link" href={url} rel="noopener">{label}</a>
+                ) : (
+                  <span>{label}</span>
+                )}
+              </>
+            );
+          })}
+        </div>
       </div>
       <div class="spec">
         <div class="lab">Permissions</div>
@@ -177,6 +192,16 @@ const { app } = Astro.props;
     font-weight: 500;
     color: var(--fg);
     margin-top: 4px;
+  }
+  .platform-link {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--marketing-terracotta);
+    text-underline-offset: 3px;
+    transition: color 120ms;
+  }
+  .platform-link:hover {
+    color: var(--marketing-terracotta);
   }
   .body {
     padding: 24px 0;

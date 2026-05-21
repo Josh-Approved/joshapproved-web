@@ -1,20 +1,36 @@
 ---
 import type { AppRecord } from '../data/apps.ts';
-import { PLATFORM_LABEL } from '../data/apps.ts';
+import { PLATFORM_LABEL, platformUrl } from '../data/apps.ts';
 import AppIcon from './AppIcon.astro';
 
 type Props = { app: AppRecord };
 const { app } = Astro.props;
-const platforms = app.platforms.map((p) => PLATFORM_LABEL[p] ?? p).join(' · ');
 ---
-<a class="card" href={`/apps/${app.slug}/`}>
-  <AppIcon app={app} size="sm" />
-  <div>
-    <h3>{app.name}</h3>
+<article class="card">
+  <a class="card-main" href={`/apps/${app.slug}/`}>
+    <AppIcon app={app} size="sm" />
+    <div>
+      <h3>{app.name}</h3>
+    </div>
+    <p>{app.description}</p>
+  </a>
+  <div class="platforms">
+    {app.platforms.map((p, i) => {
+      const label = PLATFORM_LABEL[p] ?? p;
+      const url = platformUrl(p, app);
+      return (
+        <>
+          {i > 0 && <span class="dot" aria-hidden="true">·</span>}
+          {url ? (
+            <a class="platform-link" href={url} rel="noopener">{label}</a>
+          ) : (
+            <span class="platform-link platform-link--inert">{label}</span>
+          )}
+        </>
+      );
+    })}
   </div>
-  <p>{app.description}</p>
-  <div class="platforms">{platforms}</div>
-</a>
+</article>
 
 <style>
   .card {
@@ -23,12 +39,17 @@ const platforms = app.platforms.map((p) => PLATFORM_LABEL[p] ?? p).join(' · ');
     display: flex;
     flex-direction: column;
     gap: 14px;
-    text-decoration: none;
-    color: inherit;
     transition: background 150ms cubic-bezier(0.2, 0, 0, 1);
   }
   .card:hover {
     background: var(--pure-white);
+  }
+  .card-main {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-decoration: none;
+    color: inherit;
   }
   .card h3 {
     font-size: 17px;
@@ -45,12 +66,30 @@ const platforms = app.platforms.map((p) => PLATFORM_LABEL[p] ?? p).join(' · ');
   }
   .platforms {
     display: flex;
+    align-items: center;
+    flex-wrap: wrap;
     gap: 6px;
-    margin-top: 4px;
+    margin-top: 0;
     font-family: var(--font-mono);
     font-size: 10px;
-    color: var(--fg-muted);
     text-transform: uppercase;
     letter-spacing: 0.04em;
+  }
+  .platforms .dot {
+    color: var(--fg-subtle);
+  }
+  .platform-link {
+    color: var(--fg-muted);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 120ms, border-color 120ms;
+  }
+  a.platform-link:hover {
+    color: var(--fg);
+    border-bottom-color: var(--marketing-terracotta);
+  }
+  .platform-link--inert {
+    color: var(--fg-muted);
+    cursor: default;
   }
 </style>

@@ -8,9 +8,12 @@ type Props = {
 
 const { app, size = 'sm' } = Astro.props;
 const cornerCheck = size === 'lg' ? 14 : 9;
+const hasImage = Boolean(app.icon);
 ---
-<div class={`frame frame--${size}`}>
-  {app.from && app.to ? (
+<div class={`frame frame--${size}${hasImage ? ' frame--image' : ''}`}>
+  {hasImage ? (
+    <img src={app.icon} alt="" class="icon-img" />
+  ) : app.from && app.to ? (
     <div class="ig">
       {app.from}<em>{app.to}</em>
     </div>
@@ -58,6 +61,16 @@ const cornerCheck = size === 'lg' ? 14 : 9;
     --ig-size: 14px;
     --ig-em-size: 9px;
   }
+  .frame--image {
+    background: transparent;
+    border: none;
+  }
+  .icon-img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
   .ig {
     font-size: var(--ig-size);
     font-weight: 600;
@@ -92,5 +105,6 @@ const cornerCheck = size === 'lg' ? 14 : 9;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 0 0 2px var(--paper);
   }
 </style>
