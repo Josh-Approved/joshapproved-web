@@ -7,26 +7,17 @@ type Props = {
 };
 
 const { app, size = 'sm' } = Astro.props;
-const px = size === 'lg' ? 96 : 56;
-const radius = size === 'lg' ? 22 : 14;
-const cornerPx = size === 'lg' ? 22 : 14;
 const cornerCheck = size === 'lg' ? 14 : 9;
-const cornerOffset = size === 'lg' ? 8 : 5;
-const cornerRadius = size === 'lg' ? 5 : 4;
-const glyphSize = size === 'lg' ? 36 : 22;
 ---
-<div class="frame" style={`width: ${px}px; height: ${px}px; border-radius: ${radius}px;`}>
+<div class={`frame frame--${size}`}>
   {app.from && app.to ? (
-    <div class="ig" style={size === 'lg' ? 'font-size: 22px;' : 'font-size: 14px;'}>
-      {app.from}<em style={size === 'lg' ? 'font-size: 16px;' : 'font-size: 9px;'}>{app.to}</em>
+    <div class="ig">
+      {app.from}<em>{app.to}</em>
     </div>
   ) : (
-    <div class="glyph" style={`font-size: ${glyphSize}px;`}>{app.glyph ?? '·'}</div>
+    <div class="glyph">{app.glyph ?? '·'}</div>
   )}
-  <span
-    class="corner"
-    style={`width: ${cornerPx}px; height: ${cornerPx}px; right: ${cornerOffset}px; bottom: ${cornerOffset}px; border-radius: ${cornerRadius}px;`}
-  >
+  <span class="corner">
     <svg width={cornerCheck} height={cornerCheck} viewBox="0 0 24 24" fill="none" stroke="#FAFAF7" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <polyline points="20 6 9 17 4 12" />
     </svg>
@@ -35,6 +26,9 @@ const glyphSize = size === 'lg' ? 36 : 22;
 
 <style>
   .frame {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    border-radius: var(--icon-radius);
     background: var(--paper);
     border: 1px solid var(--hairline);
     position: relative;
@@ -44,7 +38,28 @@ const glyphSize = size === 'lg' ? 36 : 22;
     overflow: hidden;
     flex-shrink: 0;
   }
+  .frame--lg {
+    --icon-size: 96px;
+    --icon-radius: 22px;
+    --corner-size: 22px;
+    --corner-offset: 8px;
+    --corner-radius: 5px;
+    --glyph-size: 36px;
+    --ig-size: 22px;
+    --ig-em-size: 16px;
+  }
+  .frame--sm {
+    --icon-size: 56px;
+    --icon-radius: 14px;
+    --corner-size: 14px;
+    --corner-offset: 5px;
+    --corner-radius: 4px;
+    --glyph-size: 22px;
+    --ig-size: 14px;
+    --ig-em-size: 9px;
+  }
   .ig {
+    font-size: var(--ig-size);
     font-weight: 600;
     letter-spacing: -0.02em;
     color: var(--fg);
@@ -52,6 +67,7 @@ const glyphSize = size === 'lg' ? 36 : 22;
     text-align: center;
   }
   .ig em {
+    font-size: var(--ig-em-size);
     font-style: normal;
     color: var(--fg-subtle);
     display: block;
@@ -59,12 +75,18 @@ const glyphSize = size === 'lg' ? 36 : 22;
     margin-top: 2px;
   }
   .glyph {
+    font-size: var(--glyph-size);
     font-weight: 500;
     color: var(--fg);
     line-height: 1;
     text-align: center;
   }
   .corner {
+    width: var(--corner-size);
+    height: var(--corner-size);
+    right: var(--corner-offset);
+    bottom: var(--corner-offset);
+    border-radius: var(--corner-radius);
     position: absolute;
     background: var(--accent);
     display: inline-flex;

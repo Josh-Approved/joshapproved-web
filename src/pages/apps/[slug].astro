@@ -152,7 +152,7 @@ const { app } = Astro.props;
     border-color: var(--fg);
   }
   .specs {
-    padding: 0 0 32px;
+    margin: 0 0 32px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1px;
@@ -222,12 +222,26 @@ const { app } = Astro.props;
     line-height: 1.6;
   }
   @media (max-width: 640px) {
+    .container {
+      padding: 0 20px;
+    }
     .hero {
       grid-template-columns: 72px 1fr;
-      gap: 18px;
+      gap: 16px;
+      padding: 32px 0 24px;
+    }
+    .hero :global(.frame--lg) {
+      --icon-size: 72px;
+      --icon-radius: 18px;
+      --corner-size: 18px;
+      --corner-offset: 6px;
+      --corner-radius: 4px;
+      --glyph-size: 28px;
+      --ig-size: 18px;
+      --ig-em-size: 13px;
     }
     .hero h1 {
-      font-size: 28px;
+      font-size: 26px;
     }
     .specs {
       grid-template-columns: repeat(2, 1fr);

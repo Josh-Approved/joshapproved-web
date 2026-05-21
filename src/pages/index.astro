@@ -186,6 +186,9 @@ const inProgress = APPS.filter((a) => a.status === 'in-progress').length;
     .grid {
       grid-template-columns: repeat(2, 1fr);
     }
+    .grid > :global(:nth-child(odd):last-child) {
+      grid-column: 1 / -1;
+    }
     .principles {
       grid-template-columns: 1fr;
       gap: 18px;

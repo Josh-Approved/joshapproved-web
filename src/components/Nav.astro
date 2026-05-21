@@ -72,11 +72,19 @@ const { variant = 'full', crumb } = Astro.props;
     font-weight: 500;
   }
   @media (max-width: 640px) {
+    .nav {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      padding: 16px 0;
+    }
     .nav-left {
-      gap: 16px;
+      gap: 14px;
+      flex-wrap: wrap;
     }
     .links {
-      gap: 16px;
+      gap: 14px 18px;
+      flex-wrap: wrap;
     }
   }
 </style>
