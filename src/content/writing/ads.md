@@ -28,7 +28,7 @@ And there's the part that's nearly invisible from your seat: targeted ads are po
 
 There are no ads in my apps. There's no ad code, no ad SDK, no analytics feeding an ad profile. The screen you see is the whole app and it isn't renting space to anyone.
 
-I'll be straight about how that's paid for, because "no ads" has to add up somehow. Mostly it's paid by the fact that these apps are small and run on your device, so they barely cost anything to keep alive — there's no server bill growing with every user. Where something does cost me money, the app might cost money, and I'll say plainly that it's covering a real cost rather than unlocking a feature I held back. And there's a "buy me a coffee" link for people who want to chip in. It's an offer, not a toll. If you ignore it the app is identical.
+I'll be straight about how that's paid for, because "no ads" has to add up somehow. Mostly it's paid by the fact that these apps don't have servers, ads, or analytics behind them, so they barely cost anything to keep alive — there's no growing bill with every user. Where something does cost me money, the app might cost money, and I'll say plainly that it's covering a real cost rather than unlocking a feature I held back. And there's a "buy me a coffee" link for people who want to chip in. It's an offer, not a toll. If you ignore it the app is identical.
 
 That choice has a cost too, and it lands on me, not you: this will never be the free thing that reached a hundred million people on the back of an ad network. I've made my peace with that. I'd rather build something small that's honestly yours than something huge that's quietly working against you.
 

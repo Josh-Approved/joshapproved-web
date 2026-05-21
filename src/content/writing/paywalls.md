@@ -32,7 +32,7 @@ And, the same as everywhere else in this series: this mostly isn't villainy. It'
 
 There's no locked core feature in my apps. The thing the app is for is the thing the app does, for free, the first time, with nothing held hostage. The whole app is the free app.
 
-I'll be honest about the economics rather than pretend they don't exist. This works because the apps are deliberately small and run on your device, so they cost very little to keep alive. If an app ever has a real, ongoing cost — a service it truly depends on — it might cost money, and if it does I'll say so plainly, up front, before you've spent any effort, and the charge will be for that real cost, not a toll on the feature you came for. There's also a "buy me a coffee" link. It is an offer with no lock behind it. Pay it or don't; the app is exactly the same either way.
+I'll be honest about the economics rather than pretend they don't exist. This works because the apps are tightly scoped and don't have servers behind them, so they cost very little to keep alive. If an app ever has a real, ongoing cost — a service it truly depends on — it might cost money, and if it does I'll say so plainly, up front, before you've spent any effort, and the charge will be for that real cost, not a toll on the feature you came for. There's also a "buy me a coffee" link. It is an offer with no lock behind it. Pay it or don't; the app is exactly the same either way.
 
 That choice costs me the most reliable money-making mechanism in the business, and I know it. I'd rather have your trust than your trapped conversion.
 

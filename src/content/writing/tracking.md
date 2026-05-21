@@ -34,6 +34,6 @@ My apps don't have analytics in them. Not a stricter analytics, not anonymised a
 
 I'll be just as honest about the cost of that as I was about the other side: it means I'm partly blind. I don't know which feature you use most. I don't get a chart when something confuses you. I find out the slower, older way — you email me, or you don't come back and I have to think hard about why. I've decided that's a fair price, and that the burden of being a little blind belongs on me, not on you.
 
-So the work happens on your device and stays there. There's no server collecting a record of what you did, because there's no server. There's nothing to leak, nothing to sell, nothing to hand over, and nothing that changes meaning the day the company is acquired — there is no company.
+So your data stays with you. There's no server collecting a record of what you did, because there's no server. There's nothing to leak, nothing to sell, nothing to hand over, and nothing that changes meaning the day the company is acquired — there is no company.
 
 You don't have to take my word for any of this. The apps are open source. If you want to confirm that nothing is being recorded, the code is right there, and so is a person whose name is on it.
