@@ -43,6 +43,32 @@ export function platformUrl(p: Platform, app: AppRecord): string | undefined {
 
 export const APPS: AppRecord[] = [
   {
+    slug: 'split-expenses',
+    name: 'Split Expenses',
+    tagline: 'Split shared costs with a group and see who owes whom. No paywall, no ads, no tracking, no accounts.',
+    description: 'Track who paid for what on a trip, in a house, or as a couple, and settle up in the fewest payments. Your data stays with you.',
+    tag: 'util',
+    platforms: ['ios', 'android'],
+    status: 'planned',
+    github: 'https://github.com/Josh-Approved/split-expenses',
+    icon: '/assets/app-icons/split-expenses.png',
+    permissions: 'Camera, notifications (optional)',
+    network: 'Optional',
+    license: 'MIT',
+    body: [
+      'Make a group for a trip, a household, or a couple, add what people pay for in any currency, and Split Expenses keeps a running who-owes-whom — then shows everyone the fewest payments that settle it. Tap any balance to see exactly how it was worked out.',
+      "Share a group with a link or a QR code — no account, and nothing held on a server of mine. Everyone's phone stays in sync, and the balances are worked out on each phone so you all see the same numbers. Settle up by recording a cash payment or handing off to Venmo, PayPal, or Cash App — the app never touches the money.",
+    ],
+    privacy: {
+      headline: 'What this app collects',
+      bullets: [
+        'No analytics, no crash reports, no usage logs. No accounts — there is nothing to sign up for.',
+        'Your groups live on your device. A shared group is passed, encrypted end-to-end, through free public drop boxes I do not run and cannot read.',
+        'Currency rates are fetched as a whole table and converted on your phone — a rate lookup reveals nothing about your expenses.',
+      ],
+    },
+  },
+  {
     slug: 'packing-list',
     name: 'Packing List',
     tagline: 'A packing checklist that builds itself from the kind of trip you are taking.',
