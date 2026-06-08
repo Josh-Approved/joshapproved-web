@@ -6,11 +6,17 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
-    "sync-design-system": "node scripts/sync-design-system.mjs"
+    "preview": "npm run build && wrangler dev",
+    "sync-design-system": "node scripts/sync-design-system.mjs",
+    "deploy": "npm run build && wrangler deploy",
+    "cf-typegen": "wrangler types"
   },
   "devDependencies": {
     "astro": "^5.0.0",
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "wrangler": "^4.98.0"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "12"
   }
 }
