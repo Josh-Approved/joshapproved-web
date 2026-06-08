@@ -34,13 +34,13 @@ const { app } = Astro.props;
 
     <div class="cta-row">
       {app.appStoreUrl && (
-        <a class="btn primary" href={app.appStoreUrl} rel="noopener">
-          Get on App Store
+        <a class="badge-link" href={app.appStoreUrl} rel="noopener" aria-label="Download on the App Store">
+          <img src="/assets/badges/apple-app-store.svg" alt="Download on the App Store" width="132" height="44" />
         </a>
       )}
       {app.playStoreUrl && (
-        <a class="btn primary" href={app.playStoreUrl} rel="noopener">
-          Get on Google Play
+        <a class="badge-link" href={app.playStoreUrl} rel="noopener" aria-label="Get it on Google Play">
+          <img src="/assets/badges/google-play.svg" alt="Get it on Google Play" width="149" height="44" />
         </a>
       )}
       {app.webStoreUrl && (
@@ -163,9 +163,23 @@ const { app } = Astro.props;
   }
   .cta-row {
     display: flex;
-    gap: 10px;
+    align-items: center;
+    gap: 12px;
     padding: 8px 0 24px;
     flex-wrap: wrap;
+  }
+  .badge-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  .badge-link img {
+    height: 44px;
+    width: auto;
+    display: block;
+  }
+  .badge-link:hover {
+    opacity: 0.82;
   }
   .btn {
     height: 44px;
