@@ -9,6 +9,11 @@ export type AppRecord = {
   platforms: Platform[];
   status: 'shipped' | 'in-progress' | 'planned';
   github: string;
+  /** Longer-tail descriptor woven into the page <title> for search (honest,
+   *  no doorway pages). e.g. "Free interval & Tabata timer". */
+  seoTitle?: string;
+  /** Honest category keywords for the SoftwareApplication JSON-LD. */
+  keywords?: string;
   icon?: string;
   glyph?: string;
   from?: string;
@@ -51,6 +56,8 @@ export const APPS: AppRecord[] = [
     platforms: ['ios', 'android'],
     status: 'planned',
     github: 'https://github.com/Josh-Approved/split-expenses',
+    seoTitle: 'Split shared costs, no account',
+    keywords: 'split expenses, bill splitting, who owes whom, group expenses, settle up, no account, free',
     icon: '/assets/app-icons/split-expenses.png',
     permissions: 'Camera, notifications (optional)',
     network: 'Optional',
@@ -77,6 +84,8 @@ export const APPS: AppRecord[] = [
     platforms: ['ios'],
     status: 'in-progress',
     github: 'https://github.com/Josh-Approved/packing-list',
+    seoTitle: 'A packing checklist that builds itself',
+    keywords: 'packing list, travel checklist, packing checklist, trip planner, what to pack, free, no ads',
     icon: '/assets/app-icons/packing-list.png',
     permissions: 'None',
     network: 'None',
@@ -103,6 +112,8 @@ export const APPS: AppRecord[] = [
     platforms: ['ios', 'android'],
     status: 'shipped',
     github: 'https://github.com/Josh-Approved/workout-timer',
+    seoTitle: 'Free interval & Tabata timer',
+    keywords: 'interval timer, tabata timer, hiit timer, workout timer, circuit timer, free, no ads, no accounts',
     icon: '/assets/app-icons/free-workout-timer.png',
     appStoreUrl: 'https://apps.apple.com/us/app/workout-timer-josh-approved/id6767314178',
     permissions: 'None',
@@ -130,6 +141,8 @@ export const APPS: AppRecord[] = [
     platforms: ['chrome'],
     status: 'shipped',
     github: 'https://github.com/Josh-Approved/ask-ai',
+    seoTitle: 'Ask questions about any page or video, privately',
+    keywords: 'private AI, on-device AI, page summary, youtube summary, chrome extension, no tracking, free',
     icon: '/assets/app-icons/ask-ai.png',
     webStoreUrl: 'https://chromewebstore.google.com/detail/ask-ai/ijppmdedkjcpicffbinafhegdmkfdeff',
     permissions: 'Active tab',
@@ -157,6 +170,8 @@ export const APPS: AppRecord[] = [
     platforms: ['chrome'],
     status: 'shipped',
     github: 'https://github.com/Josh-Approved/private-ai-summary',
+    seoTitle: 'Private page summarizer & news critique',
+    keywords: 'private summarizer, on-device AI, news critique, page summary, chrome extension, no tracking, free',
     icon: '/assets/app-icons/private-ai-summary.png',
     webStoreUrl: 'https://chromewebstore.google.com/detail/private-ai-summary/jbfgdnfdmolgdpohlcclaolkcanddjnm',
     permissions: 'Active tab',

@@ -13,14 +13,14 @@ const { variant = 'full', crumb } = Astro.props;
     <Wordmark size={variant === 'crumb' ? 'sm' : 'md'} />
     {variant === 'full' && (
       <div class="links">
-        <a href="/#apps">Apps</a>
+        <a href="/apps/">Apps</a>
         <a href="/writing/">Writing</a>
         <a href="/about/">About</a>
         <a href="https://github.com/Josh-Approved" rel="noopener">Source</a>
       </div>
     )}
     {variant === 'crumb' && crumb && (
-      <span class="crumb"><a href="/#apps">apps</a> &nbsp;/&nbsp; <b>{crumb}</b></span>
+      <span class="crumb"><a href="/apps/">apps</a> &nbsp;/&nbsp; <b>{crumb}</b></span>
     )}
   </div>
   {variant === 'full' && (
