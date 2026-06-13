@@ -13,8 +13,34 @@ export function getStaticPaths() {
 }
 
 const { app } = Astro.props;
+
+const pageTitle = app.seoTitle
+  ? `${app.name} — ${app.seoTitle} · Josh Approved`
+  : `${app.name} · Josh Approved`;
+
+// SoftwareApplication structured data — honest signal for search, no doorway
+// content. Price 0 (pay-what-you-want); only emit an AggregateRating when real.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: app.name,
+  description: app.description,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: app.platforms
+    .map((p) => ({ ios: 'iOS', android: 'Android', mac: 'macOS', chrome: 'Chrome', firefox: 'Firefox' }[p] ?? p))
+    .join(', '),
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  isAccessibleForFree: true,
+  url: `https://joshapproved.com/apps/${app.slug}/`,
+  ...(app.keywords ? { keywords: app.keywords } : {}),
+  ...(app.appStoreUrl || app.playStoreUrl || app.webStoreUrl
+    ? { downloadUrl: app.appStoreUrl ?? app.playStoreUrl ?? app.webStoreUrl }
+    : {}),
+  author: { '@type': 'Organization', name: 'Josh Approved', url: 'https://joshapproved.com' },
+};
 ---
-<Base title={`${app.name} · Josh Approved`} description={app.tagline}>
+<Base title={pageTitle} description={app.tagline}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <div class="container">
     <Nav variant="crumb" crumb={app.name} />
 

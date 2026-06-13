@@ -1,0 +1,80 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import AppCard from '../../components/AppCard.astro';
+import { APPS } from '../../data/apps.ts';
+
+// Catalog page — the canonical "all apps" surface (mirrors the in-app
+// "More from Josh Approved" cross-promo). Shipped first, then beta, then planned.
+const order = { shipped: 0, 'in-progress': 1, planned: 2 } as const;
+const apps = [...APPS].sort((a, b) => order[a.status] - order[b.status]);
+const shippedCount = APPS.filter((a) => a.status === 'shipped').length;
+const betaCount = APPS.filter((a) => a.status === 'in-progress').length;
+---
+<Base
+  title="Apps — Josh Approved"
+  description="Every Josh Approved app: free, open-source, privacy-first utilities. No paywall, no ads, no tracking, no accounts — your data stays with you."
+>
+  <div class="container">
+    <Nav variant="crumb" crumb="Apps" />
+
+    <section class="head">
+      <h1>Apps</h1>
+      <p>Free, open-source utility apps that do one thing and leave you alone. No paywall, no ads, no tracking, no accounts — your data stays with you.</p>
+      <span class="meta">{shippedCount} SHIPPED{betaCount > 0 ? ` · ${betaCount} IN BETA` : ''}</span>
+    </section>
+
+    <div class="grid">
+      {apps.map((app) => <AppCard app={app} />)}
+    </div>
+
+    <Footer />
+  </div>
+</Base>
+
+<style>
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .head {
+    padding: 48px 0 28px;
+    max-width: 640px;
+  }
+  .head h1 {
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0 0 14px;
+  }
+  .head p {
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--fg-muted);
+    margin: 0 0 14px;
+  }
+  .head .meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--fg-muted);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1px;
+    background: var(--hairline);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 56px;
+  }
+  @media (max-width: 640px) {
+    .container { padding: 0 20px; }
+    .head { padding: 32px 0 20px; }
+    .head h1 { font-size: 30px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
