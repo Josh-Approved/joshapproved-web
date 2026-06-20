@@ -1,3 +1,5 @@
+import { STORE_AVAILABILITY } from './storeAvailability.generated';
+
 export type Platform = 'ios' | 'android' | 'mac' | 'chrome' | 'firefox';
 
 export type AppRecord = {
@@ -46,7 +48,7 @@ export function platformUrl(p: Platform, app: AppRecord): string | undefined {
   }
 }
 
-export const APPS: AppRecord[] = [
+const RAW_APPS: AppRecord[] = [
   {
     slug: 'split-expenses',
     name: 'Split Expenses',
@@ -219,6 +221,21 @@ export const APPS: AppRecord[] = [
     },
   },
 ];
+
+// Overlay live App Store + Play availability (generated from the store APIs by
+// josh-approved-factory/scripts/sync-web-store-status.mjs). It only fills facts:
+// upgrades status to 'shipped' when an app is actually live, and adds a store link
+// for a store it's live on — never overwriting hand-set copy or a hand-set URL.
+export const APPS: AppRecord[] = RAW_APPS.map((app) => {
+  const live = STORE_AVAILABILITY[app.slug];
+  if (!live) return app;
+  return {
+    ...app,
+    status: live.status ?? app.status,
+    appStoreUrl: app.appStoreUrl ?? live.appStoreUrl,
+    playStoreUrl: app.playStoreUrl ?? live.playStoreUrl,
+  };
+});
 
 export const TAGS = [
   { id: 'all', label: 'All' },
