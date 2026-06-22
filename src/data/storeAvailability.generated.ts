@@ -8,10 +8,10 @@ export type StoreAvailability = {
   androidVersion?: string;
 };
 
-export const STORE_AVAILABILITY_GENERATED_AT = "2026-06-19T23:38:05.635Z";
+export const STORE_AVAILABILITY_GENERATED_AT = "2026-06-22T22:16:41.616Z";
 
 export const STORE_AVAILABILITY: Record<string, StoreAvailability> = {
   "free-workout-timer": {"status":"shipped","appStoreUrl":"https://apps.apple.com/us/app/id6767314178","iosVersion":"1.1","playStoreUrl":"https://play.google.com/store/apps/details?id=com.joshapproved.freeworkouttimer","androidVersion":"6 (1.1.2)"},
-  "grocery-list": {"status":"shipped","appStoreUrl":"https://apps.apple.com/us/app/id6779417031","iosVersion":"1.0"},
-  "packing-list": {"status":"shipped","appStoreUrl":"https://apps.apple.com/us/app/id6770051644","iosVersion":"1.0"},
+  "grocery-list": {"status":"shipped","appStoreUrl":"https://apps.apple.com/us/app/id6779417031","iosVersion":"1.0","playStoreUrl":"https://play.google.com/store/apps/details?id=com.joshapproved.grocerylist","androidVersion":"7 (1.0.1)"},
+  "packing-list": {"status":"shipped","appStoreUrl":"https://apps.apple.com/us/app/id6770051644","iosVersion":"1.0","playStoreUrl":"https://play.google.com/store/apps/details?id=com.joshapproved.packinglist","androidVersion":"1.0.1"},
 };
