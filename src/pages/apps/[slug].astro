@@ -88,39 +88,66 @@ if (hasMobileStore) {
       var isIPhone = /iPhone|iPod/.test(ua);
       var isAndroidPhone = /Android/.test(ua) && /Mobile/.test(ua);
 
-      // Fire the store handoff ONLY after the full app page has loaded and
-      // painted. This is the fix for the blank-tab bug: with the real page
-      // already on screen, the "Open in the App Store?" prompt sits on top of
-      // it, and tapping Cancel returns the visitor to the rendered page rather
-      // than a blank document. (Firing during load aborts the in-progress
-      // render → blank tab. Hidden iframes are dead on modern iOS, so we don't
-      // use them; the page's own visible store button is the manual fallback if
-      // auto-open is ever suppressed, e.g. inside an in-app webview.)
+      // Run anything store-related ONLY after the full app page has loaded and
+      // painted, so the real page is the visible document the whole time.
       function afterPaint(run) {
         function go() {
           requestAnimationFrame(function () {
-            requestAnimationFrame(function () {
-              setTimeout(run, 350);
-            });
+            requestAnimationFrame(function () { setTimeout(run, 350); });
           });
         }
         if (document.readyState === 'complete') go();
         else window.addEventListener('load', go, { once: true });
       }
 
+      // Open the store WITHOUT touching the top frame. Pointing a hidden iframe
+      // at the store scheme asks iOS to show "Open in the App Store?" over our
+      // fully-rendered page; the top document is never navigated, so it cannot
+      // go blank and Cancel leaves the visitor on the page. (A top-frame
+      // window.location to the scheme is exactly what produced the blank grey
+      // tab — never do that here.)
+      function launchViaIframe(scheme) {
+        var ifr = document.createElement('iframe');
+        ifr.setAttribute('aria-hidden', 'true');
+        ifr.style.cssText = 'position:absolute;left:-9999px;top:0;width:1px;height:1px;border:0;visibility:hidden;';
+        document.body.appendChild(ifr);
+        ifr.src = scheme;
+      }
+
+      // If the store didn't take over (older iOS or in-app webviews where the
+      // iframe launch is suppressed), reveal the install card over the rendered
+      // page as an unmissable tap target — never a dead end, never a blank tab.
+      function revealCard() {
+        var m = document.getElementById('install-modal');
+        if (!m) return;
+        var qr = m.querySelector('.install-qr');
+        if (qr) qr.style.display = 'none'; // pointless when you're already on the phone
+        m.hidden = false;
+        document.documentElement.style.overflow = 'hidden';
+      }
+
+      function handoffPhone(scheme) {
+        launchViaIframe(scheme);
+        var t = setTimeout(function () {
+          if (document.visibilityState === 'visible') revealCard();
+        }, 1200);
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden) clearTimeout(t);
+        }, { once: true });
+      }
+
       if (isIPhone) {
-        // Only hand off if the App Store is live for this app; otherwise stay
-        // on the page (it shows the real availability / BETA status).
-        if (iosScheme) afterPaint(function () { window.location.href = iosScheme; });
+        // Only act if the App Store is live for this app; else stay on the page.
+        if (iosScheme) afterPaint(function () { handoffPhone(iosScheme); });
         return;
       }
       if (isAndroidPhone) {
-        if (androidScheme) afterPaint(function () { window.location.href = androidScheme; });
+        if (androidScheme) afterPaint(function () { handoffPhone(androidScheme); });
         return;
       }
 
-      // Desktop / iPad / tablet / unknown → show the install modal if we built
-      // one (only built when at least one store is live).
+      // Desktop / iPad / tablet / unknown → show the install modal (with QR) if
+      // we built one (only built when at least one store is live).
       function openModal() {
         var m = document.getElementById('install-modal');
         if (m) { m.hidden = false; document.documentElement.style.overflow = 'hidden'; }
