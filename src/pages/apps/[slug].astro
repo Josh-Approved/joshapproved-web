@@ -4,6 +4,7 @@ import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import AppIcon from '../../components/AppIcon.astro';
 import { APPS, PLATFORM_LABEL, platformUrl } from '../../data/apps.ts';
+import QRCode from 'qrcode';
 
 export function getStaticPaths() {
   return APPS.map((app) => ({
@@ -38,9 +39,97 @@ const jsonLd = {
     : {}),
   author: { '@type': 'Organization', name: 'Josh Approved', url: 'https://joshapproved.com' },
 };
+
+// --- Smart install link (?install=1) ---------------------------------------
+// The install link is this SAME canonical app URL plus ?install=1. Natural
+// navigation (no param) is untouched. With the param, a tiny client script
+// detects the device and hands off to the live store via its app URL scheme so
+// this page stays in the browser tab. Store availability is read straight from
+// the merged app data — a store URL is present ONLY when that store is live — so
+// we never route anyone to a listing that isn't approved yet, and every new app
+// gets a working link automatically the moment its store goes live.
+const installUrl = `https://joshapproved.com/apps/${app.slug}?install=1`;
+
+const iosHttps = app.appStoreUrl;        // present ⇒ App Store is live
+const androidHttps = app.playStoreUrl;   // present ⇒ Google Play is live
+const webHttps = app.webStoreUrl;        // present ⇒ browser extension is live
+
+const iosId = iosHttps?.match(/id(\d+)/)?.[1] ?? null;
+const androidPkg = androidHttps?.match(/[?&]id=([^&]+)/)?.[1] ?? null;
+const iosScheme = iosId ? `itms-apps://itunes.apple.com/app/id${iosId}` : null;
+const androidScheme = androidPkg ? `market://details?id=${androidPkg}` : null;
+
+const hasMobileStore = Boolean(iosHttps || androidHttps);
+const hasAnyStore = Boolean(iosHttps || androidHttps || webHttps);
+
+// QR built once, at build time — only when a phone store is actually live.
+// Scanning it on a phone re-runs the same detection → the right store.
+let qrSvg = '';
+if (hasMobileStore) {
+  qrSvg = await QRCode.toString(installUrl, {
+    type: 'svg',
+    margin: 1,
+    errorCorrectionLevel: 'M',
+    color: { dark: '#1a1a1a', light: '#00000000' },
+  });
+}
 ---
 <Base title={pageTitle} description={app.tagline}>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  {/* Smart-link handoff. Runs ONLY when the URL carries ?install=1, so every
+      other way of reaching this page behaves exactly as before. */}
+  <script define:vars={{ iosScheme, iosHttps, androidScheme, androidHttps }}>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      if (!params.has('install')) return;
+
+      var ua = navigator.userAgent || '';
+      var isIPhone = /iPhone|iPod/.test(ua);
+      var isAndroidPhone = /Android/.test(ua) && /Mobile/.test(ua);
+
+      // Open the store APP via its URL scheme so this page stays in the tab.
+      // If the scheme doesn't fire (rare on real devices; some in-app
+      // webviews), fall back to the https store URL — but only if we're still
+      // visible (i.e. the store app did NOT take over).
+      function handoff(scheme, https) {
+        if (!scheme && !https) return;
+        var fallback = setTimeout(function () {
+          if (document.visibilityState === 'visible' && https) {
+            window.location.href = https;
+          }
+        }, 1200);
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden) clearTimeout(fallback);
+        }, { once: true });
+        window.location.href = scheme || https;
+      }
+
+      if (isIPhone) {
+        // Hand off only if the App Store is live for this app; otherwise stay
+        // on the page (it shows the real availability/BETA status).
+        if (iosScheme || iosHttps) handoff(iosScheme, iosHttps);
+        return;
+      }
+      if (isAndroidPhone) {
+        if (androidScheme || androidHttps) handoff(androidScheme, androidHttps);
+        return;
+      }
+
+      // Desktop / iPad / tablet / unknown → show the install modal if we built
+      // one (we only build it when at least one store is live).
+      function openModal() {
+        var m = document.getElementById('install-modal');
+        if (m) { m.hidden = false; document.documentElement.style.overflow = 'hidden'; }
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', openModal);
+      } else {
+        openModal();
+      }
+    })();
+  </script>
+
   <div class="container">
     <Nav variant="crumb" crumb={app.name} />
 
@@ -137,6 +226,52 @@ const jsonLd = {
 
     <Footer />
   </div>
+
+  {hasAnyStore && (
+    <div id="install-modal" class="install-modal" hidden>
+      <div class="install-backdrop" data-close></div>
+      <div class="install-card" role="dialog" aria-modal="true" aria-label={`Get ${app.name}`}>
+        <button class="install-close" type="button" data-close aria-label="Close">&times;</button>
+        <h2>Get {app.name}</h2>
+        <p class="install-sub">Free. No paywall, no ads, no tracking.</p>
+        {hasMobileStore && qrSvg && (
+          <div class="install-qr">
+            <Fragment set:html={qrSvg} />
+            <span>Scan with your phone’s camera to install</span>
+          </div>
+        )}
+        <div class="install-stores">
+          {iosHttps && (
+            <a class="badge-link" href={iosHttps} rel="noopener" aria-label="Download on the App Store">
+              <img src="/assets/badges/apple-app-store.svg" alt="Download on the App Store" width="132" height="44" />
+            </a>
+          )}
+          {androidHttps && (
+            <a class="badge-link" href={androidHttps} rel="noopener" aria-label="Get it on Google Play">
+              <img src="/assets/badges/google-play.svg" alt="Get it on Google Play" width="149" height="44" />
+            </a>
+          )}
+          {webHttps && (
+            <a class="btn primary" href={webHttps} rel="noopener">Add to your browser</a>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <script is:inline>
+      (function () {
+        var m = document.getElementById('install-modal');
+        if (!m) return;
+        function close() { m.hidden = true; document.documentElement.style.overflow = ''; }
+        m.querySelectorAll('[data-close]').forEach(function (el) {
+          el.addEventListener('click', close);
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && !m.hidden) close();
+        });
+      })();
+    </script>
+  )}
 </Base>
 
 <style>
@@ -340,5 +475,85 @@ const jsonLd = {
     .specs {
       grid-template-columns: repeat(2, 1fr);
     }
+  }
+
+  /* Install modal (desktop / low-confidence devices via ?install=1) */
+  .install-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .install-modal[hidden] {
+    display: none;
+  }
+  .install-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 20, 20, 0.55);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+  }
+  .install-card {
+    position: relative;
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 360px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+  }
+  .install-card h2 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+  }
+  .install-sub {
+    font-size: 14px;
+    color: var(--fg-muted);
+    margin: 0 0 20px;
+  }
+  .install-close {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    line-height: 1;
+    color: var(--fg-muted);
+    cursor: pointer;
+    padding: 4px;
+  }
+  .install-close:hover {
+    color: var(--fg);
+  }
+  .install-qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 22px;
+  }
+  .install-qr :global(svg) {
+    width: 176px;
+    height: 176px;
+    display: block;
+  }
+  .install-qr span {
+    font-size: 12px;
+    color: var(--fg-muted);
+  }
+  .install-stores {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
   }
 </style>
