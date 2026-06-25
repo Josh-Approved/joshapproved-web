@@ -14,6 +14,13 @@ code + both store buttons — is achievable, cheaply, with zero new vendors and 
 SDK.** It is standard web + OS plumbing on top of the static Astro site we
 already host on Cloudflare. Rough effort: **~½–1 day.**
 
+> **Design note (per Josh's residual-tab requirement):** the link lands on the
+> **real, full app page every time** — detection runs *on that page* and (for
+> confident phones) opens the store via its app scheme so the JA app page stays
+> in the browser tab underneath. The original bare-redirect sketch did not do
+> this; see §3. No Cloudflare Pages Function is needed — it's the static app
+> page plus a `<script>`.
+
 What we *cannot* replicate without a Branch-style SDK + backend is the part of
 Branch that Josh **does not need for acquisition**: detecting whether the app is
 already installed, opening the app instead of the store, and *deferred deep
@@ -128,66 +135,126 @@ routing layer on top of `apps.ts` / `platformUrl()`.
 
 ## 3. Recommended architecture
 
-A **server-first, modal-fallback** design that maps 1:1 onto Josh's framing
-("high confidence → store, otherwise the modal"):
+> **Revised (2026-06-25) after Josh's residual-tab requirement.** The original
+> draft recommended a bare `/get/<slug>` Cloudflare Pages Function that 302s
+> confident phones straight to the store. That **fails a hard requirement** — see
+> §3a. The recommended design below makes the smart link land on the **real,
+> full app page every time**, with detection layered on top.
+
+### 3a. What the original bare-redirect design left in the tab (and why it's wrong)
+
+Concretely, for the Free Workout Timer link under the *original* `/get/<slug>`
+Pages-Function design:
+
+- **Confident iPhone/Android:** the function returns a `302` **before any JA
+  HTML is sent**, so the customer never sees a Josh Approved page at all. The
+  browser follows the redirect, so the residual background tab ends up showing
+  **the store's own web page** (`apps.apple.com/...` or `play.google.com/...`) —
+  *not* the Workout Timer page. If the customer doesn't install and reopens that
+  tab later, they're looking at Apple's/Google's page, not ours, and can't
+  install from our site.
+- **Desktop/unknown:** the function served a *dedicated modal endpoint*, not
+  guaranteed to be the full canonical app page.
+
+So on both counts it does **not** satisfy "the residual tab must be the real,
+full app page." The redirect's millisecond head-start is worthless if it leaves
+the wrong page behind.
+
+### 3b. Recommended design — the smart link **is** a full app page
 
 ```
-Customer taps  joshapproved.com/get/<slug>
+Customer taps  joshapproved.com/get/free-workout-timer
         │
         ▼
-Cloudflare Pages Function  (edge, server-side, free tier 100k req/day)
-   reads User-Agent (+ Client Hints when present)
+A statically-rendered FULL app page  (same template/content as /apps/<slug>:
+   hero, description, privacy, screenshots, App Store + Play Store buttons)
+        │  ...renders immediately; this is the page that stays in the tab...
+        ▼
+Tiny inline <head> script runs detection on first paint
         │
-   ┌────┴───────────────────────────────────────────────┐
-   │ high-confidence iPhone  → 302 → appStoreUrl          │
-   │ high-confidence Android phone → 302 → playStoreUrl   │
-   │ everything else (desktop, iPad, bot, in-app webview, │
-   │   unknown, no UA)  → serve the MODAL page (static)   │
-   └──────────────────────────────────────────────────────┘
-                                   │
-                                   ▼
-                 Modal/landing page (static HTML, cacheable)
-                 • QR code (encodes the SAME /get/<slug> link)
-                 • App Store button   • Play Store button
-                 • client-side JS second-pass (optional iPad refine)
+   ┌────┴──────────────────────────────────────────────────────────┐
+   │ confident iPhone        → open App Store via itms-apps:// link  │
+   │ confident Android phone → open Play Store via market:// link    │
+   │ desktop / iPad / unknown / no-JS / bot → NO redirect;           │
+   │     full app page shown; (desktop) QR + store-button modal pops │
+   │     over it                                                     │
+   └────────────────────────────────────────────────────────────────┘
+        │
+   In every case the tab is left on the REAL Workout Timer page.
 ```
 
-Why this shape:
+Key properties:
 
-- **Cloudflare Pages Functions** give us a server-side hop on the host we already
-  use, at no cost, with no new vendor. Put one file at
-  `functions/get/[slug].ts`. It is the direct analogue of Branch's
-  click-tracking server, minus the tracking.
-- **Server decides only the two confident cases** (iPhone, Android phone) and
-  defers *everything ambiguous to the modal*. We never have to be clever about
-  iPad-vs-Mac or webviews — if we're not confident it's a phone, the modal is
-  the answer, which is exactly what Josh wants.
-- **The modal page is static HTML** → cacheable, crawler-safe, works with no JS.
-  The two store buttons are real `<a>` tags; the QR is an `<img>`.
-- **The QR encodes the smart link itself**, not a store URL. A desktop visitor
-  scans it with their phone → the phone hits `/get/<slug>` → server detects the
-  phone → correct store. One canonical link, end to end. (Generate the QR at
-  build time per app — the link is static — so no runtime cost and no client lib.)
+- **One link, always the real page.** `/get/<slug>` is its own Astro static
+  route (`src/pages/get/[slug].astro` via `getStaticPaths()`) that renders the
+  **same full app-page component** as `/apps/<slug>` — shared layout/partial, not
+  a copy. The residual tab is the complete Workout Timer page with everything on
+  it, including both install buttons. This is what Josh wants left behind.
+- **`/apps/<slug>` stays redirect-free** for organic site browsing. We only arm
+  auto-redirect on the purpose-built install link (`/get/<slug>`), so browsing
+  the catalog never yanks someone to a store.
+- **Detection is client-side, on the real page.** A small inline script in
+  `<head>` reads `navigator.userAgent` (+ `navigator.userAgentData` when present)
+  and fires before paint. There is no Cloudflare Pages Function and no runtime —
+  it's the existing static Astro site plus a `<script>`.
 
-**Detection rules (server-side, conservative):**
-- iPhone: UA contains `iPhone` (optionally `iPod`). → App Store.
-- Android **phone**: UA contains `Android` **and** `Mobile`. (Android tablets
-  omit `Mobile`; send those to the modal.) → Play Store.
-- iPad, Mac, Windows, Linux, ChromeOS, unknown, empty UA → modal.
-- Known bot/crawler/unfurler UAs → serve the modal HTML (never redirect a
-  crawler; see §4).
+### 3c. Keeping the residual tab on the app page while still opening the store
 
-**Why not pure client-side JS?** It works on static hosting (read
-`navigator.userAgent` / `navigator.userAgentData`, then `location.replace`), but
-it flashes a blank page first and does nothing without JS. **Why not pure
-server-side?** It can't see touch capability (can't disambiguate iPad). The
-hybrid above takes the best of both: fast confident server redirect for phones,
-robust static modal for everything else, optional JS refinement on top.
+This is the load-bearing detail. A top-level navigation to the **https** store
+URL (`https://apps.apple.com/...`) would itself replace the tab's document with
+the store's web page — re-introducing the exact problem from §3a. To open the
+store **app** while leaving our page intact in the tab, redirect to the store's
+**app URL scheme**, which the OS hands directly to the App Store / Play Store app
+without rendering a new web document in the tab:
 
-**Fallback path if we ever want to avoid Pages Functions entirely:** a fully
-static `/get/<slug>` page that does the detection in a `<script>` and falls back
-to the visible modal. Slightly worse UX (flash), but zero runtime — keep it in
-the back pocket.
+- iPhone → `itms-apps://itunes.apple.com/app/id<APPSTORE_ID>` (https
+  `apps.apple.com` link as fallback if the scheme doesn't fire).
+- Android phone → `market://details?id=<PACKAGE>` (https `play.google.com`
+  fallback).
+
+Both the App Store ID and the package name are already embedded in our existing
+`appStoreUrl` / `playStoreUrl` data, so we derive the scheme URLs at build time.
+The store app foregrounds over the browser; Safari/Chrome stays on the Workout
+Timer page underneath. (On-device verification required — see §6 — since exact
+tab-retention behavior varies by OS version and inside in-app webviews.)
+
+### 3d. The modal (desktop / low-confidence) sits over the real page
+
+For desktop, iPad, unknown, or any non-confident case, **no redirect fires** and
+the full app page is simply shown. For the desktop "hand them a QR" experience, a
+modal pops over that same page with:
+
+- a **QR code** that encodes the `/get/<slug>` smart link itself (scanning it
+  with a phone runs the same detection on the phone → correct store), and
+- explicit **App Store** and **Play Store** buttons (real `<a>` tags).
+
+Generate the QR at build time per app (the link is static) → no runtime, no
+client QR library. The page's own install buttons already cover the no-JS and
+no-modal cases.
+
+**Detection rules (client-side, conservative — same logic, now in the page):**
+- iPhone: UA contains `iPhone`/`iPod` → App Store scheme.
+- Android **phone**: UA contains `Android` **and** `Mobile` (tablets omit
+  `Mobile`) → Play Store scheme.
+- iPad, Mac, Windows, Linux, ChromeOS, unknown, empty UA, bots → no redirect;
+  full page (+ desktop modal).
+
+### 3e. Why client-side-on-the-real-page over the server-side Pages Function
+
+| | Server-side 302 (`/get` Function) | **Recommended: full app page + client detection** |
+|---|---|---|
+| Residual tab after a confident mobile hit | **Store's web page** (or blank) — wrong | **Real, full app page** — what's wanted |
+| Lands on the real app page | No | **Yes, always** |
+| Speed | Redirect ~instant, before HTML | Full page renders, then near-instant redirect |
+| "Flash" before redirect | None | A flash **of the desired page** — a feature here |
+| No-JS users | Redirect still works | See the full app page with both install buttons |
+| Bots / unfurlers | Must special-case to avoid 302'ing them | Get the full app page + OG tags for free |
+| Runtime / vendor | Cloudflare Pages Function | **None** — static site + a `<script>` |
+
+The server-side redirect's only advantage was raw speed, and that speed is what
+*causes* the wrong-residual-tab behavior. Once "land on the real page" is a
+requirement, client-side detection on the real page is strictly better and
+simpler (no runtime at all). **Recommended.**
 
 ---
 
@@ -195,15 +262,15 @@ the back pocket.
 
 | Case | What happens / risk | Handling |
 |---|---|---|
-| **In-app webview** (Instagram, TikTok, FB, Snap, etc.) | UA still contains `iPhone`/`Android Mobile`, often plus `wv`, `FBAN/FBAV`, `Instagram`, `Line`. Store links *do* open the native store from these webviews. | Detect OS normally and redirect to the store — it works. Don't over-engineer. The modal remains the fallback if UA is unrecognizable. |
-| **iPad** | iPadOS Safari sends a **macOS desktop UA** by default, so server-side sees "desktop." ([Apple Dev Forums](https://developer.apple.com/forums/thread/119186), [51Degrees](https://51degrees.com/blog/missing-ipad-tablet-web-traffic)) | Falls to the **modal** — acceptable (QR + buttons present). Optional client-side refine: UA says Macintosh **but** `navigator.maxTouchPoints > 1` ⇒ iPad ⇒ can surface the App Store button prominently. |
-| **Misdetection / low confidence** | We guess wrong about the device. | **Default to the modal** whenever not high-confidence. The modal always offers both stores + QR, so a misdetect costs one extra tap, never a dead end. |
-| **No JavaScript** | Client-side refinement won't run. | Server-side redirect needs no JS; the modal's store buttons + QR are static HTML. Fully functional without JS. |
-| **Bots / crawlers / link unfurlers** (Googlebot, `facebookexternalhit`, `Twitterbot`, `Slackbot`, etc.) | A 302 to the App Store would wreck link previews and SEO. | Match known bot UAs → **serve the modal HTML** (with proper OG/Twitter meta) instead of redirecting. Link unfurls show a real preview. |
-| **Client Hints absent on first request** | High-entropy UA Client Hints aren't sent on the first hit. ([ScientiaMobile](https://www.scientiamobile.com/user-agent-client-hints/)) | Rely on the **UA platform token** (always present) for the decision; treat Client Hints as optional enrichment only. |
+| **In-app webview** (Instagram, TikTok, FB, Snap, etc.) | UA still contains `iPhone`/`Android Mobile`, often plus `wv`, `FBAN/FBAV`, `Instagram`, `Line`. Store schemes/links *do* open the native store from these webviews. | The page renders fully (the residual webview tab is the real app page); detect OS normally and fire the store scheme. If UA is unrecognizable, no redirect → full page + buttons. |
+| **iPad** | iPadOS Safari sends a **macOS desktop UA** by default, so UA sniffing sees "desktop." ([Apple Dev Forums](https://developer.apple.com/forums/thread/119186), [51Degrees](https://51degrees.com/blog/missing-ipad-tablet-web-traffic)) | No redirect → full app page shown (+ desktop modal). Acceptable. Optional client refine: UA says Macintosh **but** `navigator.maxTouchPoints > 1` ⇒ iPad ⇒ can fire the App Store scheme. |
+| **Misdetection / low confidence** | We guess wrong about the device. | **No redirect unless high-confidence.** The full app page (with both install buttons, + desktop modal/QR) is always underneath, so a misdetect costs one extra tap, never a dead end. |
+| **No JavaScript** | The detection script won't run, so no auto-redirect. | The page is fully static — the customer sees the **complete app page with both install buttons** (and the QR is a static `<img>`). Graceful: no-JS = the plain app page, which is fine. |
+| **Bots / crawlers / link unfurlers** (Googlebot, `facebookexternalhit`, `Twitterbot`, `Slackbot`, etc.) | Don't want bots bounced to a store. | They don't run our JS, so they simply get the **full static app page + OG/Twitter meta** — correct previews and SEO for free, no special-casing needed. |
+| **Client Hints absent on first request** | High-entropy UA Client Hints aren't sent on the first hit. ([ScientiaMobile](https://www.scientiamobile.com/user-agent-client-hints/)) | Detection runs client-side where `navigator.userAgentData` is available; we still key the decision on the **UA platform token** (always present) and treat Client Hints as enrichment only. |
 | **Android WebView UA reduction** (Android 16+) | Google is reducing WebView UA detail. ([Android Developers Blog](https://android-developers.googleblog.com/2024/12/user-agent-reduction-on-android-webview.html)) | The `Android` + `Mobile` tokens we rely on are retained; we don't depend on fine-grained model strings. |
 | **Private Relay / VPN** | Hides IP. | We don't use IP for anything — irrelevant to store routing. |
-| **Desktop, genuinely** | Correct case. | Modal with QR + both buttons. |
+| **Desktop, genuinely** | Correct case. | Full app page + modal with QR + both buttons. |
 
 ---
 
@@ -234,25 +301,35 @@ None of these block the requested feature.
 
 | Piece | Effort |
 |---|---|
-| `functions/get/[slug].ts` Pages Function — UA detection + redirect/serve decision | ~½ day incl. the detection rules + bot list |
-| Modal/landing page template (reuses `apps.ts` + `platformUrl`) with QR + 2 store buttons | a few hours |
+| `src/pages/get/[slug].astro` — full app page (reuses the `/apps/<slug>` layout/partial) + inline detection script | ~½ day incl. detection rules + the `itms-apps://`/`market://` derivation |
+| Desktop modal over the page (QR + 2 store buttons) — reuses `apps.ts` / `platformUrl` | a few hours |
 | Build-time QR generation per app (link is static) | ~1 hour |
-| Cross-device verification (real iPhone, Android phone, iPad, desktop, an in-app webview, a crawler UA) | ~½ day, per cross-platform-parity policy |
+| Cross-device verification — **especially the residual-tab behavior** on a real iPhone + Android phone (does the JA page stay in the tab after the store scheme fires?), plus iPad, desktop, an in-app webview, a crawler UA | ~½ day, per cross-platform-parity policy |
 
 **Total: ~1 day of focused work.** No recurring cost (Cloudflare free tier),
-no SDK in the mobile apps, no new vendor in the stack.
+no SDK in the mobile apps, no new vendor, **no runtime** (pure static site + a
+`<script>`).
 
 ---
 
 ## 7. Recommendation
 
-Build the **server-first, modal-fallback** smart link at `joshapproved.com/get/<slug>`
-as a Cloudflare Pages Function over the existing `apps.ts` / `storeAvailability`
-data. It delivers exactly the requested behavior, costs nothing, removes the
-Branch dependency, and degrades gracefully (every ambiguous or low-confidence
-case lands on the modal with QR + both store buttons). Defer Universal/App Links,
-deferred deep linking, and attribution — they're separate, heavier efforts that
-the acquisition use case doesn't require.
+Build the smart link as a **full app page that detects on the client**:
+`joshapproved.com/get/<slug>` is a statically-rendered copy of the `/apps/<slug>`
+app page (shared layout) plus a tiny inline detection script. Confident phones
+get the store opened via its app scheme (`itms-apps://` / `market://`) so the
+**real app page stays in the tab**; everyone else just sees the full page, with a
+QR + store-button modal for desktop. This satisfies Josh's residual-tab
+requirement, costs nothing, adds **no runtime** (no Cloudflare Pages Function),
+removes the Branch dependency, and degrades gracefully (no-JS and bots get the
+plain full app page). Defer Universal/App Links, deferred deep linking, and
+attribution — separate, heavier efforts the acquisition use case doesn't require.
+
+The one thing to confirm on real hardware before calling it done: that firing the
+`itms-apps://` / `market://` scheme reliably opens the store app **and leaves our
+page in the browser tab** (§3c) across current iOS/Android and the common in-app
+webviews. If a given environment instead navigates away, the fallback is the same
+full page reachable via Back — still the real app page, never a blank shell.
 
 ---
 
