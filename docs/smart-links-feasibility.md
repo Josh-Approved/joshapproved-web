@@ -14,12 +14,13 @@ code + both store buttons — is achievable, cheaply, with zero new vendors and 
 SDK.** It is standard web + OS plumbing on top of the static Astro site we
 already host on Cloudflare. Rough effort: **~½–1 day.**
 
-> **Design note (per Josh's residual-tab requirement):** the link lands on the
-> **real, full app page every time** — detection runs *on that page* and (for
-> confident phones) opens the store via its app scheme so the JA app page stays
-> in the browser tab underneath. The original bare-redirect sketch did not do
-> this; see §3. No Cloudflare Pages Function is needed — it's the static app
-> page plus a `<script>`.
+> **Design note (per Josh's two corrections):** there is exactly **one** app
+> page per app — the existing `/apps/<slug>` listing page. The smart link is just
+> that same URL with a query param (`?install=1`). Natural visits behave exactly
+> as today; arriving with the param runs detection *on that page* and (for
+> confident phones) opens the store via its app scheme so the real app page stays
+> in the browser tab underneath. No clone page, no Cloudflare Pages Function — the
+> existing static app page plus a `<script>`. See §3.
 
 What we *cannot* replicate without a Branch-style SDK + backend is the part of
 Branch that Josh **does not need for acquisition**: detecting whether the app is
@@ -135,77 +136,95 @@ routing layer on top of `apps.ts` / `platformUrl()`.
 
 ## 3. Recommended architecture
 
-> **Revised (2026-06-25) after Josh's residual-tab requirement.** The original
-> draft recommended a bare `/get/<slug>` Cloudflare Pages Function that 302s
-> confident phones straight to the store. That **fails a hard requirement** — see
-> §3a. The recommended design below makes the smart link land on the **real,
-> full app page every time**, with detection layered on top.
+> **Revised twice (2026-06-25) after Josh's corrections.** (1) The original draft
+> was a bare `/get/<slug>` Cloudflare Pages Function that 302s confident phones
+> straight to the store — it leaves the wrong page in the tab (§3a). (2) The first
+> revision fixed the tab but used a *separate* `/get/<slug>` page that clones the
+> app listing — Josh wants **no clone page**. Final design: **one canonical app
+> page**, and the smart link is **that same URL plus a query param** (§3b).
 
-### 3a. What the original bare-redirect design left in the tab (and why it's wrong)
+### 3a. Two approaches considered and rejected
 
-Concretely, for the Free Workout Timer link under the *original* `/get/<slug>`
-Pages-Function design:
+- **Bare server-side redirect** (`/get/<slug>` Pages Function → `302` to store):
+  the customer never sees a JA page; the residual tab ends up on the store's own
+  web page (`apps.apple.com/...` / `play.google.com/...`), not the app page. Fails
+  the residual-tab requirement. The redirect's millisecond head-start is worthless
+  if it leaves the wrong page behind.
+- **Separate `/get/<slug>` page that clones the listing:** fixes the tab, but it's
+  a second page per app — a duplicate to keep in sync and an SEO liability. Josh's
+  rule: **exactly one app landing page per app.** Rejected.
 
-- **Confident iPhone/Android:** the function returns a `302` **before any JA
-  HTML is sent**, so the customer never sees a Josh Approved page at all. The
-  browser follows the redirect, so the residual background tab ends up showing
-  **the store's own web page** (`apps.apple.com/...` or `play.google.com/...`) —
-  *not* the Workout Timer page. If the customer doesn't install and reopens that
-  tab later, they're looking at Apple's/Google's page, not ours, and can't
-  install from our site.
-- **Desktop/unknown:** the function served a *dedicated modal endpoint*, not
-  guaranteed to be the full canonical app page.
+### 3b. Recommended design — one page, a query-param trigger
 
-So on both counts it does **not** satisfy "the residual tab must be the real,
-full app page." The redirect's millisecond head-start is worthless if it leaves
-the wrong page behind.
-
-### 3b. Recommended design — the smart link **is** a full app page
+There is **one** app page per app: the existing `/apps/<slug>` listing
+(`src/pages/apps/[slug].astro`). The smart link is just that URL with a param:
 
 ```
-Customer taps  joshapproved.com/get/free-workout-timer
-        │
+Natural visit (nav, Google, internal link, direct):
+   joshapproved.com/apps/free-workout-timer
+        → page behaves EXACTLY as today. No detection, no handoff.
+
+Smart link (the same page + the param):
+   joshapproved.com/apps/free-workout-timer?install=1
         ▼
-A statically-rendered FULL app page  (same template/content as /apps/<slug>:
-   hero, description, privacy, screenshots, App Store + Play Store buttons)
-        │  ...renders immediately; this is the page that stays in the tab...
+   The existing full app page renders (hero, description, privacy,
+   screenshots, App Store + Play Store buttons) — this is the page
+   that stays in the tab.
         ▼
-Tiny inline <head> script runs detection on first paint
+   Inline script sees ?install=1 → arms detection on first paint
         │
    ┌────┴──────────────────────────────────────────────────────────┐
    │ confident iPhone        → open App Store via itms-apps:// link  │
    │ confident Android phone → open Play Store via market:// link    │
-   │ desktop / iPad / unknown / no-JS / bot → NO redirect;           │
-   │     full app page shown; (desktop) QR + store-button modal pops │
-   │     over it                                                     │
+   │ desktop / iPad / unknown → QR + store-button modal over the page│
+   │ no-JS / bot              → just the full app page (no handoff)  │
    └────────────────────────────────────────────────────────────────┘
         │
-   In every case the tab is left on the REAL Workout Timer page.
+   In every case the tab is left on the REAL app page.
 ```
 
 Key properties:
 
-- **One link, always the real page.** `/get/<slug>` is its own Astro static
-  route (`src/pages/get/[slug].astro` via `getStaticPaths()`) that renders the
-  **same full app-page component** as `/apps/<slug>` — shared layout/partial, not
-  a copy. The residual tab is the complete Workout Timer page with everything on
-  it, including both install buttons. This is what Josh wants left behind.
-- **`/apps/<slug>` stays redirect-free** for organic site browsing. We only arm
-  auto-redirect on the purpose-built install link (`/get/<slug>`), so browsing
-  the catalog never yanks someone to a store.
-- **Detection is client-side, on the real page.** A small inline script in
-  `<head>` reads `navigator.userAgent` (+ `navigator.userAgentData` when present)
-  and fires before paint. There is no Cloudflare Pages Function and no runtime —
-  it's the existing static Astro site plus a `<script>`.
+- **One canonical page.** No clone, no second route. We add a small inline script
+  to the existing `/apps/<slug>` template; the param decides whether it does
+  anything.
+- **The script keys off the param.** It runs only when
+  `new URLSearchParams(location.search).has('install')` is true. Natural visits
+  (no param) → the script no-ops and the page is byte-for-byte today's behavior.
+  This is what guarantees "natural navigation = unchanged."
+- **Detection is client-side, on the real page.** When armed, a `<head>` script
+  reads `navigator.userAgent` (+ `navigator.userAgentData` when present) and
+  fires before paint. No Cloudflare Pages Function, no runtime — the existing
+  static Astro page plus a `<script>`.
 
-### 3c. Keeping the residual tab on the app page while still opening the store
+### 3c. Param name + SEO (no indexable duplicate)
 
-This is the load-bearing detail. A top-level navigation to the **https** store
-URL (`https://apps.apple.com/...`) would itself replace the tab's document with
-the store's web page — re-introducing the exact problem from §3a. To open the
-store **app** while leaving our page intact in the tab, redirect to the store's
-**app URL scheme**, which the OS hands directly to the App Store / Play Store app
-without rendering a new web document in the tab:
+- **Param:** `?install=1`. Semantic ("this link is for installing"), boolean,
+  unmistakable. (`?from=link` was the alternative; `install` reads better and
+  states intent.) The script only checks **presence**, so any truthy value works.
+- **No duplicate page is created.** `?install=1` is the *same document* as
+  `/apps/<slug>` — Astro serves one static file regardless of query string; the
+  param is not a new route. So there is no second page to maintain.
+- **Keep it out of the index, belt-and-suspenders:**
+  1. The param is **never linked anywhere crawlable** — it appears only on the
+     marketing links Josh hands out (QR, posters, social bios), never in site
+     nav, the `/apps` catalog, sitemap, or internal links. Crawlers won't find it.
+  2. The per-app page already emits a **`<link rel="canonical">`** to its clean
+     `/apps/<slug>` URL (part of the P7 SEO pass). Keep it **param-less** so even
+     if a `?install=1` URL is discovered, search engines fold it into the
+     canonical — no duplicate listing.
+  3. The sitemap lists only the clean URL (already the case).
+  No `robots`/`noindex` gymnastics needed; canonical + not-linked is sufficient
+  and standard for tracking-style params.
+
+### 3d. Keeping the residual tab on the app page while still opening the store
+
+The load-bearing detail. A top-level navigation to the **https** store URL
+(`https://apps.apple.com/...`) would replace the tab's document with the store's
+web page — the §3a problem again. To open the store **app** while leaving our
+page intact in the tab, hand off via the store's **app URL scheme**, which the OS
+routes straight to the App Store / Play Store app without rendering a new web
+document in the tab:
 
 - iPhone → `itms-apps://itunes.apple.com/app/id<APPSTORE_ID>` (https
   `apps.apple.com` link as fallback if the scheme doesn't fire).
@@ -214,47 +233,41 @@ without rendering a new web document in the tab:
 
 Both the App Store ID and the package name are already embedded in our existing
 `appStoreUrl` / `playStoreUrl` data, so we derive the scheme URLs at build time.
-The store app foregrounds over the browser; Safari/Chrome stays on the Workout
-Timer page underneath. (On-device verification required — see §6 — since exact
-tab-retention behavior varies by OS version and inside in-app webviews.)
+The store app foregrounds over the browser; Safari/Chrome stays on the app page
+underneath. (On-device verification required — see §6 — exact tab-retention
+behavior varies by OS version and inside in-app webviews.)
 
-### 3d. The modal (desktop / low-confidence) sits over the real page
+### 3e. The modal (desktop / low-confidence) sits over the real page
 
-For desktop, iPad, unknown, or any non-confident case, **no redirect fires** and
-the full app page is simply shown. For the desktop "hand them a QR" experience, a
-modal pops over that same page with:
+For desktop, iPad, unknown, or any non-confident case, **no handoff fires** and
+the full app page is shown. For the desktop "hand them a QR" experience, a modal
+pops over that same page with:
 
-- a **QR code** that encodes the `/get/<slug>` smart link itself (scanning it
-  with a phone runs the same detection on the phone → correct store), and
+- a **QR code** encoding the smart link itself (`/apps/<slug>?install=1`) —
+  scanning it with a phone runs the same detection on the phone → correct store —
+  and
 - explicit **App Store** and **Play Store** buttons (real `<a>` tags).
 
 Generate the QR at build time per app (the link is static) → no runtime, no
-client QR library. The page's own install buttons already cover the no-JS and
-no-modal cases.
+client QR library. The page's own install buttons cover the no-JS / no-modal
+cases.
 
-**Detection rules (client-side, conservative — same logic, now in the page):**
+**Detection rules (client-side, conservative; only run when `?install` present):**
 - iPhone: UA contains `iPhone`/`iPod` → App Store scheme.
 - Android **phone**: UA contains `Android` **and** `Mobile` (tablets omit
   `Mobile`) → Play Store scheme.
-- iPad, Mac, Windows, Linux, ChromeOS, unknown, empty UA, bots → no redirect;
+- iPad, Mac, Windows, Linux, ChromeOS, unknown, empty UA, bots → no handoff;
   full page (+ desktop modal).
 
-### 3e. Why client-side-on-the-real-page over the server-side Pages Function
+### 3f. Tradeoff vs. the two-page approach
 
-| | Server-side 302 (`/get` Function) | **Recommended: full app page + client detection** |
-|---|---|---|
-| Residual tab after a confident mobile hit | **Store's web page** (or blank) — wrong | **Real, full app page** — what's wanted |
-| Lands on the real app page | No | **Yes, always** |
-| Speed | Redirect ~instant, before HTML | Full page renders, then near-instant redirect |
-| "Flash" before redirect | None | A flash **of the desired page** — a feature here |
-| No-JS users | Redirect still works | See the full app page with both install buttons |
-| Bots / unfurlers | Must special-case to avoid 302'ing them | Get the full app page + OG tags for free |
-| Runtime / vendor | Cloudflare Pages Function | **None** — static site + a `<script>` |
-
-The server-side redirect's only advantage was raw speed, and that speed is what
-*causes* the wrong-residual-tab behavior. Once "land on the real page" is a
-requirement, client-side detection on the real page is strictly better and
-simpler (no runtime at all). **Recommended.**
+There is no real downside. The single-page + param design is strictly simpler
+than a separate `/get/<slug>` page — one canonical page instead of two, nothing
+to keep in sync, and the existing SEO/JSON-LD/OG work is inherited untouched.
+The param is a no-op on natural visits, so today's behavior is preserved exactly.
+The only nuance is making sure the inline script is correctly gated on the param
+(so organic visits never trigger a handoff) and that the canonical tag stays
+param-less (§3c) — both trivial. Recommended.
 
 ---
 
@@ -301,9 +314,10 @@ None of these block the requested feature.
 
 | Piece | Effort |
 |---|---|
-| `src/pages/get/[slug].astro` — full app page (reuses the `/apps/<slug>` layout/partial) + inline detection script | ~½ day incl. detection rules + the `itms-apps://`/`market://` derivation |
+| Inline detection script added to the existing `src/pages/apps/[slug].astro` — gated on `?install`, UA rules + `itms-apps://`/`market://` derivation | ~½ day |
 | Desktop modal over the page (QR + 2 store buttons) — reuses `apps.ts` / `platformUrl` | a few hours |
 | Build-time QR generation per app (link is static) | ~1 hour |
+| Canonical-tag check (param-less) + confirm the param is linked nowhere crawlable | ~½ hour |
 | Cross-device verification — **especially the residual-tab behavior** on a real iPhone + Android phone (does the JA page stay in the tab after the store scheme fires?), plus iPad, desktop, an in-app webview, a crawler UA | ~½ day, per cross-platform-parity policy |
 
 **Total: ~1 day of focused work.** No recurring cost (Cloudflare free tier),
@@ -314,16 +328,19 @@ no SDK in the mobile apps, no new vendor, **no runtime** (pure static site + a
 
 ## 7. Recommendation
 
-Build the smart link as a **full app page that detects on the client**:
-`joshapproved.com/get/<slug>` is a statically-rendered copy of the `/apps/<slug>`
-app page (shared layout) plus a tiny inline detection script. Confident phones
-get the store opened via its app scheme (`itms-apps://` / `market://`) so the
-**real app page stays in the tab**; everyone else just sees the full page, with a
-QR + store-button modal for desktop. This satisfies Josh's residual-tab
-requirement, costs nothing, adds **no runtime** (no Cloudflare Pages Function),
-removes the Branch dependency, and degrades gracefully (no-JS and bots get the
-plain full app page). Defer Universal/App Links, deferred deep linking, and
-attribution — separate, heavier efforts the acquisition use case doesn't require.
+One canonical app page, with a query-param trigger. The smart link is the
+existing app URL plus a param: `joshapproved.com/apps/<slug>?install=1`. Natural
+visits (no param) behave exactly as today. With the param, a tiny inline script
+on the existing `/apps/<slug>` page runs detection: confident phones get the
+store opened via its app scheme (`itms-apps://` / `market://`) so the **real app
+page stays in the tab**; desktop/unknown gets a QR + store-button modal over the
+page. No clone page, **no runtime** (no Cloudflare Pages Function) — the existing
+static page plus a `<script>`. Keep the page's `<link rel="canonical">`
+param-less and don't link the param anywhere crawlable, so no indexable duplicate
+is created. Costs nothing, removes the Branch dependency, degrades gracefully
+(no-JS and bots get the plain full app page). Defer Universal/App Links, deferred
+deep linking, and attribution — separate, heavier efforts the acquisition use
+case doesn't require.
 
 The one thing to confirm on real hardware before calling it done: that firing the
 `itms-apps://` / `market://` scheme reliably opens the store app **and leaves our
