@@ -8,11 +8,13 @@
     "build": "astro build",
     "preview": "astro preview",
     "sync-design-system": "node scripts/sync-design-system.mjs",
-    "generate-install-links": "tsx scripts/generate-install-links.ts"
+    "generate-install-links": "tsx scripts/generate-install-links.ts",
+    "gen-og": "tsx scripts/gen-og-images.mjs"
   },
   "devDependencies": {
     "astro": "^5.0.0",
     "qrcode": "^1.5.4",
+    "sharp": "^0.34.5",
     "tsx": "^4.22.4",
     "typescript": "^5.4.0"
   }
