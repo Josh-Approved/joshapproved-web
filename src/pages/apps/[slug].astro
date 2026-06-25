@@ -87,9 +87,17 @@ if (hasMobileStore) {
       var ua = navigator.userAgent || '';
       var isIPhone = /iPhone|iPod/.test(ua);
       var isAndroidPhone = /Android/.test(ua) && /Mobile/.test(ua);
+      // In-app browsers (Instagram / Facebook / TikTok / etc.) suppress
+      // app-scheme launches — there the auto-handoff genuinely can't fire, so we
+      // show a device-aware install card instead of a dead scheme navigation.
+      var isInAppWebview = /(FBAN|FBAV|FB_IAB|Instagram|Line\/|Twitter|TikTok|musical_ly|Snapchat|Pinterest|; ?wv\b)/i.test(ua);
 
-      // Run anything store-related ONLY after the full app page has loaded and
-      // painted, so the real page is the visible document the whole time.
+      // Do store work ONLY after the full app page has loaded and painted, so
+      // the real page is the visible document the whole time. This ordering is
+      // the fix for the blank tab: a top-frame scheme navigation fired before
+      // paint aborts the in-progress render; fired after paint it shows the
+      // "Open in the App Store?" prompt over the rendered page, and Cancel
+      // returns the visitor to that page.
       function afterPaint(run) {
         function go() {
           requestAnimationFrame(function () {
@@ -100,54 +108,40 @@ if (hasMobileStore) {
         else window.addEventListener('load', go, { once: true });
       }
 
-      // Open the store WITHOUT touching the top frame. Pointing a hidden iframe
-      // at the store scheme asks iOS to show "Open in the App Store?" over our
-      // fully-rendered page; the top document is never navigated, so it cannot
-      // go blank and Cancel leaves the visitor on the page. (A top-frame
-      // window.location to the scheme is exactly what produced the blank grey
-      // tab — never do that here.)
-      function launchViaIframe(scheme) {
-        var ifr = document.createElement('iframe');
-        ifr.setAttribute('aria-hidden', 'true');
-        ifr.style.cssText = 'position:absolute;left:-9999px;top:0;width:1px;height:1px;border:0;visibility:hidden;';
-        document.body.appendChild(ifr);
-        ifr.src = scheme;
-      }
-
-      // If the store didn't take over (older iOS or in-app webviews where the
-      // iframe launch is suppressed), reveal the install card over the rendered
-      // page as an unmissable tap target — never a dead end, never a blank tab.
-      function revealCard() {
+      // Reveal the install card limited to ONE platform's store — never offer
+      // Google Play to an iPhone or vice-versa. No QR (we're already on a phone).
+      function revealCard(platform) {
         var m = document.getElementById('install-modal');
         if (!m) return;
+        m.querySelectorAll('[data-store]').forEach(function (el) {
+          el.style.display = el.getAttribute('data-store') === platform ? '' : 'none';
+        });
         var qr = m.querySelector('.install-qr');
-        if (qr) qr.style.display = 'none'; // pointless when you're already on the phone
+        if (qr) qr.style.display = 'none';
         m.hidden = false;
         document.documentElement.style.overflow = 'hidden';
       }
 
-      function handoffPhone(scheme) {
-        launchViaIframe(scheme);
-        var t = setTimeout(function () {
-          if (document.visibilityState === 'visible') revealCard();
-        }, 1200);
-        document.addEventListener('visibilitychange', function () {
-          if (document.hidden) clearTimeout(t);
-        }, { once: true });
-      }
-
       if (isIPhone) {
-        // Only act if the App Store is live for this app; else stay on the page.
-        if (iosScheme) afterPaint(function () { handoffPhone(iosScheme); });
+        if (!iosScheme) return; // App Store not live for this app → stay on page
+        if (isInAppWebview) { afterPaint(function () { revealCard('ios'); }); return; }
+        // Normal iOS Safari: a top-frame navigation to the App Store scheme,
+        // fired after paint, reliably opens the "Open in the App Store?" prompt
+        // over the rendered page without replacing it (custom schemes don't
+        // unload the document). This is the only reliable auto-launch on current
+        // iOS — the hidden-iframe trick is suppressed by Safari.
+        afterPaint(function () { window.location.href = iosScheme; });
         return;
       }
       if (isAndroidPhone) {
-        if (androidScheme) afterPaint(function () { handoffPhone(androidScheme); });
+        if (!androidScheme) return;
+        if (isInAppWebview) { afterPaint(function () { revealCard('android'); }); return; }
+        afterPaint(function () { window.location.href = androidScheme; });
         return;
       }
 
-      // Desktop / iPad / tablet / unknown → show the install modal (with QR) if
-      // we built one (only built when at least one store is live).
+      // Desktop / iPad / tablet / unknown → full install modal (all live stores
+      // + QR) if we built one (only built when at least one store is live).
       function openModal() {
         var m = document.getElementById('install-modal');
         if (m) { m.hidden = false; document.documentElement.style.overflow = 'hidden'; }
@@ -272,17 +266,17 @@ if (hasMobileStore) {
         )}
         <div class="install-stores">
           {iosHttps && (
-            <a class="badge-link" href={iosHttps} rel="noopener" aria-label="Download on the App Store">
+            <a class="badge-link" data-store="ios" href={iosHttps} rel="noopener" aria-label="Download on the App Store">
               <img src="/assets/badges/apple-app-store.svg" alt="Download on the App Store" width="132" height="44" />
             </a>
           )}
           {androidHttps && (
-            <a class="badge-link" href={androidHttps} rel="noopener" aria-label="Get it on Google Play">
+            <a class="badge-link" data-store="android" href={androidHttps} rel="noopener" aria-label="Get it on Google Play">
               <img src="/assets/badges/google-play.svg" alt="Get it on Google Play" width="149" height="44" />
             </a>
           )}
           {webHttps && (
-            <a class="btn primary" href={webHttps} rel="noopener">Add to your browser</a>
+            <a class="btn primary" data-store="web" href={webHttps} rel="noopener">Add to your browser</a>
           )}
         </div>
       </div>
