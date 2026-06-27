@@ -387,15 +387,15 @@ if (hasMobileStore) {
     text-decoration: none;
   }
   .btn.primary {
-    background: var(--ink-1000);
-    color: var(--paper);
-    border: 1px solid var(--ink-1000);
+    background: var(--fg);
+    color: var(--bg);
+    border: 1px solid var(--fg);
   }
   .btn.primary:hover {
-    background: var(--ink-900);
+    background: var(--fg-muted);
   }
   .btn.secondary {
-    background: var(--pure-white);
+    background: var(--bg-elevated);
     color: var(--fg);
     border: 1px solid var(--hairline);
   }
@@ -413,7 +413,7 @@ if (hasMobileStore) {
     overflow: hidden;
   }
   .spec {
-    background: var(--paper);
+    background: var(--bg-elevated);
     padding: 14px 18px;
   }
   .spec .lab {
@@ -456,7 +456,7 @@ if (hasMobileStore) {
     padding: 22px 24px;
     border: 1px solid var(--hairline);
     border-radius: 12px;
-    background: var(--pure-white);
+    background: var(--bg-elevated);
     display: grid;
     grid-template-columns: 24px 1fr;
     gap: 14px;
@@ -525,20 +525,20 @@ if (hasMobileStore) {
   .install-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(20, 20, 20, 0.55);
+    background: var(--bg-scrim);
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
   }
   .install-card {
     position: relative;
-    background: var(--paper);
+    background: var(--bg-elevated);
     border: 1px solid var(--hairline);
     border-radius: 16px;
     padding: 32px;
     max-width: 360px;
     width: 100%;
     text-align: center;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+    box-shadow: var(--shadow-2);
   }
   .install-card h2 {
     font-size: 22px;
@@ -577,6 +577,12 @@ if (hasMobileStore) {
     width: 176px;
     height: 176px;
     display: block;
+    /* QR modules are dark (#1a1a1a) on a transparent plate, so they need an
+       explicit light backing to scan. Kept hardcoded — never tokenized — so the
+       plate stays light even when the card flips to dark. */
+    background: #FFFFFF;
+    padding: 10px;
+    border-radius: 8px;
   }
   .install-qr span {
     font-size: 12px;

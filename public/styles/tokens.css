@@ -179,6 +179,16 @@
     --accent-hover:    var(--green-600);
     --accent-bg:       rgba(46, 168, 102, 0.15);
 
+    /* Warm marketing palette, dark-aware. Accent lines/text lifted a notch to
+       clear WCAG-AA on the dark --bg; the -bg tints become a low-alpha dark
+       wash of the same hue so the now-light text on them stays readable. */
+    --marketing-terracotta:    #CC8068;
+    --marketing-terracotta-bg: rgba(176, 101, 75, 0.16);
+    --marketing-ochre:         #C79A52;
+    --marketing-ochre-bg:      rgba(163, 116, 48, 0.16);
+    --marketing-dusty-blue:    #8AA2BE;
+    --marketing-dusty-blue-bg: rgba(94, 118, 145, 0.18);
+
     --success-bg:      rgba(46, 168, 102, 0.15);
     --warning-bg:      rgba(180, 83, 9, 0.18);
     --danger-bg:       rgba(185, 28, 28, 0.18);
