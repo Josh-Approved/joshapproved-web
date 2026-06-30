@@ -111,7 +111,7 @@ const RAW_APPS: AppRecord[] = [
     tagline: 'A packing checklist that builds itself from the kind of trip you are taking.',
     description: 'A packing checklist that builds itself from the kind of trip you are taking. No accounts, no tracking — your data stays with you.',
     tag: 'util',
-    platforms: ['ios'],
+    platforms: ['ios', 'android'],
     status: 'in-progress',
     github: 'https://github.com/Josh-Approved/packing-list',
     seoTitle: 'A packing checklist that builds itself',
