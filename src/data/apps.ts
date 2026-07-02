@@ -1,5 +1,17 @@
 import { STORE_AVAILABILITY } from './storeAvailability.generated';
 
+// Demo assets live under src/assets/ and are imported with `?url` so Astro/Vite
+// content-hashes them into the build. The hashed filename changes whenever the
+// bytes change, so a deploy can never leave Cloudflare's edge serving stale demo
+// bytes behind an unchanged name (Josh's 2026-07-02 cache concern).
+import groceryDemo from '../assets/demos/grocery-list.gif?url';
+import groceryPoster from '../assets/demos/grocery-list-poster.png?url';
+import packingDemo from '../assets/demos/packing-list.gif?url';
+import packingPoster from '../assets/demos/packing-list-poster.png?url';
+import fwtDemo from '../assets/demos/free-workout-timer.gif?url';
+import fwtPoster from '../assets/demos/free-workout-timer-poster.png?url';
+import tendDemo from '../assets/demos/tend.png?url';
+
 export type Platform = 'ios' | 'android' | 'mac' | 'chrome' | 'firefox';
 
 export type AppRecord = {
@@ -105,8 +117,8 @@ const RAW_APPS: AppRecord[] = [
     keywords: 'grocery list, shopping list, shared list, household, groceries, no account, free',
     icon: '/assets/app-icons/grocery-list.png',
     demo: {
-      src: '/assets/demos/grocery-list.gif',
-      poster: '/assets/demos/grocery-list-poster.png',
+      src: groceryDemo,
+      poster: groceryPoster,
       alt: 'Adding an item to a shared grocery list and checking it off',
     },
     permissions: 'None required',
@@ -139,8 +151,8 @@ const RAW_APPS: AppRecord[] = [
     keywords: 'packing list, travel checklist, packing checklist, trip planner, what to pack, free, no ads',
     icon: '/assets/app-icons/packing-list.png',
     demo: {
-      src: '/assets/demos/packing-list.gif',
-      poster: '/assets/demos/packing-list-poster.png',
+      src: packingDemo,
+      poster: packingPoster,
       alt: 'A packing list filling in from the trip type, then items checked off',
     },
     permissions: 'None',
@@ -173,8 +185,8 @@ const RAW_APPS: AppRecord[] = [
     keywords: 'interval timer, tabata timer, hiit timer, workout timer, circuit timer, free, no ads, no accounts',
     icon: '/assets/app-icons/free-workout-timer.png',
     demo: {
-      src: '/assets/demos/free-workout-timer.gif',
-      poster: '/assets/demos/free-workout-timer-poster.png',
+      src: fwtDemo,
+      poster: fwtPoster,
       alt: 'Picking a timer and counting down into the first exercise',
     },
     appStoreUrl: 'https://apps.apple.com/us/app/workout-timer-josh-approved/id6767314178',
@@ -272,7 +284,7 @@ const RAW_APPS: AppRecord[] = [
     keywords: 'relationships, friends, family, friendship, reminder, connection, birthday, stay in touch, no account, free',
     icon: '/assets/app-icons/tend.png',
     demo: {
-      src: '/assets/demos/tend.png',
+      src: tendDemo,
       alt: 'The Today screen showing who to reach out to and what is coming up',
     },
     permissions: 'Notifications (optional)',
