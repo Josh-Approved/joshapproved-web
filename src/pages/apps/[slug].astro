@@ -15,6 +15,10 @@ export function getStaticPaths() {
 
 const { app } = Astro.props;
 
+// The studio wedge — byte form, locked order (canonical-voice.md § The studio
+// wedge). Rendered as chips so the differentiator is scannable above the fold.
+const WEDGE = ['No paywall', 'No ads', 'No tracking', 'No accounts'];
+
 // Page <title> for search/tab. The brand isn't appended — og:site_name carries
 // it and the canonical domain (joshapproved.com) already shows it, so a "· Josh
 // Approved" suffix only made share-card titles redundant and over-long.
@@ -84,6 +88,22 @@ if (hasMobileStore) {
 ---
 <Base title={pageTitle} description={app.tagline} ogTitle={app.name} image={ogImage}>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  {/* Demo motion, done right: the <img> ships with the static poster as its src,
+      so reduced-motion visitors (and anyone before JS runs) only ever load the
+      still. Only when motion is allowed do we swap in the animated GIF — no
+      double-fetch, and the design system's reduced-motion contract is honored. */}
+  <script is:inline>
+    (function () {
+      try {
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      } catch (e) { return; }
+      document.querySelectorAll('img[data-gif]').forEach(function (img) {
+        var gif = img.getAttribute('data-gif');
+        if (gif) img.src = gif;
+      });
+    })();
+  </script>
 
   {/* Smart-link handoff. Runs ONLY when the URL carries ?install=1, so every
       other way of reaching this page behaves exactly as before. */}
@@ -165,40 +185,61 @@ if (hasMobileStore) {
   <div class="container">
     <Nav variant="crumb" crumb={app.name} />
 
-    <section class="hero">
-      <AppIcon app={app} size="lg" />
-      <div>
-        <div class="title-row">
-          <h1>{app.name}</h1>
-          {app.status === 'in-progress' && <span class="beta-tag">BETA</span>}
+    <section class={`lede${app.demo ? ' lede--demo' : ''}`}>
+      <div class="lede-copy">
+        <div class="idrow">
+          <AppIcon app={app} size="lg" />
+          <div class="title-row">
+            <h1>{app.name}</h1>
+            {app.status === 'in-progress' && <span class="beta-tag">BETA</span>}
+          </div>
         </div>
-        <p>{app.tagline}</p>
+
+        <p class="value">{app.value ?? app.description}</p>
+
+        <ul class="wedge" aria-label="What this costs you">
+          {WEDGE.map((claim) => <li>{claim}</li>)}
+        </ul>
+        <p class="signature">Your data stays with you.</p>
+
         {app.status === 'in-progress' && (
           <p class="beta-note">In TestFlight while I finish the last device-testing pass. Public listing soon — the GitHub source is open today.</p>
         )}
-      </div>
-    </section>
 
-    <div class="cta-row">
-      {app.appStoreUrl && (
-        <a class="badge-link" href={app.appStoreUrl} rel="noopener" aria-label="Download on the App Store">
-          <img src="/assets/badges/apple-app-store.svg" alt="Download on the App Store" width="132" height="44" />
-        </a>
+        <div class="cta-row">
+          {app.appStoreUrl && (
+            <a class="badge-link" href={app.appStoreUrl} rel="noopener" aria-label="Download on the App Store">
+              <img src="/assets/badges/apple-app-store.svg" alt="Download on the App Store" width="132" height="44" />
+            </a>
+          )}
+          {app.playStoreUrl && (
+            <a class="badge-link" href={app.playStoreUrl} rel="noopener" aria-label="Get it on Google Play">
+              <img src="/assets/badges/google-play.svg" alt="Get it on Google Play" width="149" height="44" />
+            </a>
+          )}
+          {app.webStoreUrl && (
+            <a class="btn primary" href={app.webStoreUrl} rel="noopener">
+              Add to Chrome
+            </a>
+          )}
+          <a class="btn secondary" href={app.github} rel="noopener">
+            Source on GitHub
+          </a>
+        </div>
+      </div>
+
+      {app.demo && (
+        <div class="lede-demo">
+          <img
+            class="demo-media"
+            src={app.demo.poster ?? app.demo.src}
+            data-gif={app.demo.poster ? app.demo.src : undefined}
+            alt={app.demo.alt}
+            decoding="async"
+          />
+        </div>
       )}
-      {app.playStoreUrl && (
-        <a class="badge-link" href={app.playStoreUrl} rel="noopener" aria-label="Get it on Google Play">
-          <img src="/assets/badges/google-play.svg" alt="Get it on Google Play" width="149" height="44" />
-        </a>
-      )}
-      {app.webStoreUrl && (
-        <a class="btn primary" href={app.webStoreUrl} rel="noopener">
-          Add to Chrome
-        </a>
-      )}
-      <a class="btn secondary" href={app.github} rel="noopener">
-        Source on GitHub
-      </a>
-    </div>
+    </section>
 
     <div class="specs">
       <div class="spec">
@@ -312,25 +353,87 @@ if (hasMobileStore) {
     margin: 0 auto;
     padding: 0 32px;
   }
-  .hero {
-    padding: 48px 0 32px;
+  .lede {
+    padding: 40px 0 12px;
+  }
+  .lede--demo {
     display: grid;
-    grid-template-columns: 96px 1fr;
-    gap: 28px;
+    grid-template-columns: 1fr minmax(240px, 300px);
+    gap: 52px;
     align-items: center;
   }
-  .hero .title-row {
+  .lede-copy {
+    min-width: 0;
+  }
+  .idrow {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin: 0 0 22px;
+  }
+  .title-row {
     display: flex;
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
-    margin: 0 0 6px;
   }
-  .hero h1 {
-    font-size: 36px;
+  .lede h1 {
+    font-size: 32px;
     font-weight: 600;
     letter-spacing: -0.02em;
     margin: 0;
+  }
+  .value {
+    font-size: 23px;
+    line-height: 1.35;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+    margin: 0 0 20px;
+  }
+  .wedge {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 12px;
+    padding: 0;
+  }
+  .wedge li {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.01em;
+    color: var(--fg);
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    padding: 5px 12px;
+    background: var(--bg-elevated);
+    white-space: nowrap;
+  }
+  .signature {
+    font-size: 14px;
+    color: var(--fg-muted);
+    margin: 0 0 22px;
+  }
+  .beta-note {
+    font-size: 14px;
+    color: var(--marketing-terracotta);
+    margin: 0 0 20px;
+    max-width: 52ch;
+  }
+  .lede-demo {
+    display: flex;
+    justify-content: center;
+  }
+  .demo-media {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    aspect-ratio: 600 / 1296;
+    object-fit: contain;
+    border: 1px solid var(--hairline);
+    border-radius: 20px;
   }
   .beta-tag {
     font-family: var(--font-mono);
@@ -343,22 +446,11 @@ if (hasMobileStore) {
     padding: 3px 7px;
     line-height: 1;
   }
-  .hero p {
-    font-size: 16px;
-    color: var(--fg-muted);
-    margin: 0;
-    line-height: 1.5;
-  }
-  .hero .beta-note {
-    font-size: 14px;
-    color: var(--marketing-terracotta);
-    margin-top: 8px;
-  }
   .cta-row {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 8px 0 24px;
+    padding: 4px 0 0;
     flex-wrap: wrap;
   }
   .badge-link {
@@ -403,7 +495,7 @@ if (hasMobileStore) {
     border-color: var(--fg);
   }
   .specs {
-    margin: 0 0 32px;
+    margin: 32px 0;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1px;
@@ -482,27 +574,44 @@ if (hasMobileStore) {
     color: var(--fg-muted);
     line-height: 1.6;
   }
+  @media (max-width: 760px) {
+    .lede--demo {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .lede-demo {
+      justify-content: flex-start;
+    }
+    .demo-media {
+      max-width: 230px;
+    }
+  }
   @media (max-width: 640px) {
     .container {
       padding: 0 20px;
     }
-    .hero {
-      grid-template-columns: 72px 1fr;
-      gap: 16px;
-      padding: 32px 0 24px;
+    .lede {
+      padding: 28px 0 8px;
     }
-    .hero :global(.frame--lg) {
-      --icon-size: 72px;
-      --icon-radius: 18px;
-      --corner-size: 18px;
+    .idrow {
+      gap: 14px;
+      margin: 0 0 18px;
+    }
+    .lede :global(.frame--lg) {
+      --icon-size: 64px;
+      --icon-radius: 16px;
+      --corner-size: 16px;
       --corner-offset: 6px;
       --corner-radius: 4px;
-      --glyph-size: 28px;
-      --ig-size: 18px;
-      --ig-em-size: 13px;
+      --glyph-size: 26px;
+      --ig-size: 16px;
+      --ig-em-size: 12px;
     }
-    .hero h1 {
+    .lede h1 {
       font-size: 26px;
+    }
+    .value {
+      font-size: 20px;
     }
     .specs {
       grid-template-columns: repeat(2, 1fr);

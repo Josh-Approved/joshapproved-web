@@ -11,6 +11,19 @@ export type AppRecord = {
   platforms: Platform[];
   status: 'shipped' | 'in-progress' | 'planned';
   github: string;
+  /** Above-the-fold value line: what the user gets, in plain words, before any
+   *  mention of how it's built. Wedge-free (the wedge renders as its own chips).
+   *  Falls back to `description` when unset. */
+  value?: string;
+  /** Hero demo shown above the fold on the app page and on the catalog card.
+   *  A `.gif` src autoplays and loops with `poster` as the reduced-motion / pre-load
+   *  still; a `.png`/`.jpg` src is a static framed screenshot (no poster). All
+   *  assets are ~600px-wide device-framed marketing images (aspect ≈ 600:1296). */
+  demo?: {
+    src: string;
+    poster?: string;
+    alt: string;
+  };
   /** Longer-tail descriptor woven into the page <title> for search (honest,
    *  no doorway pages). e.g. "Free interval & Tabata timer". */
   seoTitle?: string;
@@ -54,6 +67,7 @@ const RAW_APPS: AppRecord[] = [
     name: 'Split Expenses',
     tagline: 'Split shared costs with a group and see who owes whom. No paywall, no ads, no tracking, no accounts.',
     description: 'Track who paid for what on a trip, in a house, or as a couple, and settle up in the fewest payments. Your data stays with you.',
+    value: 'Track who paid for what, then settle up in the fewest payments.',
     tag: 'util',
     platforms: ['ios', 'android'],
     status: 'planned',
@@ -82,6 +96,7 @@ const RAW_APPS: AppRecord[] = [
     name: 'Grocery List',
     tagline: 'A shared grocery list the whole household keeps in sync. No paywall, no ads, no tracking, no accounts.',
     description: 'Make a list, share it with a link, and everyone adds and checks off items together in real time. Your data stays with you.',
+    value: 'One shared list your whole household keeps in sync. Add milk on your way home and it shows up on their phone.',
     tag: 'util',
     platforms: ['ios', 'android'],
     status: 'planned',
@@ -89,6 +104,11 @@ const RAW_APPS: AppRecord[] = [
     seoTitle: 'Shared grocery list, no account',
     keywords: 'grocery list, shopping list, shared list, household, groceries, no account, free',
     icon: '/assets/app-icons/grocery-list.png',
+    demo: {
+      src: '/assets/demos/grocery-list.gif',
+      poster: '/assets/demos/grocery-list-poster.png',
+      alt: 'Adding an item to a shared grocery list and checking it off',
+    },
     permissions: 'None required',
     network: 'Optional',
     license: 'MIT',
@@ -110,6 +130,7 @@ const RAW_APPS: AppRecord[] = [
     name: 'Packing List',
     tagline: 'A packing checklist that builds itself from the kind of trip you are taking.',
     description: 'A packing checklist that builds itself from the kind of trip you are taking. No accounts, no tracking — your data stays with you.',
+    value: 'Tell it the trip and it builds the packing list for you, with sensible quantities to adjust.',
     tag: 'util',
     platforms: ['ios', 'android'],
     status: 'in-progress',
@@ -117,6 +138,11 @@ const RAW_APPS: AppRecord[] = [
     seoTitle: 'A packing checklist that builds itself',
     keywords: 'packing list, travel checklist, packing checklist, trip planner, what to pack, free, no ads',
     icon: '/assets/app-icons/packing-list.png',
+    demo: {
+      src: '/assets/demos/packing-list.gif',
+      poster: '/assets/demos/packing-list-poster.png',
+      alt: 'A packing list filling in from the trip type, then items checked off',
+    },
     permissions: 'None',
     network: 'None',
     license: 'MIT',
@@ -138,6 +164,7 @@ const RAW_APPS: AppRecord[] = [
     name: 'Free Workout Timer',
     tagline: 'An interval and Tabata timer. No paywall, no ads, no tracking, no accounts.',
     description: 'Tabata and interval timing for the phone in your pocket. No paywall, no ads, no tracking, no accounts.',
+    value: 'Set your intervals, press start, and put the phone down. It counts you through the workout.',
     tag: 'util',
     platforms: ['ios', 'android'],
     status: 'shipped',
@@ -145,6 +172,11 @@ const RAW_APPS: AppRecord[] = [
     seoTitle: 'Free interval & Tabata timer',
     keywords: 'interval timer, tabata timer, hiit timer, workout timer, circuit timer, free, no ads, no accounts',
     icon: '/assets/app-icons/free-workout-timer.png',
+    demo: {
+      src: '/assets/demos/free-workout-timer.gif',
+      poster: '/assets/demos/free-workout-timer-poster.png',
+      alt: 'Picking a timer and counting down into the first exercise',
+    },
     appStoreUrl: 'https://apps.apple.com/us/app/workout-timer-josh-approved/id6767314178',
     permissions: 'None',
     network: 'None',
@@ -167,6 +199,7 @@ const RAW_APPS: AppRecord[] = [
     name: 'Ask AI',
     tagline: 'Ask questions about the page or video you are looking at. Your data stays with you.',
     description: 'A Chrome extension that answers questions about the current page or YouTube video, using the AI model built into Chrome.',
+    value: 'Ask a question about the page or video you are on. The answer comes from the AI built into Chrome.',
     tag: 'browser',
     platforms: ['chrome'],
     status: 'shipped',
@@ -196,6 +229,7 @@ const RAW_APPS: AppRecord[] = [
     name: 'Private AI Summary',
     tagline: 'Summarize any page. Critique any news article. Your data stays with you.',
     description: "A Chrome extension that summarizes pages and critiques news articles using the AI model built into Chrome.",
+    value: 'Summarize any page or critique any news article, right there in your browser.',
     tag: 'browser',
     platforms: ['chrome'],
     status: 'shipped',
@@ -217,6 +251,43 @@ const RAW_APPS: AppRecord[] = [
         'No analytics, no crash reports, no usage logs.',
         'The page text is processed inside Chrome. Nothing is uploaded.',
         'Works offline once the AI model is installed.',
+      ],
+    },
+  },
+  {
+    // Ships to the stores as "Relationships"; kept under the internal slug `tend`.
+    // Status stays 'in-progress' (TestFlight + Android internal track) until the
+    // store-availability overlay sees it live and upgrades it — same path every
+    // app follows, so real store links appear automatically the moment it ships.
+    slug: 'tend',
+    name: 'Relationships',
+    tagline: 'A calm, private place to keep up with the people you love. No paywall, no ads, no tracking, no accounts.',
+    description: 'Gentle reach-out reminders, the details worth remembering about each person, and a quiet space to prepare for the conversations that are hard to start. Your data stays with you.',
+    value: 'A calm place to keep up with the people you love. A gentle nudge when it has been too long, and the details worth remembering about each person.',
+    tag: 'util',
+    platforms: ['ios', 'android'],
+    status: 'in-progress',
+    github: 'https://github.com/Josh-Approved/tend',
+    seoTitle: 'Keep up with the people you love, privately',
+    keywords: 'relationships, friends, family, friendship, reminder, connection, birthday, stay in touch, no account, free',
+    icon: '/assets/app-icons/tend.png',
+    demo: {
+      src: '/assets/demos/tend.png',
+      alt: 'The Today screen showing who to reach out to and what is coming up',
+    },
+    permissions: 'Notifications (optional)',
+    network: 'None',
+    license: 'MIT',
+    body: [
+      'A calm "Today" shows only who to reach out to and what is coming up, never a guilt trip. Keep what matters about each person: how you met, important dates, what they love, what to ask about next time.',
+      'When a conversation is hard to start, "Have the Conversation" gives you a quiet space to prepare for it one step at a time. Set a gentle rhythm for each person, or none at all. Everything you write stays on your phone. There are no accounts, and nothing about the people in your life leaves your device.',
+    ],
+    privacy: {
+      headline: 'What this app collects',
+      bullets: [
+        'No analytics, no crash reports, no usage logs. No accounts, so there is nothing to sign up for.',
+        'Everything you write about the people in your life stays on your device.',
+        'You keep your own encrypted backup, and share your "Me" manual only when you choose to.',
       ],
     },
   },

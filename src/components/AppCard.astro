@@ -8,12 +8,27 @@ const { app } = Astro.props;
 ---
 <article class="card">
   <a class="card-main" href={`/apps/${app.slug}/`}>
-    <AppIcon app={app} size="sm" />
-    <div class="title-row">
-      <h3>{app.name}</h3>
-      {app.status === 'in-progress' && <span class="beta-tag">BETA</span>}
+    {app.demo && (
+      <div class="card-demo">
+        <img
+          class="demo-media"
+          src={app.demo.poster ?? app.demo.src}
+          data-gif={app.demo.poster ? app.demo.src : undefined}
+          alt={app.demo.alt}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    )}
+    <div class="card-head">
+      <AppIcon app={app} size="sm" />
+      <div class="title-row">
+        <h3>{app.name}</h3>
+        {app.status === 'in-progress' && <span class="beta-tag">BETA</span>}
+      </div>
     </div>
-    <p>{app.description}</p>
+    <p>{app.value ?? app.description}</p>
+    <p class="wedge">No paywall · No ads · No tracking · No accounts</p>
   </a>
   <div class="platforms">
     {app.platforms.map((p, i) => {
@@ -48,9 +63,28 @@ const { app } = Astro.props;
   .card-main {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
     text-decoration: none;
     color: inherit;
+  }
+  .card-demo {
+    display: flex;
+    justify-content: center;
+    padding: 2px 0 4px;
+  }
+  .card-demo .demo-media {
+    display: block;
+    width: 132px;
+    height: auto;
+    aspect-ratio: 600 / 1296;
+    object-fit: contain;
+    border: 1px solid var(--hairline);
+    border-radius: 16px;
+  }
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
   .card h3 {
     font-size: 17px;
@@ -64,6 +98,14 @@ const { app } = Astro.props;
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
+  }
+  .card .wedge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.02em;
+    color: var(--fg-subtle);
+    line-height: 1.5;
+    margin: 2px 0 0;
   }
   .beta-tag {
     font-family: var(--font-mono);

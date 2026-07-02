@@ -31,6 +31,20 @@ const betaCount = APPS.filter((a) => a.status === 'in-progress').length;
 
     <Footer />
   </div>
+
+  {/* Swap each demo's static poster for its animated GIF only when motion is
+      allowed — reduced-motion visitors keep the still (design-system contract). */}
+  <script is:inline>
+    (function () {
+      try {
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      } catch (e) { return; }
+      document.querySelectorAll('img[data-gif]').forEach(function (img) {
+        var gif = img.getAttribute('data-gif');
+        if (gif) img.src = gif;
+      });
+    })();
+  </script>
 </Base>
 
 <style>
