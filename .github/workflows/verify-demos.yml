@@ -1,0 +1,30 @@
+# Deterministic gate against a silent regression to static demos.
+#
+# The site's homepage/app-page product demos must actually PLAY. This runs the
+# built site in real headless Chrome and asserts the animated .gif renders when
+# motion is allowed and the still poster renders under prefers-reduced-motion,
+# and that every demo asset 200s. It runs in CI (not in `astro build`) because
+# Cloudflare's build env has no browser — keeping the browser gate out of the
+# deploy build, where it belongs.
+name: verify-demos
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify-demos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm run build
+      # ubuntu-latest ships google-chrome-stable; point the CDP gate at it.
+      - name: Verify demo playback
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: npm run verify:demos

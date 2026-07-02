@@ -89,22 +89,6 @@ if (hasMobileStore) {
 <Base title={pageTitle} description={app.tagline} ogTitle={app.name} image={ogImage}>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
-  {/* Demo motion, done right: the <img> ships with the static poster as its src,
-      so reduced-motion visitors (and anyone before JS runs) only ever load the
-      still. Only when motion is allowed do we swap in the animated GIF — no
-      double-fetch, and the design system's reduced-motion contract is honored. */}
-  <script is:inline>
-    (function () {
-      try {
-        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      } catch (e) { return; }
-      document.querySelectorAll('img[data-gif]').forEach(function (img) {
-        var gif = img.getAttribute('data-gif');
-        if (gif) img.src = gif;
-      });
-    })();
-  </script>
-
   {/* Smart-link handoff. Runs ONLY when the URL carries ?install=1, so every
       other way of reaching this page behaves exactly as before. */}
   <script define:vars={{ iosScheme, androidScheme }}>
@@ -230,13 +214,19 @@ if (hasMobileStore) {
 
       {app.demo && (
         <div class="lede-demo">
-          <img
-            class="demo-media"
-            src={app.demo.poster ?? app.demo.src}
-            data-gif={app.demo.poster ? app.demo.src : undefined}
-            alt={app.demo.alt}
-            decoding="async"
-          />
+          {/* Plain <picture>: the <img> loads the .gif, which animates on its own
+              the moment motion is allowed — no JS, so nothing can silently fail to
+              swap. The reduced-motion <source> serves the still poster instead,
+              honoring the design system's reduced-motion contract declaratively.
+              The hero is above the fold, so it loads eagerly (no loading="lazy"). */}
+          {app.demo.poster ? (
+            <picture>
+              <source srcset={app.demo.poster} media="(prefers-reduced-motion: reduce)" />
+              <img class="demo-media" src={app.demo.src} alt={app.demo.alt} decoding="async" />
+            </picture>
+          ) : (
+            <img class="demo-media" src={app.demo.src} alt={app.demo.alt} decoding="async" />
+          )}
         </div>
       )}
     </section>
@@ -424,6 +414,9 @@ if (hasMobileStore) {
   .lede-demo {
     display: flex;
     justify-content: center;
+  }
+  .lede-demo picture {
+    display: contents;
   }
   .demo-media {
     display: block;

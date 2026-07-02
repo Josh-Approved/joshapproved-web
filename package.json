@@ -9,7 +9,10 @@
     "preview": "astro preview",
     "sync-design-system": "node scripts/sync-design-system.mjs",
     "generate-install-links": "tsx scripts/generate-install-links.ts",
-    "gen-og": "tsx scripts/gen-og-images.mjs"
+    "gen-og": "tsx scripts/gen-og-images.mjs",
+    "gen-demo-posters": "node scripts/gen-demo-posters.mjs",
+    "verify:demos": "node scripts/verify-demo-playback.mjs",
+    "verify": "npm run build && npm run verify:demos"
   },
   "devDependencies": {
     "astro": "^5.0.0",

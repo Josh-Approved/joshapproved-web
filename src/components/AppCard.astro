@@ -10,14 +10,14 @@ const { app } = Astro.props;
   <a class="card-main" href={`/apps/${app.slug}/`}>
     {app.demo && (
       <div class="card-demo">
-        <img
-          class="demo-media"
-          src={app.demo.poster ?? app.demo.src}
-          data-gif={app.demo.poster ? app.demo.src : undefined}
-          alt={app.demo.alt}
-          loading="lazy"
-          decoding="async"
-        />
+        {app.demo.poster ? (
+          <picture>
+            <source srcset={app.demo.poster} media="(prefers-reduced-motion: reduce)" />
+            <img class="demo-media" src={app.demo.src} alt={app.demo.alt} loading="lazy" decoding="async" />
+          </picture>
+        ) : (
+          <img class="demo-media" src={app.demo.src} alt={app.demo.alt} loading="lazy" decoding="async" />
+        )}
       </div>
     )}
     <div class="card-head">
@@ -71,6 +71,9 @@ const { app } = Astro.props;
     display: flex;
     justify-content: center;
     padding: 2px 0 4px;
+  }
+  .card-demo picture {
+    display: contents;
   }
   .card-demo .demo-media {
     display: block;
