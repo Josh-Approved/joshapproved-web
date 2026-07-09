@@ -1,18 +1,24 @@
 /**
- * Edge front for the static site. Its only job is URL canonicalisation so that
- * every page has one address Google will index:
+ * Edge front for the static site. Two jobs, both about giving every page one
+ * secure, canonical address:
  *
- *   - www.joshapproved.com        -> joshapproved.com   (drop the www)
- *   - http://…                    -> https://…          (force TLS)
- *   - a trailing-slash normalise  -> made permanent (301) instead of temporary
+ *   1. Canonicalise the URL:
+ *        - www.joshapproved.com      -> joshapproved.com   (drop the www)
+ *        - http://…                  -> https://…          (force TLS)
+ *        - a trailing-slash normalise -> made permanent (301/308) not temporary
+ *   2. Set HSTS on every response so browsers refuse to downgrade to http
+ *      (clears Cloudflare's "Domains without HSTS" insight for apex + www).
  *
- * Everything that is already canonical falls straight through to the static
- * assets (env.ASSETS), which still applies _redirects and trailing-slash
- * handling as before. Requires assets.run_worker_first so this runs on every
- * request, including ones that map directly to a built file.
+ * Everything already canonical falls straight through to the static assets
+ * (env.ASSETS), which still applies _redirects and trailing-slash handling.
+ * Requires assets.run_worker_first so this runs on every request, including
+ * ones that map directly to a built file.
  */
 
 const CANONICAL_HOST = 'joshapproved.com';
+// 1 year, cover subdomains. No `preload` on purpose: the preload list is a
+// hard-to-reverse commitment we don't need for a marketing site.
+const HSTS = 'max-age=31536000; includeSubDomains';
 
 export default {
   async fetch(request, env) {
@@ -25,18 +31,29 @@ export default {
       url.hostname = CANONICAL_HOST;
       url.protocol = 'https:';
       url.port = '';
-      return Response.redirect(url.toString(), 301);
+      return new Response(null, {
+        status: 301,
+        headers: {
+          Location: url.toString(),
+          'Strict-Transport-Security': HSTS,
+        },
+      });
     }
 
-    // Already canonical host + scheme: serve the static asset.
-    const res = await env.ASSETS.fetch(request);
+    // Already canonical host + scheme: serve the static asset, then add HSTS.
+    const assetRes = await env.ASSETS.fetch(request);
 
     // Cloudflare emits a temporary 307 for its automatic trailing-slash
     // normalisation (e.g. /about -> /about/). Make it permanent so Google
-    // consolidates ranking signals onto the slashed URL and stops re-checking.
-    if (res.status === 307) {
-      return new Response(res.body, { status: 308, headers: new Headers(res.headers) });
-    }
+    // consolidates ranking signals and stops re-checking the other form.
+    const status = assetRes.status === 307 ? 308 : assetRes.status;
+
+    const res = new Response(assetRes.body, {
+      status,
+      statusText: assetRes.statusText,
+      headers: new Headers(assetRes.headers),
+    });
+    res.headers.set('Strict-Transport-Security', HSTS);
     return res;
   },
 };
