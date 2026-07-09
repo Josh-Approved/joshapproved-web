@@ -3,6 +3,8 @@ import Base from '../../layouts/Base.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import { getCollection, render } from 'astro:content';
+import { APPS } from '../../data/apps.ts';
+import AppIcon from '../../components/AppIcon.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('writing');
@@ -20,6 +22,10 @@ const updated = new Date(post.data.updated).toLocaleDateString('en-US', {
   day: 'numeric',
   timeZone: 'UTC',
 });
+
+const relatedApps = (post.data.apps ?? [])
+  .map((slug) => APPS.find((a) => a.slug === slug))
+  .filter((a): a is NonNullable<typeof a> => Boolean(a));
 ---
 <Base title={`${post.data.title} · Josh Approved`} description={post.data.description}>
   <div class="brandrule"></div>
@@ -35,10 +41,29 @@ const updated = new Date(post.data.updated).toLocaleDateString('en-US', {
       <Content />
     </article>
 
+    {relatedApps.length > 0 && (
+      <section class="related-apps" aria-labelledby="ra-heading">
+        <h2 id="ra-heading">The apps this is about</h2>
+        <ul>
+          {relatedApps.map((app) => (
+            <li>
+              <a href={`/apps/${app.slug}/`}>
+                <AppIcon app={app} size="sm" />
+                <span class="ra-body">
+                  <span class="ra-name">{app.name}</span>
+                  <span class="ra-val">{app.value ?? app.tagline}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
     <aside class="closer">
       <p>
         This is one of the patterns the apps are a reaction to. If you'd rather
-        just see what I make, <a href="/#apps">the apps are here</a> — or
+        just see what I make, <a href="/#apps">the apps are here</a>, or
         there's <a href="/about/">more on why</a>.
       </p>
     </aside>
@@ -123,6 +148,56 @@ const updated = new Date(post.data.updated).toLocaleDateString('en-US', {
     font-size: 17px;
     line-height: 1.7;
     margin: 0 0 8px;
+  }
+  .related-apps {
+    margin: 44px 0 0;
+    padding-top: 24px;
+    border-top: 1px solid var(--hairline);
+  }
+  .related-apps h2 {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 14px;
+    color: var(--fg);
+  }
+  .related-apps ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .related-apps li a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 150ms, border-color 150ms;
+  }
+  .related-apps li a:hover {
+    background: var(--bg-elevated);
+    border-color: var(--fg);
+  }
+  .related-apps .ra-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+  .related-apps .ra-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--fg);
+  }
+  .related-apps .ra-val {
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--fg-muted);
   }
   .closer {
     margin: 40px 0 0;

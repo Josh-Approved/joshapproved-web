@@ -2,6 +2,9 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { APPS } from '../data/apps.ts';
 
+// Blog posts + writing essays both come from content collections, so any new
+// article auto-appears here on the next build. Drafts are excluded.
+
 // Generated sitemap — derived from the app data + the writing collection so it
 // can NEVER drift the way the old hand-maintained public/sitemap.xml did (it was
 // silently missing grocery-list and tend). Astro prerenders this endpoint at
@@ -13,15 +16,22 @@ type Entry = { loc: string; priority: string; lastmod?: string };
 
 export const GET: APIRoute = async () => {
   const writing = await getCollection('writing');
+  const posts = (await getCollection('posts')).filter((p) => !p.data.draft);
 
   const entries: Entry[] = [
     { loc: `${SITE}/`, priority: '1.0' },
     { loc: `${SITE}/apps/`, priority: '0.9' },
+    { loc: `${SITE}/blog/`, priority: '0.7' },
     { loc: `${SITE}/about/`, priority: '0.6' },
     { loc: `${SITE}/writing/`, priority: '0.6' },
     ...APPS.map((app) => ({
       loc: `${SITE}/apps/${app.slug}/`,
       priority: '0.8',
+    })),
+    ...posts.map((post) => ({
+      loc: `${SITE}/blog/${post.id}/`,
+      priority: '0.7',
+      lastmod: post.data.updated ?? post.data.published,
     })),
     ...writing.map((post) => ({
       loc: `${SITE}/writing/${post.id}/`,

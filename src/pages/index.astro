@@ -8,11 +8,37 @@ import { APPS } from '../data/apps.ts';
 const visible = APPS.filter((a) => a.status === 'shipped' || a.status === 'in-progress');
 const shippedCount = APPS.filter((a) => a.status === 'shipped').length;
 const inProgressCount = APPS.filter((a) => a.status === 'in-progress').length;
+
+// Organization + WebSite structured data. Invisible to visitors; it tells search
+// engines this is one named studio (with its GitHub as the verifying profile),
+// which supports a brand knowledge panel and cleaner branded-search results.
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://joshapproved.com/#org',
+      name: 'Josh Approved',
+      url: 'https://joshapproved.com',
+      logo: 'https://joshapproved.com/assets/wordmark.svg',
+      description: 'A one-person studio making free, open-source, privacy-first utility apps. No paywall, no ads, no tracking, no accounts.',
+      sameAs: ['https://github.com/Josh-Approved'],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://joshapproved.com/#website',
+      name: 'Josh Approved',
+      url: 'https://joshapproved.com',
+      publisher: { '@id': 'https://joshapproved.com/#org' },
+    },
+  ],
+};
 ---
 <Base
   title="Josh Approved — utility apps that do one thing and leave you alone"
   description="Utility apps that do one thing and leave you alone. No paywall, no ads, no tracking, no accounts — your data stays with you. Made by one person."
 >
+  <script type="application/ld+json" set:html={JSON.stringify(orgLd)} />
   <div class="brandrule"></div>
   <div class="container">
     <Nav variant="full" />

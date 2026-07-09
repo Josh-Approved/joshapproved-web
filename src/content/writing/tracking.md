@@ -4,6 +4,7 @@ description: "Almost every app and website records what you look at and tap. Her
 dek: "Almost every app and website records what you look at and tap. Here's how it actually works, the fair reason it exists, and the point where it stops being for you."
 order: 1
 updated: "2026-05-15"
+apps: ["grocery-list", "tend", "private-ai-summary"]
 ---
 
 Open almost any app or website and, before you've done anything, it has already started taking notes. Which screen you landed on. How long you stayed. What you tapped, what you scrolled past, where your thumb hovered and didn't commit. The page you were on when you closed it.

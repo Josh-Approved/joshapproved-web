@@ -4,6 +4,7 @@ description: "Most free apps aren't a gift — you're paying with attention and 
 dek: "Most free apps aren't a gift. Here's how ad-supported software actually works, the fair case for it, and the point where the incentives turn against you."
 order: 2
 updated: "2026-05-15"
+apps: ["free-workout-timer", "ask-ai"]
 ---
 
 If an app costs nothing and shows you ads, it's easy to assume the deal is simple: you watch a few ads, the maker gets a few cents, everyone's even. That's the surface. Underneath, the arrangement shapes the entire app you're using, usually in ways you'd object to if they were stated out loud.

@@ -4,6 +4,7 @@ description: "A surprising number of tiny apps ask you to make an account before
 dek: "A surprising number of tiny apps make you sign up before they'll do a single thing. Here's the fair reason it exists — and the point where the account stops being for you."
 order: 3
 updated: "2026-05-15"
+apps: ["grocery-list", "split-expenses", "packing-list"]
 ---
 
 You download something small. A timer. A converter. A calculator. You open it, ready to use the one feature you came for, and it asks you to create an account first. Email, password, maybe a verification link, maybe "continue with Google." For a timer.

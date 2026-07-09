@@ -1,0 +1,249 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import AppIcon from '../../components/AppIcon.astro';
+import { getCollection, render } from 'astro:content';
+import { APPS } from '../../data/apps.ts';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('posts')).filter((p) => !p.data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const app = APPS.find((a) => a.slug === post.data.app);
+const published = new Date(post.data.published).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+
+const canonical = `https://joshapproved.com/blog/${post.id}/`;
+const kindLabel = post.data.kind === 'launch' ? 'New app' : 'Alternative to paid apps';
+
+// BlogPosting structured data — an honest article record for search, plus a
+// breadcrumb so the result shows Home > Blog > title.
+const blogLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.published,
+  dateModified: post.data.updated ?? post.data.published,
+  author: { '@type': 'Person', name: 'Josh', url: 'https://joshapproved.com/about/' },
+  publisher: { '@type': 'Organization', name: 'Josh Approved', url: 'https://joshapproved.com' },
+  mainEntityOfPage: canonical,
+  ...(app ? { about: { '@type': 'SoftwareApplication', name: app.name, url: `https://joshapproved.com/apps/${app.slug}/` } } : {}),
+};
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://joshapproved.com/' },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://joshapproved.com/blog/' },
+    { '@type': 'ListItem', position: 3, name: post.data.title, item: canonical },
+  ],
+};
+
+const ogImage = app?.icon ? `/assets/og/${app.slug}.png` : undefined;
+---
+<Base title={`${post.data.title} · Josh Approved`} description={post.data.description} image={ogImage}>
+  <script type="application/ld+json" set:html={JSON.stringify(blogLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+
+  <div class="brandrule"></div>
+  <div class="container">
+    <Nav variant="full" />
+
+    <a class="back" href="/blog/">← Blog</a>
+
+    <article class="prose">
+      <span class="kind">{kindLabel}</span>
+      <h1>{post.data.title}</h1>
+      <p class="dek">{post.data.dek}</p>
+      <p class="meta">By Josh · {published}</p>
+      <Content />
+    </article>
+
+    {app && (
+      <aside class="appcta">
+        <AppIcon app={app} size="sm" />
+        <div class="appcta-body">
+          <h2>{app.name}</h2>
+          <p>{app.value ?? app.tagline}</p>
+          <div class="appcta-links">
+            <a class="appcta-primary" href={`/apps/${app.slug}/`}>See the app</a>
+            {app.appStoreUrl && (
+              <a class="badge-link" href={app.appStoreUrl} rel="noopener" aria-label="Download on the App Store">
+                <img src="/assets/badges/apple-app-store.svg" alt="Download on the App Store" width="120" height="40" />
+              </a>
+            )}
+            {app.playStoreUrl && (
+              <a class="badge-link" href={app.playStoreUrl} rel="noopener" aria-label="Get it on Google Play">
+                <img src="/assets/badges/google-play.svg" alt="Get it on Google Play" width="135" height="40" />
+              </a>
+            )}
+          </div>
+        </div>
+      </aside>
+    )}
+
+    <Footer />
+  </div>
+</Base>
+
+<style>
+  .brandrule {
+    height: 3px;
+    background: var(--marketing-terracotta);
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .back {
+    display: inline-block;
+    margin: 40px 0 0;
+    font-size: 14px;
+    color: var(--fg-muted);
+    text-decoration: none;
+  }
+  .back:hover {
+    color: var(--fg);
+  }
+  .prose {
+    padding: 16px 0 8px;
+  }
+  .kind {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--marketing-terracotta);
+  }
+  .prose h1 {
+    font-size: 42px;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    font-weight: 600;
+    margin: 10px 0 16px;
+  }
+  .prose .dek {
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--fg-muted);
+    margin: 0 0 16px;
+  }
+  .prose .meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--fg-subtle);
+    margin: 0 0 8px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .prose :global(h2) {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    margin: 40px 0 12px;
+  }
+  .prose :global(p) {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--fg);
+    margin: 0 0 18px;
+  }
+  .prose :global(strong) {
+    font-weight: 600;
+  }
+  .prose :global(a) {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--marketing-terracotta);
+    text-underline-offset: 3px;
+  }
+  .prose :global(ul) {
+    margin: 0 0 18px;
+    padding-left: 22px;
+  }
+  .prose :global(li) {
+    font-size: 17px;
+    line-height: 1.7;
+    margin: 0 0 8px;
+  }
+  .appcta {
+    margin: 40px 0 0;
+    padding: 24px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--hairline);
+    border-radius: 16px;
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  .appcta-body h2 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 2px 0 6px;
+  }
+  .appcta-body p {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--fg-muted);
+    margin: 0 0 14px;
+  }
+  .appcta-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .appcta-primary {
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    background: var(--fg);
+    color: var(--bg);
+    text-decoration: none;
+  }
+  .appcta-primary:hover {
+    background: var(--fg-muted);
+  }
+  .badge-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  .badge-link img {
+    height: 40px;
+    width: auto;
+    display: block;
+  }
+  .badge-link:hover {
+    opacity: 0.82;
+  }
+  @media (max-width: 540px) {
+    .container { padding: 0 20px; }
+    .prose h1 { font-size: 32px; }
+    .prose :global(p), .prose :global(li) { font-size: 16px; }
+    .appcta { grid-template-columns: 1fr; }
+  }
+</style>

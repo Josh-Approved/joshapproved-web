@@ -87,7 +87,9 @@ const others = APPS.filter((a) => a.slug !== currentSlug).sort(
   .rail {
     list-style: none;
     margin: 0;
-    padding: 0 0 8px;
+    /* Bottom padding clears the horizontal scrollbar so it sits below the tiles
+       rather than over them. Must be >= the scrollbar height set below. */
+    padding: 0 0 14px;
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: minmax(210px, 1fr);
@@ -95,9 +97,25 @@ const others = APPS.filter((a) => a.slug !== currentSlug).sort(
     background: var(--hairline);
     border: 1px solid var(--hairline);
     border-radius: 12px;
+    /* Scroll horizontally only. Setting overflow-x alone makes the browser
+       compute overflow-y to `auto`, which produced a stray vertical scrollbar
+       (the horizontal scrollbar ate a few px of height). Pin y to hidden, give
+       the horizontal scrollbar a known thin height, and pad for it above. */
     overflow-x: auto;
+    overflow-y: hidden;
     scroll-snap-type: x proximity;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .rail::-webkit-scrollbar {
+    height: 8px;
+  }
+  .rail::-webkit-scrollbar-thumb {
+    background: var(--hairline-strong, var(--fg-subtle));
+    border-radius: 999px;
+  }
+  .rail::-webkit-scrollbar-track {
+    background: transparent;
   }
   .tile {
     background: var(--bg);
@@ -156,7 +174,9 @@ const others = APPS.filter((a) => a.slug !== currentSlug).sort(
     overflow: hidden;
   }
   .tile .plats {
-    margin-top: auto;
+    /* Not pinned to the bottom of the tile: the horizontal scrollbar clips the
+       last few px of the tile, so keeping this line with the content above keeps
+       it fully visible. Equal-height tiles just get empty space at the foot. */
     font-family: var(--font-mono);
     font-size: 10px;
     text-transform: uppercase;

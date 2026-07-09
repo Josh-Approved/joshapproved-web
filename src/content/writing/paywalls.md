@@ -4,6 +4,7 @@ description: "You download an app to do one thing, and that exact thing is the p
 dek: "You download an app to do one thing — and that exact thing is the part behind the paywall. Here's the fair case for charging money, and where this specific pattern crosses a line."
 order: 4
 updated: "2026-05-15"
+apps: ["free-workout-timer", "grocery-list"]
 ---
 
 There's a specific move I want to talk about, because it's the one that bothers me most and the one I see everywhere.
