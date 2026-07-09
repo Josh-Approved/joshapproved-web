@@ -51,7 +51,8 @@ const jsonLd = {
   ...(app.appStoreUrl || app.playStoreUrl || app.webStoreUrl
     ? { downloadUrl: app.appStoreUrl ?? app.playStoreUrl ?? app.webStoreUrl }
     : {}),
-  author: { '@type': 'Organization', name: 'Josh Approved', url: 'https://joshapproved.com' },
+  author: { '@type': 'Organization', '@id': 'https://joshapproved.com/#org', name: 'Josh Approved', url: 'https://joshapproved.com' },
+  publisher: { '@id': 'https://joshapproved.com/#org' },
 };
 
 // Breadcrumb trail (mirrors the on-page crumb nav) so Google can render a

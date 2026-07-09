@@ -1,11 +1,28 @@
 ---
 import Base from '../layouts/Base.astro';
 import Footer from '../components/Footer.astro';
+
+// AboutPage schema, wired to the canonical Organization + Person entities defined
+// on the homepage (by @id), so answer engines read this as the authoritative
+// "who is Josh Approved / who is Josh" page.
+const aboutLd = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  '@id': 'https://joshapproved.com/about/#aboutpage',
+  url: 'https://joshapproved.com/about/',
+  name: 'About Josh Approved',
+  description: "Why Josh Approved exists and how it works, in the founder's words.",
+  inLanguage: 'en',
+  mainEntity: { '@id': 'https://joshapproved.com/#org' },
+  about: [{ '@id': 'https://joshapproved.com/#org' }, { '@id': 'https://joshapproved.com/#josh' }],
+  publisher: { '@id': 'https://joshapproved.com/#org' },
+};
 ---
 <Base
   title="About · Josh Approved"
   description="Why Josh Approved exists and how it works."
 >
+  <script type="application/ld+json" set:html={JSON.stringify(aboutLd)} />
   <div class="container">
     <article class="prose">
       <h1>About</h1>

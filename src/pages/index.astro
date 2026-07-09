@@ -8,9 +8,11 @@ const visible = APPS.filter((a) => a.status === 'shipped' || a.status === 'in-pr
 const shippedCount = APPS.filter((a) => a.status === 'shipped').length;
 const inProgressCount = APPS.filter((a) => a.status === 'in-progress').length;
 
-// Organization + WebSite structured data. Invisible to visitors; it tells search
-// engines this is one named studio (with its GitHub as the verifying profile),
-// which supports a brand knowledge panel and cleaner branded-search results.
+// Entity graph (Organization + founder Person + WebSite). Invisible to visitors;
+// it lets search and AI answer engines identify this as one named studio, run by
+// one named person, with GitHub as the verifying profile, so they can attribute
+// and cite it confidently. This is the canonical entity definition other pages
+// reference by @id.
 const orgLd = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -20,15 +22,37 @@ const orgLd = {
       name: 'Josh Approved',
       url: 'https://joshapproved.com',
       logo: 'https://joshapproved.com/assets/wordmark.svg',
-      description: 'A one-person studio making free, open-source, privacy-first utility apps. No paywall, no ads, no tracking, no accounts.',
+      description:
+        'Josh Approved is a one-person studio that makes free, open-source, privacy-first utility apps for iOS and Android. No paywall, no ads, no tracking, no accounts, and your data stays with you.',
+      slogan: 'No paywall. No ads. No tracking. No accounts.',
+      knowsAbout: [
+        'privacy-first software',
+        'open-source utility apps',
+        'iOS apps',
+        'Android apps',
+        'apps with no ads or tracking',
+      ],
+      founder: { '@id': 'https://joshapproved.com/#josh' },
       sameAs: ['https://github.com/Josh-Approved'],
+    },
+    {
+      '@type': 'Person',
+      '@id': 'https://joshapproved.com/#josh',
+      name: 'Josh',
+      url: 'https://joshapproved.com/about/',
+      jobTitle: 'Founder',
+      description:
+        'Solo founder and developer of Josh Approved, making free, privacy-first utility apps after years building large consumer apps.',
+      worksFor: { '@id': 'https://joshapproved.com/#org' },
     },
     {
       '@type': 'WebSite',
       '@id': 'https://joshapproved.com/#website',
       name: 'Josh Approved',
       url: 'https://joshapproved.com',
+      inLanguage: 'en',
       publisher: { '@id': 'https://joshapproved.com/#org' },
+      about: { '@id': 'https://joshapproved.com/#org' },
     },
   ],
 };

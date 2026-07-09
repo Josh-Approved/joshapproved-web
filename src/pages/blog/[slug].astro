@@ -36,8 +36,8 @@ const blogLd = {
   description: post.data.description,
   datePublished: post.data.published,
   dateModified: post.data.updated ?? post.data.published,
-  author: { '@type': 'Person', name: 'Josh', url: 'https://joshapproved.com/about/' },
-  publisher: { '@type': 'Organization', name: 'Josh Approved', url: 'https://joshapproved.com' },
+  author: { '@type': 'Person', '@id': 'https://joshapproved.com/#josh', name: 'Josh', url: 'https://joshapproved.com/about/' },
+  publisher: { '@type': 'Organization', '@id': 'https://joshapproved.com/#org', name: 'Josh Approved', url: 'https://joshapproved.com' },
   mainEntityOfPage: canonical,
   ...(app ? { about: { '@type': 'SoftwareApplication', name: app.name, url: `https://joshapproved.com/apps/${app.slug}/` } } : {}),
 };

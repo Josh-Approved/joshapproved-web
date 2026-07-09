@@ -1,4 +1,55 @@
+# Josh Approved: free, open-source, privacy-first utility apps.
+# Our content is open (MIT) and we are glad to be read, cited, and quoted.
+# AI answer engines and crawlers are explicitly welcome.
+
 User-agent: *
 Allow: /
+
+# Answer engines and AI crawlers, named explicitly so intent is unambiguous.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# A curated, LLM-friendly map of the site:
+# https://joshapproved.com/llms.txt   (index)
+# https://joshapproved.com/llms-full.txt   (full text)
 
 Sitemap: https://joshapproved.com/sitemap.xml
