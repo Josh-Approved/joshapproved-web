@@ -1,16 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
-import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 ---
 <Base
   title="About · Josh Approved"
   description="Why Josh Approved exists and how it works."
 >
-  <div class="brandrule"></div>
   <div class="container">
-    <Nav />
-
     <article class="prose">
       <h1>About</h1>
       <p class="lede">Hi, I'm Josh. I make utility apps, and this is the honest version of why.</p>
@@ -70,10 +66,6 @@ import Footer from '../components/Footer.astro';
 </Base>
 
 <style>
-  .brandrule {
-    height: 3px;
-    background: var(--marketing-terracotta);
-  }
   .container {
     max-width: 720px;
     margin: 0 auto;

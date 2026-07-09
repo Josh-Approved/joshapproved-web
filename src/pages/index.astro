@@ -1,6 +1,5 @@
 ---
 import Base from '../layouts/Base.astro';
-import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import AppCard from '../components/AppCard.astro';
 import { APPS } from '../data/apps.ts';
@@ -39,10 +38,7 @@ const orgLd = {
   description="Utility apps that do one thing and leave you alone. No paywall, no ads, no tracking, no accounts. Your data stays with you. Made by one person."
 >
   <script type="application/ld+json" set:html={JSON.stringify(orgLd)} />
-  <div class="brandrule"></div>
   <div class="container">
-    <Nav />
-
     <section class="hero">
       <h1>I build utility apps that do one thing and leave you alone.</h1>
       <p class="lede">
@@ -93,10 +89,6 @@ const orgLd = {
 </Base>
 
 <style>
-  .brandrule {
-    height: 3px;
-    background: var(--marketing-terracotta);
-  }
   .container {
     max-width: 1080px;
     margin: 0 auto;

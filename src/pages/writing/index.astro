@@ -1,6 +1,5 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import { getCollection } from 'astro:content';
 
@@ -12,10 +11,7 @@ const posts = (await getCollection('writing')).sort(
   title="Writing · Josh Approved"
   description="Plain-language pieces on the common patterns in consumer software (tracking, ads, accounts, paywalls) and why I build the opposite kind."
 >
-  <div class="brandrule"></div>
   <div class="container">
-    <Nav />
-
     <header class="head">
       <h1>Writing</h1>
       <p class="lede">
@@ -43,10 +39,6 @@ const posts = (await getCollection('writing')).sort(
 </Base>
 
 <style>
-  .brandrule {
-    height: 3px;
-    background: var(--marketing-terracotta);
-  }
   .container {
     max-width: 760px;
     margin: 0 auto;

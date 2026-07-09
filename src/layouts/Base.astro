@@ -1,4 +1,6 @@
 ---
+import Nav from '../components/Nav.astro';
+
 type Props = {
   title: string;
   description?: string;
@@ -8,9 +10,13 @@ type Props = {
   ogTitle?: string;
   /** Path to a share-card image (1200×630). Resolved to an absolute URL. */
   image?: string;
+  /** Breadcrumb leaf label. Set on detail pages (app / post) only; a row
+   *  renders below the header. Section index pages leave it unset. */
+  crumb?: string;
+  crumbParent?: { href: string; label: string };
 };
 
-const { title, description, canonical, ogTitle, image } = Astro.props;
+const { title, description, canonical, ogTitle, image, crumb, crumbParent } = Astro.props;
 const fullCanonical = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
 const fullDescription =
   description ??
@@ -53,6 +59,28 @@ const fullImage = image ? new URL(image, Astro.site).toString() : undefined;
     <link rel="stylesheet" href="/styles/tokens.css" />
   </head>
   <body>
+    <header class="site-header">
+      <div class="page-shell">
+        <Nav crumb={crumb} crumbParent={crumbParent} />
+      </div>
+    </header>
     <slot />
   </body>
 </html>
+
+<style>
+  /* One header for the whole site, rendered here so it is identical and in the
+     same place on every page. It sits at a fixed width independent of each
+     page's content width (which varies: 720 for prose, 1080 for the grids), so
+     the logo and links never shift between pages. */
+  .page-shell {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  @media (max-width: 640px) {
+    .page-shell {
+      padding: 0 20px;
+    }
+  }
+</style>

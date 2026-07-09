@@ -1,6 +1,5 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import AppIcon from '../../components/AppIcon.astro';
 import { getCollection, render } from 'astro:content';
@@ -54,16 +53,11 @@ const breadcrumbLd = {
 
 const ogImage = app?.icon ? `/assets/og/${app.slug}.png` : undefined;
 ---
-<Base title={`${post.data.title} · Josh Approved`} description={post.data.description} image={ogImage}>
+<Base title={`${post.data.title} · Josh Approved`} description={post.data.description} image={ogImage} crumb={post.data.title} crumbParent={{ href: '/blog/', label: 'Blog' }}>
   <script type="application/ld+json" set:html={JSON.stringify(blogLd)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
 
-  <div class="brandrule"></div>
   <div class="container">
-    <Nav />
-
-    <a class="back" href="/blog/">← Blog</a>
-
     <article class="prose">
       <span class="kind">{kindLabel}</span>
       <h1>{post.data.title}</h1>
@@ -100,24 +94,10 @@ const ogImage = app?.icon ? `/assets/og/${app.slug}.png` : undefined;
 </Base>
 
 <style>
-  .brandrule {
-    height: 3px;
-    background: var(--marketing-terracotta);
-  }
   .container {
     max-width: 720px;
     margin: 0 auto;
     padding: 0 32px;
-  }
-  .back {
-    display: inline-block;
-    margin: 40px 0 0;
-    font-size: 14px;
-    color: var(--fg-muted);
-    text-decoration: none;
-  }
-  .back:hover {
-    color: var(--fg);
   }
   .prose {
     padding: 16px 0 8px;

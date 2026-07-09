@@ -1,6 +1,5 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import { getCollection } from 'astro:content';
 
@@ -15,10 +14,7 @@ const fmt = (d: string) =>
   title="Blog · Josh Approved"
   description="New app announcements and honest, free alternatives to the paywalled utility apps they replace. No ads, no accounts, your data stays with you."
 >
-  <div class="brandrule"></div>
   <div class="container">
-    <Nav />
-
     <header class="head">
       <h1>Blog</h1>
       <p class="lede">
@@ -46,10 +42,6 @@ const fmt = (d: string) =>
 </Base>
 
 <style>
-  .brandrule {
-    height: 3px;
-    background: var(--marketing-terracotta);
-  }
   .container {
     max-width: 760px;
     margin: 0 auto;

@@ -1,6 +1,5 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import AppIcon from '../../components/AppIcon.astro';
 import MoreApps from '../../components/MoreApps.astro';
@@ -127,7 +126,7 @@ if (hasMobileStore) {
   });
 }
 ---
-<Base title={pageTitle} description={app.tagline} ogTitle={app.name} image={ogImage}>
+<Base title={pageTitle} description={app.tagline} ogTitle={app.name} image={ogImage} crumb={app.name}>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
   {faqLd && <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />}
@@ -210,8 +209,6 @@ if (hasMobileStore) {
   </script>
 
   <div class="container">
-    <Nav crumb={app.name} />
-
     <section class={`lede${app.demo ? ' lede--demo' : ''}`}>
       <div class="lede-copy">
         <div class="idrow">
