@@ -28,7 +28,7 @@ const published = new Date(post.data.published).toLocaleDateString('en-US', {
 const canonical = `https://joshapproved.com/blog/${post.id}/`;
 const kindLabel = post.data.kind === 'launch' ? 'New app' : 'Alternative to paid apps';
 
-// BlogPosting structured data — an honest article record for search, plus a
+// BlogPosting structured data: an honest article record for search, plus a
 // breadcrumb so the result shows Home > Blog > title.
 const blogLd = {
   '@context': 'https://schema.org',
@@ -60,7 +60,7 @@ const ogImage = app?.icon ? `/assets/og/${app.slug}.png` : undefined;
 
   <div class="brandrule"></div>
   <div class="container">
-    <Nav variant="full" />
+    <Nav />
 
     <a class="back" href="/blog/">← Blog</a>
 

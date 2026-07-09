@@ -2,41 +2,47 @@
 import Wordmark from './Wordmark.astro';
 
 type Props = {
-  variant?: 'full' | 'crumb';
+  /** When set, a breadcrumb row renders on its own line BELOW the header (never
+   *  inline with the logo). Parent link defaults to Apps. */
   crumb?: string;
+  crumbParent?: { href: string; label: string };
 };
 
-const { variant = 'full', crumb } = Astro.props;
+const { crumb, crumbParent = { href: '/apps/', label: 'Apps' } } = Astro.props;
 ---
-<nav class="nav">
+<nav class="nav" aria-label="Primary">
   <div class="nav-left">
-    <Wordmark size={variant === 'crumb' ? 'sm' : 'md'} />
-    {variant === 'full' && (
-      <div class="links">
-        <a href="/apps/">Apps</a>
-        <a href="/blog/">Blog</a>
-        <a href="/writing/">Writing</a>
-        <a href="/about/">About</a>
-        <a href="https://github.com/Josh-Approved" rel="noopener">Source</a>
-      </div>
-    )}
-    {variant === 'crumb' && crumb && (
-      <span class="crumb"><a href="/apps/">apps</a> &nbsp;/&nbsp; <b>{crumb}</b></span>
-    )}
-  </div>
-  {variant === 'full' && (
+    <Wordmark size="md" />
     <div class="links">
-      <a href="https://buymeacoffee.com/jtysonwilliams" rel="noopener">Donate</a>
-      <a href="mailto:info@joshapproved.com">Contact</a>
+      <a href="/apps/">Apps</a>
+      <a href="/blog/">Blog</a>
+      <a href="/writing/">Writing</a>
+      <a href="/about/">About</a>
+      <a href="https://github.com/Josh-Approved" rel="noopener">Source</a>
     </div>
-  )}
+  </div>
+  <div class="links links--end">
+    <a href="https://buymeacoffee.com/jtysonwilliams" rel="noopener">Donate</a>
+    <a href="mailto:info@joshapproved.com">Contact</a>
+  </div>
 </nav>
+{crumb && (
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href={crumbParent.href}>{crumbParent.label}</a>
+    <span class="sep" aria-hidden="true">/</span>
+    <span class="here">{crumb}</span>
+  </nav>
+)}
 
 <style>
+  /* One header, identical on every page: the same wordmark size and the same
+     links, in the same place. Breadcrumbs (when present) sit on their own row
+     below, so navigating between pages never resizes or hides the header. */
   .nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 20px;
     padding: 22px 0;
     border-bottom: 1px solid var(--hairline);
   }
@@ -53,22 +59,30 @@ const { variant = 'full', crumb } = Astro.props;
     font-size: 14px;
     color: var(--fg-muted);
     text-decoration: none;
+    white-space: nowrap;
   }
   .links a:hover {
     color: var(--fg);
   }
-  .crumb {
+  .crumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 0 0;
     font-size: 13px;
     color: var(--fg-muted);
   }
-  .crumb a {
+  .crumbs a {
     color: var(--fg-muted);
     text-decoration: none;
   }
-  .crumb a:hover {
+  .crumbs a:hover {
     color: var(--fg);
   }
-  .crumb b {
+  .crumbs .sep {
+    color: var(--fg-subtle);
+  }
+  .crumbs .here {
     color: var(--fg);
     font-weight: 500;
   }

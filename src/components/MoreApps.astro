@@ -1,7 +1,7 @@
 ---
 // Internal cross-link strip shown at the foot of every app page. Every other
 // app links to this same component, so the whole catalog is one connected graph
-// — good for the visitor (discover the sibling apps) and good for SEO (internal
+// good for the visitor (discover the sibling apps) and good for SEO (internal
 // links spread crawl + link equity across every app detail page, and no app
 // page is an orphan reachable only from /apps).
 import type { AppRecord } from '../data/apps.ts';
@@ -82,7 +82,7 @@ const others = APPS.filter((a) => a.slug !== currentSlug).sort(
   .more-all:hover {
     color: var(--marketing-terracotta);
   }
-  /* Horizontal scroller — contains its own overflow so the page body never
+  /* Horizontal scroller, contains its own overflow so the page body never
      scrolls sideways. Snap for a tidy swipe; scrollbar left visible on touch. */
   .rail {
     list-style: none;
@@ -183,7 +183,7 @@ const others = APPS.filter((a) => a.slug !== currentSlug).sort(
     letter-spacing: 0.04em;
     color: var(--fg-subtle);
   }
-  /* The sm AppIcon in a compact tile — trim it a touch. */
+  /* The sm AppIcon in a compact tile, trim it a touch. */
   .tile :global(.frame--sm) {
     --icon-size: 40px;
     --icon-radius: 10px;

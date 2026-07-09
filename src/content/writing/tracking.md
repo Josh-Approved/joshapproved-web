@@ -9,7 +9,7 @@ apps: ["grocery-list", "tend", "private-ai-summary"]
 
 Open almost any app or website and, before you've done anything, it has already started taking notes. Which screen you landed on. How long you stayed. What you tapped, what you scrolled past, where your thumb hovered and didn't commit. The page you were on when you closed it.
 
-This is normally done with tools you'd recognise by name if you worked in tech and probably wouldn't otherwise — Google Analytics, Amplitude, Mixpanel, and a dozen others like them. They're not exotic. Adding one is a few lines of code, it's usually free to start, and it's so standard that shipping an app *without* one is the unusual choice. That's worth sitting with for a second: the default state of software you use is that it watches you.
+This is normally done with tools you'd recognise by name if you worked in tech and probably wouldn't otherwise: Google Analytics, Amplitude, Mixpanel, and a dozen others like them. They're not exotic. Adding one is a few lines of code, it's usually free to start, and it's so standard that shipping an app *without* one is the unusual choice. That's worth sitting with for a second: the default state of software you use is that it watches you.
 
 ## The fair version of why this exists
 
@@ -17,7 +17,7 @@ I want to be fair to the other side, because I've watched it up close.
 
 When you're building something, you genuinely cannot see what people do with it. You watch ten friends use it and learn a lot; you ship to ten thousand strangers and you're blind again. Analytics is the instrument that gives that sight back. Used well, it answers humane questions: Where do people give up? Which step is confusing enough that half of them quit? Did the thing I just changed make it better or worse?
 
-I've watched these tools find a screen where most people got stuck, watched it get fixed, and watched the frustration disappear. That is a real, good use. The people adding analytics are mostly not cackling villains. Most of them tell themselves — accurately, at first — that they're doing it to make the product better for you.
+I've watched these tools find a screen where most people got stuck, watched it get fixed, and watched the frustration disappear. That is a real, good use. The people adding analytics are mostly not cackling villains. Most of them tell themselves, accurately at first, that they're doing it to make the product better for you.
 
 ## Where it stops being for you
 
@@ -31,10 +31,10 @@ There's a second cost that's easy to miss: the data doesn't just sit there. It's
 
 ## What I do instead
 
-My apps don't have analytics in them. Not a stricter analytics, not anonymised analytics — none.
+My apps don't have analytics in them. Not a stricter analytics, not anonymised analytics. None.
 
-I'll be just as honest about the cost of that as I was about the other side: it means I'm partly blind. I don't know which feature you use most. I don't get a chart when something confuses you. I find out the slower, older way — you email me, or you don't come back and I have to think hard about why. I've decided that's a fair price, and that the burden of being a little blind belongs on me, not on you.
+I'll be just as honest about the cost of that as I was about the other side: it means I'm partly blind. I don't know which feature you use most. I don't get a chart when something confuses you. I find out the slower, older way: you email me, or you don't come back and I have to think hard about why. I've decided that's a fair price, and that the burden of being a little blind belongs on me, not on you.
 
-So your data stays with you. There's no server collecting a record of what you did, because there's no server. There's nothing to leak, nothing to sell, nothing to hand over, and nothing that changes meaning the day the company is acquired — there is no company.
+So your data stays with you. There's no server collecting a record of what you did, because there's no server. There's nothing to leak, nothing to sell, nothing to hand over, and nothing that changes meaning the day the company is acquired. There is no company.
 
 You don't have to take my word for any of this. The apps are open source. If you want to confirm that nothing is being recorded, the code is right there, and so is a person whose name is on it.

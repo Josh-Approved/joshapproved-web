@@ -1,7 +1,7 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-// The reaction essays — the "why the apps exist" long-form pieces.
+// The reaction essays: the "why the apps exist" long-form pieces.
 const writing = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/writing' }),
   schema: z.object({
@@ -10,13 +10,13 @@ const writing = defineCollection({
     dek: z.string(),
     order: z.number(),
     updated: z.string(),
-    // Slugs of apps this essay is the reasoning behind — rendered as
+    // Slugs of apps this essay is the reasoning behind, rendered as
     // "the apps this is about" cross-links at the foot of the piece.
     apps: z.array(z.string()).optional(),
   }),
 });
 
-// The blog — launch announcements ("Introducing X") and honest
+// The blog: launch announcements ("Introducing X") and honest
 // alternative-to-a-paywalled-app pieces. Separate from the essays: these are
 // tied to a specific app and are the volume/SEO surface. Draft = not built.
 const posts = defineCollection({

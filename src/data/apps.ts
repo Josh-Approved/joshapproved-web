@@ -91,15 +91,15 @@ const RAW_APPS: AppRecord[] = [
     network: 'Optional',
     license: 'MIT',
     body: [
-      'Make a group for a trip, a household, or a couple, add what people pay for in any currency, and Split Expenses keeps a running who-owes-whom — then shows everyone the fewest payments that settle it. Tap any balance to see exactly how it was worked out.',
-      "Share a group with a link or a QR code — no account, and nothing held on a server of mine. Everyone's phone stays in sync, and the balances are worked out on each phone so you all see the same numbers. Settle up by recording a cash payment or handing off to Venmo, PayPal, or Cash App — the app never touches the money.",
+      'Make a group for a trip, a household, or a couple, add what people pay for in any currency, and Split Expenses keeps a running who-owes-whom, then shows everyone the fewest payments that settle it. Tap any balance to see exactly how it was worked out.',
+      "Share a group with a link or a QR code: no account, and nothing held on a server of mine. Everyone's phone stays in sync, and the balances are worked out on each phone so you all see the same numbers. Settle up by recording a cash payment or handing off to Venmo, PayPal, or Cash App, and the app never touches the money.",
     ],
     privacy: {
       headline: 'What this app collects',
       bullets: [
-        'No analytics, no crash reports, no usage logs. No accounts — there is nothing to sign up for.',
+        'No analytics, no crash reports, no usage logs. No accounts, so there is nothing to sign up for.',
         'Your groups live on your device. A shared group is passed, encrypted end-to-end, through free public drop boxes I do not run and cannot read.',
-        'Currency rates are fetched as a whole table and converted on your phone — a rate lookup reveals nothing about your expenses.',
+        'Currency rates are fetched as a whole table and converted on your phone, so a rate lookup reveals nothing about your expenses.',
       ],
     },
   },
@@ -125,15 +125,15 @@ const RAW_APPS: AppRecord[] = [
     network: 'Optional',
     license: 'MIT',
     body: [
-      'Make a grocery list, add items as they come to mind, and check them off at the store. Share the list with anyone in your household by sending a link or showing a QR code — no account, nothing to sign up for.',
-      "Once a list is shared, everyone's phone stays in sync: add milk on your way home and it shows up on your partner's list, check something off and it clears for everyone. The syncing runs through free public drop boxes I do not run and cannot read, and the merging happens on each phone — so you all see the same list without a server of mine in the middle.",
+      'Make a grocery list, add items as they come to mind, and check them off at the store. Share the list with anyone in your household by sending a link or showing a QR code: no account, nothing to sign up for.',
+      "Once a list is shared, everyone's phone stays in sync: add milk on your way home and it shows up on your partner's list, check something off and it clears for everyone. The syncing runs through free public drop boxes I do not run and cannot read, and the merging happens on each phone, so you all see the same list without a server of mine in the middle.",
     ],
     privacy: {
       headline: 'What this app collects',
       bullets: [
-        'No analytics, no crash reports, no usage logs. No accounts — there is nothing to sign up for.',
+        'No analytics, no crash reports, no usage logs. No accounts, so there is nothing to sign up for.',
         'Your lists live on your device. A shared list is passed, encrypted end-to-end, through free public drop boxes I do not run and cannot read.',
-        'Nothing about what you buy ever reaches me — there is no server of mine in the path.',
+        'Nothing about what you buy ever reaches me. There is no server of mine in the path.',
       ],
     },
   },
@@ -141,7 +141,7 @@ const RAW_APPS: AppRecord[] = [
     slug: 'packing-list',
     name: 'Packing List',
     tagline: 'A packing checklist that builds itself from the kind of trip you are taking.',
-    description: 'A packing checklist that builds itself from the kind of trip you are taking. No accounts, no tracking — your data stays with you.',
+    description: 'A packing checklist that builds itself from the kind of trip you are taking. No accounts, no tracking. Your data stays with you.',
     value: 'Tell it the trip and it builds the packing list for you, with sensible quantities to adjust.',
     tag: 'util',
     platforms: ['ios', 'android'],
@@ -159,8 +159,8 @@ const RAW_APPS: AppRecord[] = [
     network: 'None',
     license: 'MIT',
     body: [
-      "Pick how long you're going and what kind of trip it is — beach, business, hiking, cold weather, kids along — and Packing List composes a checklist with sensible quantities. One pair of socks a day, one passport, two swimsuits.",
-      'Adjust anything, add your own items, split the list across the people you are packing for, and check things off as you go. No account, no tracking, no analytics — your data stays on your device.',
+      "Pick how long you're going and what kind of trip it is (beach, business, hiking, cold weather, kids along), and Packing List composes a checklist with sensible quantities. One pair of socks a day, one passport, two swimsuits.",
+      'Adjust anything, add your own items, split the list across the people you are packing for, and check things off as you go. No account, no tracking, no analytics. Your data stays on your device.',
     ],
     privacy: {
       headline: 'What this app collects',
@@ -194,8 +194,8 @@ const RAW_APPS: AppRecord[] = [
     network: 'None',
     license: 'MIT',
     body: [
-      "Plays a beep, counts down, and gets out of your way. No sign-in, no email, no paywall — that's the whole app.",
-      'Build your own intervals or pick a preset. Works in portrait or landscape on the floor next to you. Your data stays with you — no accounts, no tracking, no analytics.',
+      "Plays a beep, counts down, and gets out of your way. No sign-in, no email, no paywall. That's the whole app.",
+      'Build your own intervals or pick a preset. Works in portrait or landscape on the floor next to you. Your data stays with you: no accounts, no tracking, no analytics.',
     ],
     privacy: {
       headline: 'What this app collects',
@@ -224,7 +224,7 @@ const RAW_APPS: AppRecord[] = [
     network: 'None',
     license: 'MIT',
     body: [
-      "Open the popup on any article or YouTube video. Ask a question. The answer comes from Chrome's built-in AI model — what you're reading stays with you.",
+      "Open the popup on any article or YouTube video. Ask a question. The answer comes from Chrome's built-in AI model, and what you're reading stays with you.",
       'Works on YouTube videos that have captions. Suggests question chips per page type so you do not have to think of one. If the page is too sparse or the model is not yet downloaded, the popup says so plainly.',
     ],
     privacy: {
@@ -232,7 +232,7 @@ const RAW_APPS: AppRecord[] = [
       bullets: [
         'No analytics, no crash reports, no remote logging.',
         "Page content is read into Chrome's built-in AI model only. It never reaches a server.",
-        'Requires Chrome with Gemini Nano available — see the popup for one-time setup.',
+        'Requires Chrome with Gemini Nano available. See the popup for one-time setup.',
       ],
     },
   },
@@ -255,7 +255,7 @@ const RAW_APPS: AppRecord[] = [
     license: 'MIT',
     body: [
       'A summarizer and a news-critique tool, both running entirely in your browser. No accounts, no paywall, and the page you are reading stays with you.',
-      "Uses the Chrome Summarizer API and the Prompt API, both backed by Gemini Nano built into Chrome. Some Chrome builds still gate the model behind a one-time flag — the popup walks you through it the first time.",
+      "Uses the Chrome Summarizer API and the Prompt API, both backed by Gemini Nano built into Chrome. Some Chrome builds still gate the model behind a one-time flag, and the popup walks you through it the first time.",
     ],
     privacy: {
       headline: 'What this extension collects',
@@ -269,7 +269,7 @@ const RAW_APPS: AppRecord[] = [
   {
     // Ships to the stores as "Relationships"; kept under the internal slug `tend`.
     // Status stays 'in-progress' (TestFlight + Android internal track) until the
-    // store-availability overlay sees it live and upgrades it — same path every
+    // store-availability overlay sees it live and upgrades it, same path every
     // app follows, so real store links appear automatically the moment it ships.
     slug: 'tend',
     name: 'Relationships',
@@ -308,7 +308,7 @@ const RAW_APPS: AppRecord[] = [
 // Overlay live App Store + Play availability (generated from the store APIs by
 // josh-approved-factory/scripts/sync-web-store-status.mjs). It only fills facts:
 // upgrades status to 'shipped' when an app is actually live, and adds a store link
-// for a store it's live on — never overwriting hand-set copy or a hand-set URL.
+// for a store it's live on, never overwriting hand-set copy or a hand-set URL.
 export const APPS: AppRecord[] = RAW_APPS.map((app) => {
   const live = STORE_AVAILABILITY[app.slug];
   if (!live) return app;

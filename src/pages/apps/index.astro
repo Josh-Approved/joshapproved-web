@@ -5,7 +5,7 @@ import Footer from '../../components/Footer.astro';
 import AppCard from '../../components/AppCard.astro';
 import { APPS } from '../../data/apps.ts';
 
-// Catalog page — the canonical "all apps" surface (mirrors the in-app
+// Catalog page: the canonical "all apps" surface (mirrors the in-app
 // "More from Josh Approved" cross-promo). Shipped first, then beta, then planned.
 const order = { shipped: 0, 'in-progress': 1, planned: 2 } as const;
 const apps = [...APPS].sort((a, b) => order[a.status] - order[b.status]);
@@ -13,15 +13,15 @@ const shippedCount = APPS.filter((a) => a.status === 'shipped').length;
 const betaCount = APPS.filter((a) => a.status === 'in-progress').length;
 ---
 <Base
-  title="Apps — Josh Approved"
-  description="Every Josh Approved app: free, open-source, privacy-first utilities. No paywall, no ads, no tracking, no accounts — your data stays with you."
+  title="Apps · Josh Approved"
+  description="Every Josh Approved app: free, open-source, privacy-first utilities. No paywall, no ads, no tracking, no accounts. Your data stays with you."
 >
   <div class="container">
-    <Nav variant="crumb" crumb="Apps" />
+    <Nav />
 
     <section class="head">
       <h1>Apps</h1>
-      <p>Free, open-source utility apps that do one thing and leave you alone. No paywall, no ads, no tracking, no accounts — your data stays with you.</p>
+      <p>Free, open-source utility apps that do one thing and leave you alone. No paywall, no ads, no tracking, no accounts. Your data stays with you.</p>
       <span class="meta">{shippedCount} SHIPPED{betaCount > 0 ? ` · ${betaCount} IN BETA` : ''}</span>
     </section>
 
@@ -33,7 +33,7 @@ const betaCount = APPS.filter((a) => a.status === 'in-progress').length;
   </div>
 
   {/* Swap each demo's static poster for its animated GIF only when motion is
-      allowed — reduced-motion visitors keep the still (design-system contract). */}
+      allowed, reduced-motion visitors keep the still (design-system contract). */}
   <script is:inline>
     (function () {
       try {

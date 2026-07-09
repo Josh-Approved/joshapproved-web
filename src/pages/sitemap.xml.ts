@@ -5,7 +5,7 @@ import { APPS } from '../data/apps.ts';
 // Blog posts + writing essays both come from content collections, so any new
 // article auto-appears here on the next build. Drafts are excluded.
 
-// Generated sitemap — derived from the app data + the writing collection so it
+// Generated sitemap, derived from the app data + the content collections so it
 // can NEVER drift the way the old hand-maintained public/sitemap.xml did (it was
 // silently missing grocery-list and tend). Astro prerenders this endpoint at
 // build time, so the Cloudflare deploy still serves a plain static file.
