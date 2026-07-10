@@ -10,7 +10,7 @@ published: "2026-07-09"
 
 An interval timer is about as simple as an app gets: work, rest, repeat. Which is exactly why so many of them look for a way to charge. You save a custom workout and hit a subscription. You want to remove the ads between rounds and there is a Pro tier. The timer works, but the useful parts are rationed.
 
-Free Workout Timer is the version where nothing is rationed. This is an honest look at how it compares.
+Free Workout Timer is the version where none of it is rationed. Here is how it actually compares.
 
 ## The usual pattern
 
@@ -20,10 +20,10 @@ Popular interval timers (Seconds, Interval Timer, and the various Tabata timers)
 
 - **No paywall.** Custom intervals, Tabata, multiple workouts, background timing: all of it is in the app, free, the first time.
 - **No ads.** Nothing plays between your rounds.
-- **No account.** Open the app and start. There is nothing to sign up for.
+- **No account.** Open the app and start. No sign-up.
 - **Your data stays with you.** The timer runs on your phone and does not report anything back, because there is no analytics in it at all.
 
-## The honest part
+## Where a paid app still wins
 
 If you are a coach who needs a large library of named routines synced across a team, a paid app built for that may serve you better, and I would rather say so than pretend otherwise. Free Workout Timer is built for one person timing their own intervals, and it does that job completely, without asking for money to unlock the middle of it.
 

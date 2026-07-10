@@ -1,6 +1,6 @@
 ---
 title: "Introducing Grocery List: one shared list, no account"
-description: "Grocery List is a free shared grocery list for iOS and Android. Add an item on your way home and it shows up on everyone's phone, with no account, no ads, and nothing held on a server of mine."
+description: "Grocery List is a free shared grocery list for iOS and Android. Add an item on your way home and it shows up on everyone's phone, with no account, no ads, and no server of mine holding your data."
 dek: "A grocery list the whole household keeps in sync, with no sign-up and no ads."
 app: "grocery-list"
 kind: "launch"
@@ -24,10 +24,10 @@ That is a real decision with a real cost to me: I have no analytics, so I cannot
 
 ## Why I built it
 
-I kept running into the same thing. The shared list is the feature everyone actually wants, and it is the feature every popular grocery app attaches something to. If you have used Bring!, AnyList, or OurGroceries and bounced off the forced sign-up, the ads, or the version that quietly adds items you did not put there, this is the same shape of tool with none of that. Your list contains only what you typed. No advertiser items, no suggestions pushed from a server, no upsell for the part you came for.
+I kept running into the same thing. The shared list is the feature everyone actually wants, and it is the feature every popular grocery app attaches something to. If you have used Bring!, AnyList, or OurGroceries and bounced off the forced sign-up, the ads, or the version that adds items you never put there, this is the same shape of tool with none of that. Your list contains only what you typed. No advertiser items, no suggestions pushed from a server, no upsell for the part you came for.
 
 ## Get it
 
 Grocery List is on the App Store and Google Play, free. The whole app is the free app. It is open source, so you do not have to take my word for any of the privacy claims: the code is on GitHub with my name on it.
 
-Grocery List is supported by the people who use it. No ads, no subscriptions, no data harvest. What keeps it going is whether it turns out to be worth a few dollars to you. If it is, there is a donate link, and it changes nothing about the app either way.
+Grocery List is supported by the people who use it. No ads, no subscriptions, no data harvest. What keeps it going is whether it turns out to be worth a few dollars to you. If it is, there is a donate link, and the app is the same either way.
