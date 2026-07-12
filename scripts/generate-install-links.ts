@@ -3,7 +3,8 @@
  * -------------------------------------------------------------------------
  * Emits the copy-paste-ready "App install links" block into the go-to-market
  * doc (josh-approved-docs/strategy/gtm.md) from the SAME app data the website
- * renders. Every app in src/data/apps.ts gets a smart install link of the form
+ * renders (src/data/catalog.ts, the data-only module behind src/data/apps.ts).
+ * Every app in the catalog gets a smart install link of the form
  *
  *     https://joshapproved.com/apps/<slug>?install=1
  *
@@ -17,7 +18,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
-import { APPS } from '../src/data/apps.ts';
+import { APPS } from '../src/data/catalog.ts';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const target =
@@ -62,7 +63,7 @@ is genuinely live, so a customer is never sent to an empty/unapproved listing.
 | --- | --- | --- |
 ${rows}
 
-_Auto-generated from \`joshapproved-web/src/data/apps.ts\`. New apps and newly
+_Auto-generated from \`joshapproved-web/src/data/catalog.ts\`. New apps and newly
 live stores appear here on the next regeneration — the links themselves work the
 moment an app's page is live._
 ${END}`;
