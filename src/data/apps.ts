@@ -28,7 +28,7 @@ const DEMOS: Record<string, NonNullable<AppRecord['demo']>> = {
   'packing-list': {
     src: packingDemo,
     poster: packingPoster,
-    alt: 'A packing list filling in from the trip type, then items checked off',
+    alt: 'A packing list building itself from the trip type, with sensible quantities',
   },
   'free-workout-timer': {
     src: fwtDemo,
