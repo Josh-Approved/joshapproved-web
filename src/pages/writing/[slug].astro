@@ -4,6 +4,7 @@ import Footer from '../../components/Footer.astro';
 import { getCollection, render } from 'astro:content';
 import { APPS } from '../../data/apps.ts';
 import AppIcon from '../../components/AppIcon.astro';
+import MoreApps from '../../components/MoreApps.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('writing');
@@ -53,6 +54,8 @@ const relatedApps = (post.data.apps ?? [])
         </ul>
       </section>
     )}
+
+    {post.data.allApps && <MoreApps currentSlug={post.id} />}
 
     <aside class="closer">
       <p>
