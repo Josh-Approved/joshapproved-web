@@ -1,14 +1,14 @@
 # joshapproved.com
 
-The studio site for Josh Approved — privacy-first, open-source replacements for paywalled utility apps.
+The studio site for Josh Approved: privacy-first, open-source replacements for paywalled utility apps.
 
 Lives at https://joshapproved.com.
 
 ## What's here
 
-- `/` — studio site with the apps catalogue
-- `/apps/<slug>/` — per-app landing pages (driven by `src/data/apps.ts`)
-- `/manifesto/` — what we make and what we don't
+- `/` studio site with the apps catalogue
+- `/apps/<slug>/` per-app landing pages (driven by `src/data/apps.ts`)
+- `/about/` what we make and what we don't (`/manifesto/` redirects here)
 
 In-browser tools (HEIC → JPG, image compression, etc.) live on their own subdomains and ship as separate Pages projects. They will be linked from the catalogue when shipped.
 
@@ -30,7 +30,7 @@ npm run preview      # serve ./dist locally
 
 ## Add a new app
 
-Add an entry to `src/data/apps.ts`. The catalogue card and `/apps/<slug>/` page render from that record — no new files needed for a standard listing.
+Add an entry to `src/data/apps.ts`. The catalogue card and `/apps/<slug>/` page render from that record, so no new files are needed for a standard listing.
 
 ## Design system
 
