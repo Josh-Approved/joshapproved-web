@@ -22,6 +22,8 @@ export const FAQ: Record<string, Faq[]> = {
     { q: 'Is Packing List free?', a: 'Yes. The whole app is free, with no paywall and no ads.' },
     { q: 'Do I need an account?', a: 'No account and no sign-up. Open it and start a list.' },
     { q: 'How does it decide what to pack?', a: 'You tell it the trip and it builds a suggested list with sensible quantities you can adjust. Nothing is sent to a server to do it.' },
+    { q: 'Can I share a trip with the person I am travelling with?', a: 'Yes. You share a trip with a link or a QR code, phone to phone. There is no sign-up and no email to hand over.' },
+    { q: 'How does a shared trip stay in sync without a server?', a: 'Changes pass between your phones encrypted end to end, through free public relays I do not run and cannot read. The list merges on each device, so nothing about your trip reaches me.' },
   ],
   'split-expenses': [
     { q: 'Is Split Expenses free?', a: 'Yes. Tracking costs and settling up are free, with no paywall and no ads.' },
