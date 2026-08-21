@@ -2,10 +2,12 @@
 # Our content is open (MIT) and we are glad to be read, cited, and quoted.
 # AI answer engines and crawlers are explicitly welcome.
 #
-# One exception: /portfolio/case/ holds gated case studies about client and
-# employer work. Search engines are left to crawl them so they can read the
-# noindex tag on the page and keep them out of results. AI crawlers, which
-# honour robots.txt rather than noindex, are asked to skip them outright.
+# Two exceptions: /portfolio/case/ holds gated case studies about client and
+# employer work, and /prep/ is a temporary private page. Search engines are left
+# to crawl both so they can read the noindex tag and keep them out of results
+# (a Disallow here would hide that tag and the bare URL could still be listed).
+# AI crawlers, which honour robots.txt rather than noindex, are asked to skip
+# them outright. /prep/ serves nothing but a lock screen and encrypted text.
 
 User-agent: *
 Allow: /
@@ -14,58 +16,72 @@ Allow: /
 User-agent: GPTBot
 Allow: /
 Disallow: /portfolio/case/
+Disallow: /prep/
 
 User-agent: OAI-SearchBot
 Allow: /
 Disallow: /portfolio/case/
+Disallow: /prep/
 
 User-agent: ChatGPT-User
 Allow: /
 Disallow: /portfolio/case/
+Disallow: /prep/
 
 User-agent: ClaudeBot
 Allow: /
 Disallow: /portfolio/case/
+Disallow: /prep/
 
 User-agent: Claude-User
 Allow: /
 Disallow: /portfolio/case/
+Disallow: /prep/
 
 User-agent: Claude-SearchBot
 Allow: /
 Disallow: /portfolio/case/
+Disallow: /prep/
 
 User-agent: PerplexityBot
 Allow: /
 Disallow: /portfolio/case/
+Disallow: /prep/
 
 User-agent: Perplexity-User
 Allow: /
 Disallow: /portfolio/case/
+Disallow: /prep/
 
 User-agent: Google-Extended
 Allow: /
 Disallow: /portfolio/case/
+Disallow: /prep/
 
 User-agent: Applebot-Extended
 Allow: /
 Disallow: /portfolio/case/
+Disallow: /prep/
 
 User-agent: Amazonbot
 Allow: /
 Disallow: /portfolio/case/
+Disallow: /prep/
 
 User-agent: Meta-ExternalAgent
 Allow: /
 Disallow: /portfolio/case/
+Disallow: /prep/
 
 User-agent: cohere-ai
 Allow: /
 Disallow: /portfolio/case/
+Disallow: /prep/
 
 User-agent: CCBot
 Allow: /
 Disallow: /portfolio/case/
+Disallow: /prep/
 
 # A curated, LLM-friendly map of the site:
 # https://joshapproved.com/llms.txt   (index)
