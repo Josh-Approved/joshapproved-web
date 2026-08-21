@@ -29,8 +29,12 @@ import { CASES } from '../../data/portfolio';
         {CASES.map((c) => (
           <li>
             <a class="card" href={`/portfolio/case/${c.slug}/`} data-case-link>
-              <span class="cover">
-                <img src={c.cover.src} alt={c.cover.alt} loading="lazy" decoding="async" />
+              <span class:list={['cover', !c.cover && 'cover--pending']}>
+                {c.cover ? (
+                  <img src={c.cover.src} alt={c.cover.alt} loading="lazy" decoding="async" />
+                ) : (
+                  <span class="cover-label">Cover image to come</span>
+                )}
                 <span class="lockchip">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <rect x="3" y="11" width="18" height="11" rx="2" />
@@ -160,6 +164,21 @@ import { CASES } from '../../data/portfolio';
     filter: none;
     transform: none;
   }
+  /* No cover image yet. Nothing to blur, so the slot is simply marked. */
+  .cover--pending {
+    border-style: dashed;
+    border-color: var(--hairline-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cover-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-subtle);
+  }
 
   .lockchip {
     position: absolute;
@@ -186,6 +205,9 @@ import { CASES } from '../../data/portfolio';
     flex-direction: column;
     gap: 6px;
     padding: 14px 2px 0;
+    /* So the call to action sits on the same line across the row, whatever
+       length each summary happens to be. */
+    flex: 1;
   }
   .meta {
     font-family: var(--font-mono);
@@ -206,7 +228,8 @@ import { CASES } from '../../data/portfolio';
     color: var(--fg-muted);
   }
   .cta {
-    margin-top: 4px;
+    margin-top: auto;
+    padding-top: 10px;
     font-family: var(--font-mono);
     font-size: 11px;
     text-transform: uppercase;

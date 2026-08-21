@@ -7,13 +7,27 @@ type Props = Figure & {
   inGrid?: boolean;
 };
 
-const { tag, src, alt, caption, width = 'column', inGrid = false } = Astro.props;
-const widthClass = inGrid ? 'fig-cell' : width === 'wide' ? 'fig-wide' : 'fig-col';
+const {
+  tag,
+  src,
+  alt,
+  caption,
+  width = 'column',
+  ratio = '16 / 10',
+  inGrid = false,
+} = Astro.props;
+const widthClass = inGrid ? 'fig-cell' : `fig-${width}`;
 ---
 <figure class:list={['fig', widthClass]}>
-  <div class="frame">
-    <img src={src} alt={alt} loading="lazy" decoding="async" />
-  </div>
+  {src ? (
+    <div class="frame">
+      <img src={src} alt={alt} loading="lazy" decoding="async" />
+    </div>
+  ) : (
+    <div class="frame pending" style={`aspect-ratio: ${ratio};`}>
+      <span class="pending-label">Image to come</span>
+    </div>
+  )}
   <figcaption>
     <span class="tag">{tag}</span>
     <span class="cap">{caption}</span>
@@ -26,7 +40,12 @@ const widthClass = inGrid ? 'fig-cell' : width === 'wide' ? 'fig-wide' : 'fig-co
   .fig {
     margin: 36px 0;
   }
-  .fig-col {
+  .fig-narrow {
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .fig-column {
     max-width: 720px;
     margin-left: auto;
     margin-right: auto;
@@ -50,6 +69,24 @@ const widthClass = inGrid ? 'fig-cell' : width === 'wide' ? 'fig-wide' : 'fig-co
     display: block;
     width: 100%;
     height: auto;
+  }
+  /* An image slot waiting on the real photo. Dashed and labelled so it can
+     never be mistaken for finished work, but the right shape so the page
+     reads at its real weight. */
+  .pending {
+    border: 1px dashed var(--hairline-strong);
+    background: var(--bg-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pending-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-subtle);
+    line-height: 1;
   }
   figcaption {
     display: flex;
