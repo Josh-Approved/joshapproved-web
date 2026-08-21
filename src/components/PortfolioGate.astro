@@ -6,14 +6,12 @@ type Props = {
    *  on a locked case study page. */
   variant?: 'bar' | 'panel';
   heading?: string;
+  /** Optional. Left unset by default: the lock, the heading and the field say
+   *  enough on their own. */
   body?: string;
 };
 
-const {
-  variant = 'bar',
-  heading = 'These case studies are locked',
-  body = 'This is client and employer work, so it sits behind one password. If I sent you here, you already have it. If you found it on your own and want a look, email me and I will send it over.',
-} = Astro.props;
+const { variant = 'bar', heading = 'These case studies are locked', body } = Astro.props;
 ---
 <section class:list={['gate', `gate--${variant}`]} data-gate aria-labelledby="gate-heading">
   <div class="locked-view">
@@ -24,7 +22,7 @@ const {
       </svg>
     </span>
     <h2 id="gate-heading">{heading}</h2>
-    <p class="body">{body}</p>
+    {body && <p class="body">{body}</p>}
 
     <form class="form" data-gate-form novalidate>
       <label class="field">
@@ -44,10 +42,6 @@ const {
     </form>
 
     <p class="error" id="gate-error" data-gate-error role="status" hidden></p>
-    <p class="hint">
-      One password opens every case study. It stays unlocked on this device
-      until you lock it again or clear your browser data.
-    </p>
   </div>
 
   <div class="unlocked-view">
@@ -194,7 +188,7 @@ const {
     font-size: 15px;
     line-height: 1.65;
     color: var(--fg-muted);
-    margin: 0 0 18px;
+    margin: 0;
     max-width: 56ch;
   }
   .gate--panel .body {
@@ -203,6 +197,7 @@ const {
   }
 
   .form {
+    margin-top: 18px;
     display: flex;
     gap: 10px;
     align-items: flex-end;
@@ -262,13 +257,6 @@ const {
     color: var(--danger);
     margin: 12px 0 0;
   }
-  .hint {
-    font-size: 13px;
-    line-height: 1.55;
-    color: var(--fg-subtle);
-    margin: 12px 0 0;
-  }
-
   .check {
     width: 20px;
     height: 20px;

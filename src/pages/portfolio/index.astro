@@ -7,19 +7,14 @@ import { CASES } from '../../data/portfolio';
 ---
 <Base
   title="Portfolio · Josh Approved"
-  description="Case studies from design and product work outside the studio. Locked behind a password."
+  description="My personal work portfolio. Locked behind a password."
   ogTitle="Portfolio"
 >
   <PortfolioBoot />
   <div class="container">
     <header class="head">
       <h1>Portfolio</h1>
-      <p class="lede">
-        This is design and product work from outside the studio. Each one is
-        written up the same way: what was going on, what I was asked to do, what
-        I did, and what changed. Most of it belongs to the people who paid for
-        it, so it sits behind a password.
-      </p>
+      <p class="lede">My personal work portfolio.</p>
     </header>
 
     <PortfolioGate variant="bar" />
@@ -49,18 +44,11 @@ import { CASES } from '../../data/portfolio';
                 <span class="title">{c.title}</span>
                 <span class="summary">{c.summary}</span>
                 <span class="cta cta-open">Read case study</span>
-                <span class="cta cta-locked">Enter the password to open</span>
               </span>
             </a>
           </li>
         ))}
       </ul>
-
-      <p class="note">
-        Every case study here runs on the same four headings: Situation, Task,
-        Action, Result. Same order, same shape, so you can read two of them
-        without relearning the layout.
-      </p>
     </section>
 
     <Footer />
@@ -231,12 +219,6 @@ import { CASES } from '../../data/portfolio';
   :global(html[data-portfolio='unlocked']) .cta-open {
     display: block;
   }
-  :global(html[data-portfolio='unlocked']) .cta-locked {
-    display: none;
-  }
-  .cta-locked {
-    color: var(--fg-subtle);
-  }
 
   .card:hover .cover {
     border-color: var(--hairline-strong);
@@ -245,18 +227,6 @@ import { CASES } from '../../data/portfolio';
     text-decoration: underline;
     text-decoration-color: var(--hairline-strong);
     text-underline-offset: 3px;
-  }
-
-  .note {
-    box-sizing: border-box;
-    margin: 44px 0 0;
-    padding: 18px 20px;
-    background: var(--bg-subtle);
-    border-radius: 12px;
-    font-size: 14px;
-    line-height: 1.65;
-    color: var(--fg-muted);
-    max-width: 720px;
   }
 
   @media (max-width: 540px) {
