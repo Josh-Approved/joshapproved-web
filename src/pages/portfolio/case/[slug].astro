@@ -29,7 +29,7 @@ const next = CASES[(index + 1) % CASES.length];
   <PortfolioBoot />
   <div class="container">
     <header class="masthead">
-      <span class="kicker">{study.year} · {study.discipline}</span>
+      <span class="kicker">{study.year} · {study.surfaces.join(', ')}</span>
       <h1>{study.title}</h1>
       <p class="dek">{study.dek}</p>
     </header>
