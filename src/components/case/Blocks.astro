@@ -36,7 +36,14 @@ const { blocks } = Astro.props;
       )}
 
       {b.kind === 'figure' && (
-        <Figure tag={b.tag} src={b.src} alt={b.alt} caption={b.caption} width={b.width} />
+        <Figure
+          tag={b.tag}
+          src={b.src}
+          alt={b.alt}
+          caption={b.caption}
+          width={b.width}
+          ratio={b.ratio}
+        />
       )}
 
       {b.kind === 'figures' && <Figures columns={b.columns} items={b.items} />}
