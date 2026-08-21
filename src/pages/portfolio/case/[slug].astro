@@ -37,11 +37,7 @@ const next = CASES[(index + 1) % CASES.length];
     {/* Locked: the title and the one-line summary are already public on the
         index, so the page is not a dead end. Everything below is not. */}
     <div class="locked-only">
-      <PortfolioGate
-        variant="panel"
-        heading="This case study is locked"
-        body="It is client and employer work, so it sits behind one password. If I sent you here, you already have it. If you found it on your own and want a look, email me and I will send it over."
-      />
+      <PortfolioGate variant="panel" heading="This case study is locked" />
     </div>
 
     <article class="unlocked-only">
