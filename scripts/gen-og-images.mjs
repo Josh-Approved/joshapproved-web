@@ -58,9 +58,11 @@ function wrap(text, max) {
 }
 
 async function loadApps() {
-  // apps.ts pulls in a generated overlay; for copy we only need the raw list,
-  // so read it via tsx-free regex-free dynamic import of a tiny shim.
-  const mod = await import(join(ROOT, 'src/data/apps.ts'));
+  // catalog.ts, NOT apps.ts: this script runs under plain tsx, outside Vite, so
+  // it can only load the data-only module. apps.ts attaches demo assets through
+  // Vite-only features (`import.meta.glob`, `?url`), which throw here. Same
+  // reason generate-install-links.ts reads catalog.ts.
+  const mod = await import(join(ROOT, 'src/data/catalog.ts'));
   return mod.APPS;
 }
 

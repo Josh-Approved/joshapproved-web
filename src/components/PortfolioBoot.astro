@@ -1,0 +1,19 @@
+---
+import { PASSPHRASE_SHA256 } from '../data/portfolio';
+---
+{/*
+  Runs before the rest of the page parses, so an already-unlocked visitor never
+  sees a flash of the locked state. Everything portfolio-related keys off the
+  data-portfolio attribute this sets on <html>.
+*/}
+<script is:inline define:vars={{ hash: PASSPHRASE_SHA256 }}>
+  (function () {
+    try {
+      if (window.localStorage.getItem('ja-portfolio') === hash) {
+        document.documentElement.setAttribute('data-portfolio', 'unlocked');
+      }
+    } catch (e) {
+      /* Private mode with storage blocked: stay locked, the form still works. */
+    }
+  })();
+</script>

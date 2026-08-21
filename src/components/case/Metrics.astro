@@ -1,0 +1,73 @@
+---
+import type { Metric } from '../../data/portfolio';
+
+type Props = {
+  items: Metric[];
+  /** 'strip' is the masthead version: tighter, no outer margin. */
+  variant?: 'block' | 'strip';
+};
+
+const { items, variant = 'block' } = Astro.props;
+---
+<div class:list={['metrics', `metrics--${variant}`]}>
+  {items.map((m) => (
+    <div class="tile">
+      <span class="value">{m.value}</span>
+      <span class="label">{m.label}</span>
+      {m.note && <span class="note">{m.note}</span>}
+    </div>
+  ))}
+</div>
+
+<style>
+  /* The numbers block. Same shape whether it sits in the masthead as an outcome
+     strip or inside Result as the evidence. */
+  .metrics {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+  .metrics--block {
+    max-width: 1080px;
+    margin: 36px auto;
+  }
+  .metrics--strip {
+    margin: 0;
+  }
+  .tile {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 20px;
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    background: var(--bg-elevated);
+  }
+  .value {
+    font-size: 34px;
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--fg);
+  }
+  .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--marketing-terracotta);
+  }
+  .note {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--fg-muted);
+  }
+  @media (max-width: 540px) {
+    .metrics {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .value {
+      font-size: 30px;
+    }
+  }
+</style>

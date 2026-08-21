@@ -1,0 +1,276 @@
+---
+import Base from '../../layouts/Base.astro';
+import Footer from '../../components/Footer.astro';
+import PortfolioBoot from '../../components/PortfolioBoot.astro';
+import PortfolioGate from '../../components/PortfolioGate.astro';
+import { CASES } from '../../data/portfolio';
+---
+<Base
+  title="Portfolio · Josh Approved"
+  description="Case studies from design and product work outside the studio. Locked behind a password."
+  ogTitle="Portfolio"
+>
+  <PortfolioBoot />
+  <div class="container">
+    <header class="head">
+      <h1>Portfolio</h1>
+      <p class="lede">
+        This is design and product work from outside the studio. Each one is
+        written up the same way: what was going on, what I was asked to do, what
+        I did, and what changed. Most of it belongs to the people who paid for
+        it, so it sits behind a password.
+      </p>
+    </header>
+
+    <PortfolioGate variant="bar" />
+
+    <section class="cases" aria-labelledby="cases-heading">
+      <div class="sectionbar">
+        <h2 id="cases-heading">Case studies</h2>
+        <span class="count">{CASES.length} projects</span>
+      </div>
+
+      <ul class="grid">
+        {CASES.map((c) => (
+          <li>
+            <a class="card" href={`/portfolio/case/${c.slug}/`} data-case-link>
+              <span class="cover">
+                <img src={c.cover.src} alt={c.cover.alt} loading="lazy" decoding="async" />
+                <span class="lockchip">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                  Locked
+                </span>
+              </span>
+              <span class="body">
+                <span class="meta">{c.year} · {c.discipline}</span>
+                <span class="title">{c.title}</span>
+                <span class="summary">{c.summary}</span>
+                <span class="cta cta-open">Read case study</span>
+                <span class="cta cta-locked">Enter the password to open</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <p class="note">
+        Every case study here runs on the same four headings: Situation, Task,
+        Action, Result. Same order, same shape, so you can read two of them
+        without relearning the layout.
+      </p>
+    </section>
+
+    <Footer />
+  </div>
+</Base>
+
+<script is:inline>
+  // A locked card should not feel broken when you click it. Send the visitor to
+  // the one thing that will help: the password field.
+  document.querySelectorAll('[data-case-link]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      if (document.documentElement.getAttribute('data-portfolio') === 'unlocked') return;
+      event.preventDefault();
+      var input = document.querySelector('[data-gate-input]');
+      if (!input) return;
+      input.focus({ preventScroll: true });
+      input.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    });
+  });
+</script>
+
+<style>
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .head {
+    padding: 64px 0 0;
+    max-width: 720px;
+  }
+  .head h1 {
+    font-size: 48px;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    font-weight: 600;
+    margin: 0 0 16px;
+  }
+  .head .lede {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--fg-muted);
+    margin: 0;
+  }
+
+  .cases {
+    margin-top: 56px;
+  }
+  .sectionbar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .sectionbar h2 {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .count {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--fg-muted);
+  }
+
+  .grid {
+    list-style: none;
+    margin: 24px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 28px;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+  }
+
+  .cover {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    background: var(--bg-subtle);
+    aspect-ratio: 16 / 10;
+  }
+  .cover img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Locked: blurred and scaled up a touch so the blur has no soft edge. */
+    filter: blur(14px) saturate(0.92);
+    transform: scale(1.1);
+    transition:
+      filter 250ms cubic-bezier(0.2, 0, 0, 1),
+      transform 250ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  :global(html[data-portfolio='unlocked']) .cover img {
+    filter: none;
+    transform: none;
+  }
+
+  .lockchip {
+    position: absolute;
+    inset: auto auto 12px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 1px solid var(--hairline-strong);
+    color: var(--fg-muted);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  :global(html[data-portfolio='unlocked']) .lockchip {
+    display: none;
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 2px 0;
+  }
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--fg-subtle);
+  }
+  .title {
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+  }
+  .summary {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--fg-muted);
+  }
+  .cta {
+    margin-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--marketing-terracotta);
+  }
+  .cta-open {
+    display: none;
+  }
+  :global(html[data-portfolio='unlocked']) .cta-open {
+    display: block;
+  }
+  :global(html[data-portfolio='unlocked']) .cta-locked {
+    display: none;
+  }
+  .cta-locked {
+    color: var(--fg-subtle);
+  }
+
+  .card:hover .cover {
+    border-color: var(--hairline-strong);
+  }
+  :global(html[data-portfolio='unlocked']) .card:hover .title {
+    text-decoration: underline;
+    text-decoration-color: var(--hairline-strong);
+    text-underline-offset: 3px;
+  }
+
+  .note {
+    box-sizing: border-box;
+    margin: 44px 0 0;
+    padding: 18px 20px;
+    background: var(--bg-subtle);
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--fg-muted);
+    max-width: 720px;
+  }
+
+  @media (max-width: 540px) {
+    .container {
+      padding: 0 20px;
+    }
+    .head {
+      padding: 40px 0 0;
+    }
+    .head h1 {
+      font-size: 36px;
+    }
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

@@ -2,7 +2,11 @@
 const year = new Date().getFullYear();
 ---
 <footer>
-  <span>© {year} Josh Approved · MIT</span>
+  <span class="colophon">
+    <span>© {year} Josh Approved · MIT</span>
+    <span class="sep" aria-hidden="true">·</span>
+    <a href="/portfolio/">Portfolio</a>
+  </span>
   <span class="stamp">
     <span class="check">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FAFAF7" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -28,6 +32,25 @@ const year = new Date().getFullYear();
     color: var(--fg-muted);
     gap: 16px;
     flex-wrap: wrap;
+  }
+  .colophon {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .colophon .sep {
+    color: var(--fg-subtle);
+  }
+  .colophon a {
+    color: var(--fg-muted);
+    text-decoration: none;
+  }
+  .colophon a:hover {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--hairline-strong);
+    text-underline-offset: 3px;
   }
   .stamp {
     display: inline-flex;
