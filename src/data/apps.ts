@@ -11,36 +11,38 @@ export { platformUrl, TAGS, PLATFORM_LABEL } from './catalog';
 // content-hashes them into the build. The hashed filename changes whenever the
 // bytes change, so a deploy can never leave Cloudflare's edge serving stale demo
 // bytes behind an unchanged name (Josh's 2026-07-02 cache concern).
-import groceryDemo from '../assets/demos/grocery-list.gif?url';
-import groceryPoster from '../assets/demos/grocery-list-poster.png?url';
-import packingDemo from '../assets/demos/packing-list.gif?url';
-import packingPoster from '../assets/demos/packing-list-poster.png?url';
-import fwtDemo from '../assets/demos/free-workout-timer.gif?url';
-import fwtPoster from '../assets/demos/free-workout-timer-poster.png?url';
-import tendDemo from '../assets/demos/tend.png?url';
+//
+// They are picked up BY FILENAME rather than by a hand-written import list: a
+// demo named after the app's slug is wired automatically the moment it lands in
+// src/assets/demos/. That is deliberate. The hand-written list meant adding an
+// app to the site took a code edit in two files, and the second one was the one
+// that got forgotten (Home Upkeep shipped to both stores in August 2026 with no
+// demo on the site at all). The factory's site-parity check copies each app's
+// own hero recording in here, so the only thing left for a human to write is
+// the alt text, which lives with the rest of the app's copy in catalog.ts.
+const DEMO_URLS = import.meta.glob('../assets/demos/*.{gif,png}', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+}) as Record<string, string>;
 
-const DEMOS: Record<string, NonNullable<AppRecord['demo']>> = {
-  'grocery-list': {
-    src: groceryDemo,
-    poster: groceryPoster,
-    alt: 'Adding an item to a shared grocery list and checking it off',
-  },
-  'packing-list': {
-    src: packingDemo,
-    poster: packingPoster,
-    alt: 'A packing list building itself from the trip type, with sensible quantities',
-  },
-  'free-workout-timer': {
-    src: fwtDemo,
-    poster: fwtPoster,
-    alt: 'Picking a timer and counting down into the first exercise',
-  },
-  tend: {
-    src: tendDemo,
-    alt: 'The Today screen showing who to reach out to and what is coming up',
-  },
-};
+const demoAsset = (slug: string, ext: string): string | undefined =>
+  DEMO_URLS[`../assets/demos/${slug}.${ext}`];
 
-export const APPS: AppRecord[] = CATALOG_APPS.map((app) =>
-  DEMOS[app.slug] ? { ...app, demo: DEMOS[app.slug] } : app,
-);
+function demoFor(app: AppRecord): AppRecord['demo'] {
+  if (!app.demoAlt) return undefined;
+  // A `.gif` animates and takes its reduced-motion still from the matching
+  // `-poster.png` (generated from the gif's own first frame by
+  // scripts/gen-demo-posters.mjs). A bare `.png` is a static framed screenshot.
+  const gif = demoAsset(app.slug, 'gif');
+  if (gif) {
+    return { src: gif, poster: demoAsset(`${app.slug}-poster`, 'png'), alt: app.demoAlt };
+  }
+  const still = demoAsset(app.slug, 'png');
+  return still ? { src: still, alt: app.demoAlt } : undefined;
+}
+
+export const APPS: AppRecord[] = CATALOG_APPS.map((app) => {
+  const demo = demoFor(app);
+  return demo ? { ...app, demo } : app;
+});

@@ -19,11 +19,15 @@ export type AppRecord = {
    *  mention of how it's built. Wedge-free (the wedge renders as its own chips).
    *  Falls back to `description` when unset. */
   value?: string;
+  /** Alt text for the hero demo. Setting this is what turns the demo on: apps.ts
+   *  looks for src/assets/demos/<slug>.gif (or .png) and attaches it, so the
+   *  asset needs no code change of its own, only this line of copy. */
+  demoAlt?: string;
   /** Hero demo shown above the fold on the app page and on the catalog card.
    *  A `.gif` src autoplays and loops with `poster` as the reduced-motion / pre-load
    *  still; a `.png`/`.jpg` src is a static framed screenshot (no poster). All
    *  assets are ~600px-wide device-framed marketing images (aspect ≈ 600:1296).
-   *  Attached in apps.ts (the srcs are Vite `?url` asset imports). */
+   *  Attached in apps.ts from `demoAlt` + the asset on disk; never hand-set here. */
   demo?: {
     src: string;
     poster?: string;
@@ -109,6 +113,7 @@ const RAW_APPS: AppRecord[] = [
     seoTitle: 'Shared grocery list, no account',
     keywords: 'grocery list, shopping list, shared list, household, groceries, no account, free',
     icon: '/assets/app-icons/grocery-list.png',
+    demoAlt: 'Adding an item to a shared grocery list and checking it off',
     permissions: 'None required',
     network: 'Optional',
     license: 'MIT',
@@ -138,6 +143,7 @@ const RAW_APPS: AppRecord[] = [
     seoTitle: 'A packing checklist that builds itself',
     keywords: 'packing list, travel checklist, packing checklist, trip planner, what to pack, free, no ads',
     icon: '/assets/app-icons/packing-list.png',
+    demoAlt: 'A packing list building itself from the trip type, with sensible quantities',
     permissions: 'None required',
     network: 'Optional',
     license: 'MIT',
@@ -168,6 +174,7 @@ const RAW_APPS: AppRecord[] = [
     seoTitle: 'Free interval & Tabata timer',
     keywords: 'interval timer, tabata timer, hiit timer, workout timer, circuit timer, free, no ads, no accounts',
     icon: '/assets/app-icons/free-workout-timer.png',
+    demoAlt: 'Picking a timer and counting down into the first exercise',
     appStoreUrl: 'https://apps.apple.com/us/app/workout-timer-josh-approved/id6767314178',
     permissions: 'None',
     network: 'None',
@@ -247,9 +254,10 @@ const RAW_APPS: AppRecord[] = [
   },
   {
     // Ships to the stores as "Relationships"; kept under the internal slug `tend`.
-    // Status stays 'in-progress' (TestFlight + Android internal track) until the
-    // store-availability overlay sees it live and upgrades it, same path every
-    // app follows, so real store links appear automatically the moment it ships.
+    // The hand-written status is the pre-launch one; the store-availability
+    // overlay upgrades it and fills each store's link as that store goes live,
+    // which is why no store URL is hand-set here. The overlay is refreshed by the
+    // factory's daily site-parity job (josh-approved-factory/scripts/site-parity.mjs).
     slug: 'tend',
     name: 'Relationships',
     tagline: 'A calm, private place to keep up with the people you love. No paywall, no ads, no tracking, no accounts.',
@@ -262,6 +270,7 @@ const RAW_APPS: AppRecord[] = [
     seoTitle: 'Keep up with the people you love, privately',
     keywords: 'relationships, friends, family, friendship, reminder, connection, birthday, stay in touch, no account, free',
     icon: '/assets/app-icons/tend.png',
+    demoAlt: 'The Today screen showing who to reach out to and what is coming up',
     permissions: 'Notifications (optional)',
     network: 'None',
     license: 'MIT',
