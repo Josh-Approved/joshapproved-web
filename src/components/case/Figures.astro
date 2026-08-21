@@ -1,0 +1,37 @@
+---
+import type { Figure as FigureType } from '../../data/portfolio';
+import Figure from './Figure.astro';
+
+type Props = { columns: 2 | 3; items: FigureType[] };
+const { columns, items } = Astro.props;
+---
+<div class:list={['figs', `figs-${columns}`]}>
+  {items.map((item) => <Figure {...item} inGrid />)}
+</div>
+
+<style>
+  /* Two or three artifacts that belong side by side: a research board next to
+     the notes it came from, a before next to an after. */
+  .figs {
+    max-width: 1080px;
+    margin: 36px auto;
+    display: grid;
+    gap: 24px;
+  }
+  .figs-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .figs-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  @media (max-width: 720px) {
+    .figs-2,
+    .figs-3 {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+    }
+    .figs {
+      margin: 28px auto;
+    }
+  }
+</style>

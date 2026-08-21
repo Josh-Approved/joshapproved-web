@@ -1,6 +1,11 @@
 # Josh Approved: free, open-source, privacy-first utility apps.
 # Our content is open (MIT) and we are glad to be read, cited, and quoted.
 # AI answer engines and crawlers are explicitly welcome.
+#
+# One exception: /portfolio/case/ holds gated case studies about client and
+# employer work. Search engines are left to crawl them so they can read the
+# noindex tag on the page and keep them out of results. AI crawlers, which
+# honour robots.txt rather than noindex, are asked to skip them outright.
 
 User-agent: *
 Allow: /
@@ -8,45 +13,59 @@ Allow: /
 # Answer engines and AI crawlers, named explicitly so intent is unambiguous.
 User-agent: GPTBot
 Allow: /
+Disallow: /portfolio/case/
 
 User-agent: OAI-SearchBot
 Allow: /
+Disallow: /portfolio/case/
 
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /portfolio/case/
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /portfolio/case/
 
 User-agent: Claude-User
 Allow: /
+Disallow: /portfolio/case/
 
 User-agent: Claude-SearchBot
 Allow: /
+Disallow: /portfolio/case/
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /portfolio/case/
 
 User-agent: Perplexity-User
 Allow: /
+Disallow: /portfolio/case/
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /portfolio/case/
 
 User-agent: Applebot-Extended
 Allow: /
+Disallow: /portfolio/case/
 
 User-agent: Amazonbot
 Allow: /
+Disallow: /portfolio/case/
 
 User-agent: Meta-ExternalAgent
 Allow: /
+Disallow: /portfolio/case/
 
 User-agent: cohere-ai
 Allow: /
+Disallow: /portfolio/case/
 
 User-agent: CCBot
 Allow: /
+Disallow: /portfolio/case/
 
 # A curated, LLM-friendly map of the site:
 # https://joshapproved.com/llms.txt   (index)

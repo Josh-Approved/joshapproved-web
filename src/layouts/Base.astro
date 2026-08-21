@@ -14,9 +14,12 @@ type Props = {
    *  renders below the header. Section index pages leave it unset. */
   crumb?: string;
   crumbParent?: { href: string; label: string };
+  /** Keep the page out of search results. Used by the gated portfolio case
+   *  studies, which are also left out of the sitemap and llms.txt. */
+  noindex?: boolean;
 };
 
-const { title, description, canonical, ogTitle, image, crumb, crumbParent } = Astro.props;
+const { title, description, canonical, ogTitle, image, crumb, crumbParent, noindex } = Astro.props;
 const fullCanonical = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
 const fullDescription =
   description ??
@@ -31,6 +34,7 @@ const fullImage = image ? new URL(image, Astro.site).toString() : undefined;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={fullDescription} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={fullCanonical} />
 
     <meta property="og:title" content={shareTitle} />

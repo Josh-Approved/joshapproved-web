@@ -1,0 +1,60 @@
+---
+type Props = { items: { title: string; body: string }[] };
+const { items } = Astro.props;
+---
+<ol class="steps">
+  {items.map((s, i) => (
+    <li>
+      <span class="num">{String(i + 1).padStart(2, '0')}</span>
+      <span class="col">
+        <span class="title">{s.title}</span>
+        <span class="body">{s.body}</span>
+      </span>
+    </li>
+  ))}
+</ol>
+
+<style>
+  /* The sequence of moves inside Action. Numbered on purpose: the order is the
+     argument. */
+  .steps {
+    max-width: 720px;
+    margin: 28px auto;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--hairline);
+  }
+  .steps li {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .num {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1;
+    color: var(--fg-muted);
+    border: 1px solid var(--hairline-strong);
+    border-radius: 5px;
+    padding: 6px 7px;
+  }
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+  .title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+  }
+  .body {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--fg-muted);
+  }
+</style>

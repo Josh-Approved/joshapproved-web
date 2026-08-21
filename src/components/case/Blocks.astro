@@ -1,0 +1,129 @@
+---
+import type { CaseBlock } from '../../data/portfolio';
+import Figure from './Figure.astro';
+import Figures from './Figures.astro';
+import Metrics from './Metrics.astro';
+import Quote from './Quote.astro';
+import Callout from './Callout.astro';
+import Steps from './Steps.astro';
+import DataTable from './DataTable.astro';
+
+type Props = { blocks: CaseBlock[] };
+const { blocks } = Astro.props;
+---
+{
+  blocks.map((b) => (
+    <>
+      {b.kind === 'prose' && (
+        <div class="prose">
+          {b.paragraphs.map((p) => (
+            <p>{p}</p>
+          ))}
+        </div>
+      )}
+
+      {b.kind === 'heading' && <h3 class="subhead">{b.text}</h3>}
+
+      {b.kind === 'list' && (
+        <div class="listblock">
+          {b.label && <span class="listlabel">{b.label}</span>}
+          <ul>
+            {b.items.map((i) => (
+              <li>{i}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {b.kind === 'figure' && (
+        <Figure tag={b.tag} src={b.src} alt={b.alt} caption={b.caption} width={b.width} />
+      )}
+
+      {b.kind === 'figures' && <Figures columns={b.columns} items={b.items} />}
+
+      {b.kind === 'metrics' && <Metrics items={b.items} />}
+
+      {b.kind === 'quote' && <Quote text={b.text} source={b.source} />}
+
+      {b.kind === 'callout' && <Callout label={b.label} body={b.body} />}
+
+      {b.kind === 'steps' && <Steps items={b.items} />}
+
+      {b.kind === 'table' && (
+        <DataTable columns={b.columns} rows={b.rows} caption={b.caption} />
+      )}
+    </>
+  ))
+}
+
+<style>
+  /* Reading column. Figures, metric tiles and grids set their own wider bounds,
+     so the text stays at a comfortable measure while the evidence gets room. */
+  .prose,
+  .subhead,
+  .listblock {
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .prose p {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--fg);
+    margin: 0 0 18px;
+  }
+  .prose p:last-child {
+    margin-bottom: 0;
+  }
+  .subhead {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    margin: 40px auto 14px;
+  }
+  .listblock {
+    margin: 24px auto;
+  }
+  .listlabel {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--fg-muted);
+    margin-bottom: 10px;
+  }
+  .listblock ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--hairline);
+  }
+  .listblock li {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--fg);
+    padding: 12px 0 12px 22px;
+    border-bottom: 1px solid var(--hairline);
+    position: relative;
+  }
+  .listblock li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 21px;
+    width: 8px;
+    height: 1px;
+    background: var(--marketing-terracotta);
+  }
+  @media (max-width: 540px) {
+    .prose p {
+      font-size: 16px;
+    }
+    .subhead {
+      font-size: 18px;
+      margin: 32px auto 12px;
+    }
+  }
+</style>
