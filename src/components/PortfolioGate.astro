@@ -13,8 +13,10 @@ type Props = {
 
 const { variant = 'bar', heading = 'These case studies are locked', body } = Astro.props;
 ---
+{/* Once unlocked the whole thing disappears and the case studies move up.
+    There is no "unlocked" confirmation state: the case studies opening is the
+    confirmation. */}
 <section class:list={['gate', `gate--${variant}`]} data-gate aria-labelledby="gate-heading">
-  <div class="locked-view">
     <span class="icon" aria-hidden="true">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="11" width="18" height="11" rx="2" />
@@ -42,17 +44,6 @@ const { variant = 'bar', heading = 'These case studies are locked', body } = Ast
     </form>
 
     <p class="error" id="gate-error" data-gate-error role="status" hidden></p>
-  </div>
-
-  <div class="unlocked-view">
-    <span class="check" aria-hidden="true">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FAFAF7" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="20 6 9 17 4 12" />
-      </svg>
-    </span>
-    <span class="unlocked-text">Unlocked on this device.</span>
-    <button type="button" class="lock" data-gate-lock>Lock again</button>
-  </div>
 </section>
 
 <script is:inline define:vars={{ hash: PASSPHRASE_SHA256 }}>
@@ -77,19 +68,10 @@ const { variant = 'bar', heading = 'These case studies are locked', body } = Ast
         .join('');
     }
 
-    function setState(unlocked) {
-      if (unlocked) {
-        document.documentElement.setAttribute('data-portfolio', 'unlocked');
-      } else {
-        document.documentElement.removeAttribute('data-portfolio');
-      }
-    }
-
     document.querySelectorAll('[data-gate]').forEach(function (gate) {
       var form = gate.querySelector('[data-gate-form]');
       var input = gate.querySelector('[data-gate-input]');
       var error = gate.querySelector('[data-gate-error]');
-      var lock = gate.querySelector('[data-gate-lock]');
 
       function fail(message) {
         error.textContent = message;
@@ -128,16 +110,7 @@ const { variant = 'bar', heading = 'These case studies are locked', body } = Ast
           /* Storage blocked: unlocked for this page view only. */
         }
         input.value = '';
-        setState(true);
-        document.dispatchEvent(new CustomEvent('ja-portfolio-unlocked'));
-      });
-
-      lock.addEventListener('click', function () {
-        try {
-          window.localStorage.removeItem(STORE);
-        } catch (e) {}
-        setState(false);
-        document.dispatchEvent(new CustomEvent('ja-portfolio-locked'));
+        document.documentElement.setAttribute('data-portfolio', 'unlocked');
       });
     });
   })();
@@ -159,18 +132,11 @@ const { variant = 'bar', heading = 'These case studies are locked', body } = Ast
     text-align: center;
   }
 
-  /* The two faces of the gate. Which one shows is decided by the attribute the
-     boot script puts on <html>, so there is no flash on an unlocked reload. */
-  .unlocked-view {
+  /* Unlocked, the gate is gone rather than replaced by a confirmation, so the
+     case studies sit as high on the page as they can. The boot script sets the
+     attribute before the body parses, so an unlocked visitor never sees it. */
+  :global(html[data-portfolio='unlocked']) .gate {
     display: none;
-  }
-  :global(html[data-portfolio='unlocked']) .locked-view {
-    display: none;
-  }
-  :global(html[data-portfolio='unlocked']) .unlocked-view {
-    display: flex;
-    align-items: center;
-    gap: 10px;
   }
 
   .icon {
@@ -257,38 +223,6 @@ const { variant = 'bar', heading = 'These case studies are locked', body } = Ast
     color: var(--danger);
     margin: 12px 0 0;
   }
-  .check {
-    width: 20px;
-    height: 20px;
-    background: var(--accent);
-    border-radius: 5px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .unlocked-text {
-    font-size: 14px;
-    color: var(--fg-muted);
-  }
-  .lock {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--fg-muted);
-    background: none;
-    border: 1px solid var(--hairline-strong);
-    border-radius: 6px;
-    padding: 6px 10px;
-    cursor: pointer;
-    margin-left: auto;
-  }
-  .lock:hover {
-    color: var(--fg);
-    border-color: var(--fg);
-  }
-
   .gate[data-shake] {
     animation: shake 320ms cubic-bezier(0.2, 0, 0, 1);
   }

@@ -75,7 +75,14 @@ export type CaseStudy = {
   /** One line on the index card. */
   summary: string;
   year: string;
-  discipline: string;
+  /**
+   * The surfaces and kinds of work the project actually touched. NOT a job
+   * title and not "product management": say what was worked on. Two or three
+   * short terms, first capitalised, the rest lower case, e.g.
+   * ['Digital', 'physical ops'] or ['Digital', 'usability', 'physical ops'].
+   * Rendered next to the year on the card and above the case study title.
+   */
+  surfaces: string[];
   cover: { src: string; alt: string };
   /** The spec table under the masthead. Keep every case to the same rows. */
   facts: { label: string; value: string }[];
@@ -102,7 +109,7 @@ const curabiturCheckout: CaseStudy = {
   dek: 'Placeholder case study. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
   summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod.',
   year: '2026',
-  discipline: 'Product management',
+  surfaces: ['Digital', 'payments', 'support ops'],
   cover: {
     src: '/assets/portfolio/cover-a.svg',
     alt: 'Placeholder cover artwork for the Curabitur checkout rebuild case study.',
@@ -304,7 +311,7 @@ const vestibulumReporting: CaseStudy = {
   dek: 'Placeholder case study. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.',
   summary: 'Duis aute irure dolor in reprehenderit in voluptate velit esse.',
   year: '2025',
-  discipline: 'Product management, research',
+  surfaces: ['Digital', 'data', 'internal tools'],
   cover: {
     src: '/assets/portfolio/cover-b.svg',
     alt: 'Placeholder cover artwork for the Vestibulum reporting dashboard case study.',
@@ -413,7 +420,7 @@ const aliquamOnboarding: CaseStudy = {
   dek: 'Placeholder case study. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.',
   summary: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem.',
   year: '2024',
-  discipline: 'Product management, growth',
+  surfaces: ['Digital', 'usability', 'physical ops'],
   cover: {
     src: '/assets/portfolio/cover-c.svg',
     alt: 'Placeholder cover artwork for the Aliquam member onboarding case study.',
