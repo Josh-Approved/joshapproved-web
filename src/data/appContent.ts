@@ -25,6 +25,13 @@ export const FAQ: Record<string, Faq[]> = {
     { q: 'Can I share a trip with the person I am travelling with?', a: 'Yes. You share a trip with a link or a QR code, phone to phone. There is no sign-up and no email to hand over.' },
     { q: 'How does a shared trip stay in sync without a server?', a: 'Changes pass between your phones encrypted end to end, through free public relays I do not run and cannot read. The list merges on each device, so nothing about your trip reaches me.' },
   ],
+  'home-maintenance': [
+    { q: 'Is Home Upkeep free?', a: 'Yes. The whole app is free, with no paywall, no ads, and no subscription. The appliance registry and the reminders are all in the free app.' },
+    { q: 'Do I need an account?', a: 'No account and no sign-up. Open it and add your first task.' },
+    { q: 'Will it nag me?', a: 'No. One reminder when a task is due, on a schedule you set yourself. There are no streaks, no badges, and no daily prompts.' },
+    { q: 'What happens when I mark a task done?', a: 'The next due date sets itself from the day you did the work, so a job done early or late keeps its own rhythm instead of drifting.' },
+    { q: 'Can I get my data out?', a: 'Yes. Export everything to a file whenever you want, and import it back on another phone.' },
+  ],
   'split-expenses': [
     { q: 'Is Split Expenses free?', a: 'Yes. Tracking costs and settling up are free, with no paywall and no ads.' },
     { q: 'Do I need an account to split with a group?', a: 'No. You share a group with a link or a QR code, and balances are worked out on each phone.' },
@@ -53,6 +60,7 @@ export const RELATED_ESSAYS: Record<string, string[]> = {
   'grocery-list': ['accounts', 'tracking'],
   'free-workout-timer': ['paywalls', 'ads'],
   'packing-list': ['accounts', 'paywalls'],
+  'home-maintenance': ['paywalls', 'tracking'],
   'split-expenses': ['accounts', 'paywalls'],
   'tend': ['tracking', 'accounts'],
   'ask-ai': ['tracking', 'ads'],
