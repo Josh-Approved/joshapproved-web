@@ -300,7 +300,7 @@ const RAW_APPS: AppRecord[] = [
     seoTitle: 'Keep up with the people you love, privately',
     keywords: 'relationships, friends, family, friendship, reminder, connection, birthday, stay in touch, no account, free',
     icon: '/assets/app-icons/tend.png',
-    demoAlt: 'The Today screen showing who to reach out to and what is coming up',
+    demoAlt: 'The Today screen showing who to reach out to and what is coming up, then a catch-up logged against one person',
     permissions: 'Notifications (optional)',
     network: 'None',
     license: 'MIT',
