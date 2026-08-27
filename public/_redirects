@@ -1,2 +1,8 @@
 /manifesto/  /about/  301
 /manifesto   /about/  301
+
+# Relationships was published under its internal repo name `tend` until
+# 2026-08-27. Keep the old address alive: it is in the sitemap Google already
+# crawled, in the GTM install links, and in the directory submissions list.
+/apps/tend/  /apps/relationships/  301
+/apps/tend   /apps/relationships/  301

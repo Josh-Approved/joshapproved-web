@@ -108,7 +108,7 @@ const RAW_APPS: AppRecord[] = [
     value: 'One shared list your whole household keeps in sync. Add milk on your way home and it shows up on their phone.',
     tag: 'util',
     platforms: ['ios', 'android'],
-    status: 'planned',
+    status: 'shipped',
     github: 'https://github.com/Josh-Approved/grocery-list',
     seoTitle: 'Shared grocery list, no account',
     keywords: 'grocery list, shopping list, shared list, household, groceries, no account, free',
@@ -138,7 +138,7 @@ const RAW_APPS: AppRecord[] = [
     value: 'Tell it the trip and it builds the packing list for you, with sensible quantities to adjust.',
     tag: 'util',
     platforms: ['ios', 'android'],
-    status: 'in-progress',
+    status: 'shipped',
     github: 'https://github.com/Josh-Approved/packing-list',
     seoTitle: 'A packing checklist that builds itself',
     keywords: 'packing list, travel checklist, packing checklist, trip planner, what to pack, free, no ads',
@@ -283,23 +283,28 @@ const RAW_APPS: AppRecord[] = [
     },
   },
   {
-    // Ships to the stores as "Relationships"; kept under the internal slug `tend`.
+    // The app repo is still named `tend`, the internal name it was born under,
+    // but nothing public says that word: the stores, the site and this URL all
+    // say Relationships (slug renamed from `tend` 2026-08-27, Josh's call, with
+    // a 301 in public/_redirects). The factory maps repo slug -> website slug in
+    // sync-web-store-status.mjs § WEB_SLUG, so the generated overlay below keys
+    // off `relationships` too.
     // The hand-written status is the pre-launch one; the store-availability
     // overlay upgrades it and fills each store's link as that store goes live,
     // which is why no store URL is hand-set here. The overlay is refreshed by the
     // factory's daily site-parity job (josh-approved-factory/scripts/site-parity.mjs).
-    slug: 'tend',
+    slug: 'relationships',
     name: 'Relationships',
     tagline: 'A calm, private place to keep up with the people you love. No paywall, no ads, no tracking, no accounts.',
     description: 'Gentle reach-out reminders, the details worth remembering about each person, and a quiet space to prepare for the conversations that are hard to start. Your data stays with you.',
     value: 'A calm place to keep up with the people you love. A gentle nudge when it has been too long, and the details worth remembering about each person.',
     tag: 'util',
     platforms: ['ios', 'android'],
-    status: 'in-progress',
+    status: 'shipped',
     github: 'https://github.com/Josh-Approved/tend',
     seoTitle: 'Keep up with the people you love, privately',
     keywords: 'relationships, friends, family, friendship, reminder, connection, birthday, stay in touch, no account, free',
-    icon: '/assets/app-icons/tend.png',
+    icon: '/assets/app-icons/relationships.png',
     demoAlt: 'The Today screen showing who to reach out to and what is coming up, then a catch-up logged against one person',
     permissions: 'Notifications (optional)',
     network: 'None',

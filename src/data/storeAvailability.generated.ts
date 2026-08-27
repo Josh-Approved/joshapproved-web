@@ -8,12 +8,12 @@ export type StoreAvailability = {
   androidVersion?: string;
 };
 
-export const STORE_AVAILABILITY_GENERATED_AT = "2026-08-21T13:39:53.482Z";
+export const STORE_AVAILABILITY_GENERATED_AT = "2026-08-27T15:18:21.744Z";
 
 export const STORE_AVAILABILITY: Record<string, StoreAvailability> = {
-  "free-workout-timer": {"status":"shipped","appStoreUrl":"https://apps.apple.com/us/app/id6767314178","iosVersion":"1.1.8","playStoreUrl":"https://play.google.com/store/apps/details?id=com.joshapproved.freeworkouttimer","androidVersion":"1.1.8"},
-  "grocery-list": {"status":"shipped","appStoreUrl":"https://apps.apple.com/us/app/id6779417031","iosVersion":"1.0.7","playStoreUrl":"https://play.google.com/store/apps/details?id=com.joshapproved.grocerylist","androidVersion":"1.0.7"},
-  "home-maintenance": {"status":"shipped","appStoreUrl":"https://apps.apple.com/us/app/id6791778049","iosVersion":"1.0.0","playStoreUrl":"https://play.google.com/store/apps/details?id=com.joshapproved.homemaintenance","androidVersion":"1.0.0"},
-  "packing-list": {"status":"shipped","appStoreUrl":"https://apps.apple.com/us/app/id6770051644","iosVersion":"1.0.8","playStoreUrl":"https://play.google.com/store/apps/details?id=com.joshapproved.packinglist","androidVersion":"1.0.8"},
-  "tend": {"status":"shipped","playStoreUrl":"https://play.google.com/store/apps/details?id=com.joshapproved.tend","androidVersion":"1.0.0"},
+  "free-workout-timer": {"status":"shipped","appStoreUrl":"https://apps.apple.com/us/app/id6767314178","iosVersion":"1.1.9","playStoreUrl":"https://play.google.com/store/apps/details?id=com.joshapproved.freeworkouttimer","androidVersion":"1.1.9"},
+  "grocery-list": {"status":"shipped","appStoreUrl":"https://apps.apple.com/us/app/id6779417031","iosVersion":"1.0.7","playStoreUrl":"https://play.google.com/store/apps/details?id=com.joshapproved.grocerylist","androidVersion":"1.0.8"},
+  "home-maintenance": {"status":"shipped","appStoreUrl":"https://apps.apple.com/us/app/id6791778049","iosVersion":"1.0.1","playStoreUrl":"https://play.google.com/store/apps/details?id=com.joshapproved.homemaintenance","androidVersion":"1.0.1"},
+  "packing-list": {"status":"shipped","appStoreUrl":"https://apps.apple.com/us/app/id6770051644","iosVersion":"1.0.9","playStoreUrl":"https://play.google.com/store/apps/details?id=com.joshapproved.packinglist","androidVersion":"1.0.9"},
+  "relationships": {"status":"shipped","appStoreUrl":"https://apps.apple.com/us/app/id6785106429","iosVersion":"1.0.0","playStoreUrl":"https://play.google.com/store/apps/details?id=com.joshapproved.tend","androidVersion":"1.0.1"},
 };

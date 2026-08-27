@@ -37,7 +37,7 @@ export const FAQ: Record<string, Faq[]> = {
     { q: 'Do I need an account to split with a group?', a: 'No. You share a group with a link or a QR code, and balances are worked out on each phone.' },
     { q: 'Does the app handle the money?', a: 'No. It records who paid and shows the fewest payments to settle up. You settle in cash or hand off to Venmo, PayPal, or Cash App. The app never touches the money.' },
   ],
-  'tend': [
+  'relationships': [
     { q: 'Is Relationships free?', a: 'Yes. The whole app is free, with no paywall, no ads, and no subscription.' },
     { q: 'Where is my information about people stored?', a: 'On your device. There is no account, and nothing you write about the people in your life reaches me.' },
     { q: 'Does it use streaks or notifications to keep me in the app?', a: 'No. It has gentle reminders you set yourself, and none of the streaks, badges, or engagement nudges other apps use.' },
@@ -62,7 +62,7 @@ export const RELATED_ESSAYS: Record<string, string[]> = {
   'packing-list': ['accounts', 'paywalls'],
   'home-maintenance': ['paywalls', 'tracking'],
   'split-expenses': ['accounts', 'paywalls'],
-  'tend': ['tracking', 'accounts'],
+  'relationships': ['tracking', 'accounts'],
   'ask-ai': ['tracking', 'ads'],
   'private-ai-summary': ['tracking', 'ads'],
 };
