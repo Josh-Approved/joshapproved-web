@@ -14,7 +14,7 @@ export const FAQ: Record<string, Faq[]> = {
     { q: 'Does it work on both iPhone and Android?', a: 'Yes, and a shared list stays in sync across both.' },
   ],
   'free-workout-timer': [
-    { q: 'Is Free Workout Timer free?', a: 'Yes. Every feature is in the app for free, including custom intervals and Tabata. No paywall, no ads.' },
+    { q: 'Is Workout Timer free?', a: 'Yes. Every feature is in the app for free, including custom intervals and Tabata. No paywall, no ads.' },
     { q: 'Does the timer keep running when the screen is off?', a: 'Yes. It keeps time in the background, so locking the phone or switching apps does not stop the count.' },
     { q: 'Do you track my workouts?', a: 'No. There is no account and no analytics. The timer runs on your phone and reports nothing back.' },
   ],

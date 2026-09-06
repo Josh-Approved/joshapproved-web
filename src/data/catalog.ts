@@ -193,7 +193,7 @@ const RAW_APPS: AppRecord[] = [
   },
   {
     slug: 'free-workout-timer',
-    name: 'Free Workout Timer',
+    name: 'Workout Timer',
     tagline: 'An interval and Tabata timer. No paywall, no ads, no tracking, no accounts.',
     description: 'Tabata and interval timing for the phone in your pocket. No paywall, no ads, no tracking, no accounts.',
     value: 'Set your intervals, press start, and put the phone down. It counts you through the workout.',
