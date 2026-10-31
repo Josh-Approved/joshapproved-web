@@ -5,6 +5,7 @@ import AppIcon from '../../components/AppIcon.astro';
 import MoreApps from '../../components/MoreApps.astro';
 import { APPS, PLATFORM_LABEL, platformUrl } from '../../data/apps.ts';
 import { FAQ, RELATED_ESSAYS } from '../../data/appContent.ts';
+import { POST_KIND_SHORT } from '../../data/postKinds.ts';
 import { getCollection } from 'astro:content';
 import QRCode from 'qrcode';
 
@@ -349,7 +350,7 @@ if (hasMobileStore) {
           {relatedPosts.map((p) => (
             <li>
               <a href={`/blog/${p.id}/`}>{p.data.title}</a>
-              <span class="reading-kind">{p.data.kind === 'launch' ? 'New app' : 'Alternative'}</span>
+              <span class="reading-kind">{POST_KIND_SHORT[p.data.kind]}</span>
             </li>
           ))}
           {relatedEssays.map((w) => (

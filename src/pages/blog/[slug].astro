@@ -4,6 +4,7 @@ import Footer from '../../components/Footer.astro';
 import AppIcon from '../../components/AppIcon.astro';
 import { getCollection, render } from 'astro:content';
 import { APPS } from '../../data/apps.ts';
+import { POST_KIND_LABEL } from '../../data/postKinds.ts';
 
 export async function getStaticPaths() {
   const posts = (await getCollection('posts')).filter((p) => !p.data.draft);
@@ -25,7 +26,7 @@ const published = new Date(post.data.published).toLocaleDateString('en-US', {
 });
 
 const canonical = `https://joshapproved.com/blog/${post.id}/`;
-const kindLabel = post.data.kind === 'launch' ? 'New app' : 'Alternative to paid apps';
+const kindLabel = POST_KIND_LABEL[post.data.kind];
 
 // BlogPosting structured data: an honest article record for search, plus a
 // breadcrumb so the result shows Home > Blog > title.
@@ -163,6 +164,41 @@ const ogImage = app?.icon ? `/assets/og/${app.slug}.png` : undefined;
     line-height: 1.7;
     margin: 0 0 8px;
   }
+  /* App screenshots written into a post as <figure class="shot"> (one phone)
+     or <figure class="shots"> (two side by side). */
+  .prose :global(figure.shot),
+  .prose :global(figure.shots) {
+    margin: 28px 0 32px;
+  }
+  .prose :global(figure.shot) {
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .prose :global(figure.shots) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    max-width: 576px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .prose :global(figure img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--hairline);
+    border-radius: 24px;
+    background: var(--bg-elevated);
+  }
+  .prose :global(figcaption) {
+    grid-column: 1 / -1;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--fg-muted);
+    text-align: center;
+    margin: 4px 0 0;
+  }
   .appcta {
     margin: 40px 0 0;
     padding: 24px;
@@ -225,5 +261,7 @@ const ogImage = app?.icon ? `/assets/og/${app.slug}.png` : undefined;
     .prose h1 { font-size: 32px; }
     .prose :global(p), .prose :global(li) { font-size: 16px; }
     .appcta { grid-template-columns: 1fr; }
+    .prose :global(figure.shots) { gap: 10px; }
+    .prose :global(figure img) { border-radius: 16px; }
   }
 </style>

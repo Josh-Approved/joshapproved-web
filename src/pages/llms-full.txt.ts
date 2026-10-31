@@ -9,6 +9,17 @@ import { FAQ } from '../data/appContent.ts';
 
 const SITE = 'https://joshapproved.com';
 
+// A post's screenshots are written as raw <figure> HTML; in this plain-text
+// file each one collapses to its caption, so the markup never reaches an
+// answer engine but what the pictures show still does.
+const plainBody = (body: string) =>
+  body
+    .replace(/<figure[\s\S]*?<\/figure>/g, (fig) => {
+      const caption = fig.match(/<figcaption>([\s\S]*?)<\/figcaption>/)?.[1].trim();
+      return caption ? `[Screenshot: ${caption.replace(/&gt;/g, '>')}]` : '';
+    })
+    .trim();
+
 const STATUS_LABEL: Record<string, string> = {
   shipped: 'Live on the App Store and Google Play',
   'in-progress': 'In beta',
@@ -74,7 +85,7 @@ ${writing.map((w) => `## ${w.data.title}\nURL: ${SITE}/writing/${w.id}/\n\n${w.b
 
 # Blog
 
-${posts.map((p) => `## ${p.data.title}\nURL: ${SITE}/blog/${p.id}/\n\n${p.body?.trim() ?? p.data.description}`).join('\n\n---\n\n')}
+${posts.map((p) => `## ${p.data.title}\nURL: ${SITE}/blog/${p.id}/\n\n${p.body ? plainBody(p.body) : p.data.description}`).join('\n\n---\n\n')}
 `;
 
   return new Response(body, {

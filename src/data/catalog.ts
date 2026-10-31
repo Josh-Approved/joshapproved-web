@@ -206,19 +206,20 @@ const RAW_APPS: AppRecord[] = [
     icon: '/assets/app-icons/free-workout-timer.png',
     demoAlt: 'Picking a timer and counting down into the first exercise',
     appStoreUrl: 'https://apps.apple.com/us/app/workout-timer-josh-approved/id6767314178',
-    permissions: 'None',
-    network: 'None',
+    permissions: 'Camera (class mode only), notifications (optional)',
+    network: 'Optional',
     license: 'MIT',
     body: [
       "Plays a beep, counts down, and gets out of your way. No sign-in, no email, no paywall. That's the whole app.",
       'Build your own intervals or pick a preset. Works in portrait or landscape on the floor next to you. Your data stays with you: no accounts, no tracking, no analytics.',
+      "Running a group class? Class mode (beta) keeps a room of phones in step: everyone scans your class code, then your pause and skip reach every phone at the same moment, and each person hears the cues in their own headphones.",
     ],
     privacy: {
       headline: 'What this app collects',
       bullets: [
         'No analytics, no crash reports, no install pings.',
         'No accounts. There is nothing to sign up for.',
-        'No network access. The app cannot send your data anywhere.',
+        "Your timers stay on your phone. The app goes online only to check for updates and, during a class, to pass the instructor's pause and skip between phones, end-to-end encrypted, through free public relays I do not run and cannot read.",
       ],
     },
   },
