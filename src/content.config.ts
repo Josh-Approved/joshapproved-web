@@ -20,8 +20,9 @@ const writing = defineCollection({
   }),
 });
 
-// The blog: launch announcements ("Introducing X") and honest
-// alternative-to-a-paywalled-app pieces. Separate from the essays: these are
+// The blog: launch announcements ("Introducing X"), honest
+// alternative-to-a-paywalled-app pieces, and what's-new updates to a live app.
+// Separate from the essays: these are
 // tied to a specific app and are the volume/SEO surface. Draft = not built.
 const posts = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/posts' }),
@@ -31,8 +32,9 @@ const posts = defineCollection({
     dek: z.string(),
     /** Slug of the app this post is about (drives the CTA + related links). */
     app: z.string(),
-    /** 'launch' = introducing an app; 'alternative' = free-alternative-to-X. */
-    kind: z.enum(['launch', 'alternative']),
+    /** 'launch' = introducing an app; 'alternative' = free-alternative-to-X;
+     *  'update' = what's new in an app that is already out. */
+    kind: z.enum(['launch', 'alternative', 'update']),
     /** Named paid competitors positioned against (longer-form surface only). */
     competitors: z.array(z.string()).optional(),
     published: z.string(),

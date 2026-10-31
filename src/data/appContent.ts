@@ -17,6 +17,7 @@ export const FAQ: Record<string, Faq[]> = {
     { q: 'Is Workout Timer free?', a: 'Yes. Every feature is in the app for free, including custom intervals and Tabata. No paywall, no ads.' },
     { q: 'Does the timer keep running when the screen is off?', a: 'Yes. It keeps time in the background, so locking the phone or switching apps does not stop the count.' },
     { q: 'Do you track my workouts?', a: 'No. There is no account and no analytics. The timer runs on your phone and reports nothing back.' },
+    { q: 'Can I use Workout Timer to run a group class?', a: "Yes. Class mode (beta) lets an instructor run one workout across a room of phones. Everyone scans the instructor's class code, every phone runs the workout in step with its own sounds, and the instructor's pause and skip reach every phone at once. No one needs an account." },
   ],
   'packing-list': [
     { q: 'Is Packing List free?', a: 'Yes. The whole app is free, with no paywall and no ads.' },
