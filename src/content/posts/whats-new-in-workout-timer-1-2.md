@@ -17,22 +17,6 @@ Workout Timer has no analytics in it. I can't see which screens you open, how lo
 
 Here is what came out of that inbox lately.
 
-## Run a group class (beta)
-
-<figure class="shots">
-  <img src="/assets/blog/workout-timer-1-2/class-setup.webp" width="600" height="1304" loading="lazy" decoding="async" alt="The Class mode screen in Workout Timer, with a Join a class section and a Scan class code button, and a Run a class section listing saved timers to pick from." />
-  <img src="/assets/blog/workout-timer-1-2/class-instructor.webp" width="600" height="1304" loading="lazy" decoding="async" alt="The instructor's screen during a class, marked Instructor, Beta and Live, counting down to the start of the class." />
-  <figcaption>Class mode: join by scanning the instructor's code, or pick a timer and run the class yourself.</figcaption>
-</figure>
-
-The request: a way for an instructor to run one workout for a whole room, where everyone follows along on their own phone, in their own headphones.
-
-Class mode does that. The instructor picks a timer and shows a class code. Everyone else opens Workout Timer, taps Class mode, and scans it. From then on every phone runs the same workout in step, each with its own sounds. When the instructor pauses, skips, or goes back, every phone does it at the same moment. Someone who arrives late scans in and lands right where the class is, and a phone that loses signal keeps running on schedule.
-
-Nobody in the room makes an account. The workout itself travels inside the class code. During a class, the instructor's pause and skip pass between phones end-to-end encrypted, through free public relays I don't run and can't read. Outside a class, the only time the app goes online is to check for app updates.
-
-It's labeled beta because a room full of different phones is hard to test from one desk. If you run a class with it, the Send feedback link on the Class mode screen is the fastest way to tell me how it went.
-
 ## Turn the cues down, not your music
 
 <figure class="shot">
@@ -54,6 +38,22 @@ Settings &gt; Sounds now starts with a Volume slider. It sets how loud Workout T
 The request: after the last round, start the same workout again without backing out to the list to find it.
 
 The Done screen now has a Restart workout button. It runs the same timer again from the top, with the round count and time cleared. Back to timers is still right there if you're finished.
+
+## Run a group class (beta)
+
+<figure class="shots">
+  <img src="/assets/blog/workout-timer-1-2/class-setup.webp" width="600" height="1304" loading="lazy" decoding="async" alt="The Class mode screen in Workout Timer, with a Join a class section and a Scan class code button, and a Run a class section listing saved timers to pick from." />
+  <img src="/assets/blog/workout-timer-1-2/class-instructor.webp" width="600" height="1304" loading="lazy" decoding="async" alt="The instructor's screen during a class, marked Instructor, Beta and Live, counting down to the start of the class." />
+  <figcaption>Class mode: join by scanning the instructor's code, or pick a timer and run the class yourself.</figcaption>
+</figure>
+
+The request: a way for an instructor to run one workout for a whole room, where everyone follows along on their own phone, in their own headphones.
+
+Class mode does that. The instructor picks a timer and shows a class code. Everyone else opens Workout Timer, taps Class mode, and scans it. From then on every phone runs the same workout in step, each with its own sounds. When the instructor pauses, skips, or goes back, every phone does it at the same moment. Someone who arrives late scans in and lands right where the class is, and a phone that loses signal keeps running on schedule.
+
+Nobody in the room makes an account. The workout itself travels inside the class code. During a class, the instructor's pause and skip pass between phones end-to-end encrypted, through free public relays I don't run and can't read. Outside a class, the only time the app goes online is to check for app updates.
+
+It's labeled beta because a room full of different phones is hard to test from one desk. If you run a class with it, the Send feedback link on the Class mode screen is the fastest way to tell me how it went.
 
 ## Also new lately
 
