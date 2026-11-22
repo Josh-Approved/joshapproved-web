@@ -1,0 +1,294 @@
+---
+/**
+ * Shared-list invite landing page. See src/data/join.ts for how the link works
+ * and why the code in it never reaches this site.
+ *
+ * Kept out of search (noindex) and out of the generated sitemap and llms.txt:
+ * it is a doorway for one person holding one link, not content.
+ */
+import Base from '../../layouts/Base.astro';
+import Footer from '../../components/Footer.astro';
+import AppIcon from '../../components/AppIcon.astro';
+import { APPS } from '../../data/apps.ts';
+import { JOIN_APPS } from '../../data/join.ts';
+
+export function getStaticPaths() {
+  return JOIN_APPS.map((join) => {
+    const app = APPS.find((a) => a.slug === join.slug);
+    if (!app) throw new Error(`join: no catalog app for ${join.slug}`);
+    return { params: { slug: join.slug }, props: { join, app } };
+  });
+}
+
+const { join, app } = Astro.props;
+const title = `Join ${join.thing}`;
+const ogImage = app.icon ? `/assets/og/${app.slug}.png` : undefined;
+const WEDGE = ['No paywall', 'No ads', 'No tracking', 'No accounts'];
+---
+<Base
+  title={`${title} in ${app.name}`}
+  ogTitle={`You're invited to ${join.thing}`}
+  description={`Open it in ${app.name} and you both see the same list. No paywall, no ads, no tracking, no accounts.`}
+  image={ogImage}
+  noindex
+>
+  <main class="container">
+    <section class="invite">
+      <div class="idrow">
+        <AppIcon app={app} size="lg" />
+        <h1>{title}</h1>
+      </div>
+
+      <p class="lead">
+        Someone shared {join.thing} with you in {app.name}. Open it in the app
+        and you'll both see the same list, kept up to date as you shop.
+      </p>
+
+      <div class="state" data-state="ready" hidden>
+        <a class="btn primary open" href="#" data-open>Open in {app.name}</a>
+        <p class="hint" data-desktop hidden>
+          Open this link on your phone. That's where {app.name} lives.
+        </p>
+      </div>
+
+      <div class="state" data-state="broken" hidden>
+        <p class="hint">
+          This link is missing its code, so it can't open the list. Ask for the
+          link again, or scan the QR code on their phone from inside {app.name}.
+        </p>
+      </div>
+
+      <noscript>
+        <p class="hint">
+          Install {app.name} below, then come back and tap the link again.
+        </p>
+      </noscript>
+
+      <h2>Don't have {app.name} yet?</h2>
+      <ol class="steps">
+        <li>Install it from your phone's store.</li>
+        <li>Come back to this page and tap <strong>Open in {app.name}</strong>.</li>
+      </ol>
+      <div class="cta-row">
+        {app.appStoreUrl && (
+          <a class="badge-link" href={app.appStoreUrl} rel="noopener" aria-label="Download on the App Store">
+            <img src="/assets/badges/apple-app-store.svg" alt="Download on the App Store" width="132" height="44" />
+          </a>
+        )}
+        {app.playStoreUrl && (
+          <a class="badge-link" href={app.playStoreUrl} rel="noopener" aria-label="Get it on Google Play">
+            <img src="/assets/badges/google-play.svg" alt="Get it on Google Play" width="149" height="44" />
+          </a>
+        )}
+      </div>
+
+      <ul class="wedge" aria-label="What this costs you">
+        {WEDGE.map((claim) => <li>{claim}</li>)}
+      </ul>
+
+      <p class="privacy">
+        The code that connects your phones is in the part of this link after
+        the <code>#</code>. Browsers never send that part to a website, so this
+        site never sees it. <a href={`/apps/${app.slug}/`}>More about {app.name}</a>.
+      </p>
+    </section>
+  </main>
+  <Footer />
+</Base>
+
+<script
+  is:inline
+  define:vars={{ scheme: join.scheme, pkg: join.androidPackage, playUrl: app.playStoreUrl ?? '' }}
+>
+  (function () {
+    // Same rule as the app's parser: the code is the `s=` value, from the
+    // fragment (web links) or the query (older links), at least 16 chars.
+    var href = window.location.href;
+    var m = href.match(/[?&#]s=([^&]+)/);
+    var secret = null;
+    if (m) {
+      try {
+        secret = decodeURIComponent(m[1]);
+      } catch (e) {
+        secret = null;
+      }
+    }
+    var ok = !!secret && secret.length >= 16;
+    var show = function (name) {
+      var el = document.querySelector('[data-state="' + name + '"]');
+      if (el) el.hidden = false;
+    };
+    if (!ok) {
+      show('broken');
+      return;
+    }
+    show('ready');
+    var ua = navigator.userAgent || '';
+    var isAndroid = /Android/i.test(ua);
+    var isIOS =
+      /iPhone|iPad|iPod/i.test(ua) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var s = encodeURIComponent(secret);
+    var open = document.querySelector('[data-open]');
+    if (isAndroid) {
+      // intent:// lets Chrome hand off to the app, or go to the store if the
+      // app isn't installed, in one tap.
+      open.href =
+        'intent://join?s=' + s +
+        '#Intent;scheme=' + scheme +
+        ';package=' + pkg +
+        (playUrl ? ';S.browser_fallback_url=' + encodeURIComponent(playUrl) : '') +
+        ';end';
+    } else {
+      open.href = scheme + '://join?s=' + s;
+      if (!isIOS) {
+        var desk = document.querySelector('[data-desktop]');
+        if (desk) desk.hidden = false;
+      }
+    }
+  })();
+</script>
+
+<style>
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .invite {
+    padding: 40px 0 56px;
+  }
+  .idrow {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin: 0 0 22px;
+  }
+  h1 {
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin: 0;
+  }
+  .lead {
+    font-size: 19px;
+    line-height: 1.45;
+    color: var(--fg);
+    margin: 0 0 24px;
+  }
+  .state {
+    margin: 0 0 36px;
+  }
+  .state[hidden] {
+    display: none;
+  }
+  .btn {
+    height: 48px;
+    padding: 0 22px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    max-width: 100%;
+    text-decoration: none;
+  }
+  .btn.primary {
+    background: var(--fg);
+    color: var(--bg);
+    border: 1px solid var(--fg);
+  }
+  .btn.primary:hover {
+    background: var(--fg-muted);
+  }
+  .hint {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--fg-muted);
+    margin: 14px 0 0;
+  }
+  .hint[hidden] {
+    display: none;
+  }
+  h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+  .steps {
+    margin: 0 0 16px;
+    padding-left: 22px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--fg);
+  }
+  .cta-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 0 0 28px;
+  }
+  .badge-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  .badge-link img {
+    height: 44px;
+    width: auto;
+    display: block;
+  }
+  .badge-link:hover {
+    opacity: 0.82;
+  }
+  .wedge {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 20px;
+    padding: 0;
+  }
+  .wedge li {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.01em;
+    color: var(--fg);
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    padding: 5px 12px;
+    background: var(--bg-elevated);
+    white-space: nowrap;
+  }
+  .privacy {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--fg-muted);
+    margin: 0;
+  }
+  .privacy code {
+    font-size: 13px;
+  }
+  .privacy a {
+    color: var(--fg);
+  }
+  @media (max-width: 560px) {
+    .container {
+      padding: 0 16px;
+    }
+    h1 {
+      font-size: 26px;
+    }
+    .lead {
+      font-size: 17px;
+    }
+    .btn.primary {
+      width: 100%;
+    }
+  }
+</style>

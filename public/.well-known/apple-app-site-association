@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["GY4CVTZ3QB.com.joshapproved.grocerylist"],
+        "components": [
+          { "/": "/join/grocery-list", "comment": "Grocery List shared-list invite" },
+          { "/": "/join/grocery-list/*", "comment": "Grocery List shared-list invite" }
+        ]
+      }
+    ]
+  }
+}

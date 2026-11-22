@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.joshapproved.grocerylist",
+      "sha256_cert_fingerprints": [
+        "CE:72:5E:6D:31:89:04:64:71:B5:36:1D:2C:DE:9B:7A:86:B0:14:FD:3E:6C:9A:A7:F1:ED:22:11:C7:4C:84:45"
+      ]
+    }
+  }
+]
