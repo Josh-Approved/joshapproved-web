@@ -54,6 +54,11 @@ export default {
       headers: new Headers(assetRes.headers),
     });
     res.headers.set('Strict-Transport-Security', HSTS);
+    // The iOS link-association file has no extension, so the asset layer
+    // can't infer its type. Apple's fetcher expects JSON.
+    if (url.pathname === '/.well-known/apple-app-site-association') {
+      res.headers.set('Content-Type', 'application/json');
+    }
     return res;
   },
 };
